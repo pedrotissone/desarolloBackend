@@ -1,4 +1,5 @@
 const fs = require("fs")
+const path = require("path")
 
 class ProductManager {
     //Atributos
@@ -8,7 +9,8 @@ class ProductManager {
 
     constructor() {
         this.products = [] //Array con todos los productos
-        this.path = "./db/db.json"
+        // this.path = __dirname + "/db/db.json"
+        this.path = path.join(__dirname, "db", "db.json") //normalizo la ruta para cualquier OS con el modulo path
     }
 
     //                              METODOS
@@ -151,7 +153,7 @@ class ProductManager {
 
     getIdProducts() {
         try {
-            const ultimoId = fs.readFileSync("./db/idProducts.txt", { encoding: "utf-8" })
+            const ultimoId = fs.readFileSync(__dirname + "/db/idProducts.txt", { encoding: "utf-8" })
             return ProductManager.idProducts = parseInt(ultimoId)
             
         } catch (error) {

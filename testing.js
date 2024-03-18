@@ -12,7 +12,7 @@ Producto.getProducts()
 //3) A continuacion puedo agregar mas productos, editarlos o eliminarlos.
 
 // Producto.addProduct("Martillo", "Stanley", 3000, "./img1", "awds", 10)
-// Producto.addProduct("Navaja", "Stanley", 3000, "./img1", "awdsss", 10)
-// Producto.deleteProduct(1)
-// Producto.updateProduct(2,"Notebook", "Hp", 3000, "./img1", "awsdf20", 10)
+// Producto.addProduct("Navaja", "Stanley", 3000, "./img1", "awdssss", 10)
+// Producto.deleteProduct(4)
+// Producto.updateProduct(1,"Notebook", "Hp", 3000, "./img1", "awsdf20", 10)
 // Producto.getProductById(2)

@@ -1,14 +1,5 @@
 [
     {
-        "id": 1,
-        "title": "Taladro",
-        "description": "Gamma",
-        "price": 3000,
-        "thumbnail": "./img1",
-        "code": "awsdf23",
-        "stock": 15
-    },
-    {
         "id": 2,
         "title": "Reposera",
         "description": "Mor",
@@ -16,5 +7,23 @@
         "thumbnail": "./img1",
         "code": "awsdf29",
         "stock": 6
+    },
+    {
+        "id": 3,
+        "title": "Martillo",
+        "description": "Stanley",
+        "price": 3000,
+        "thumbnail": "./img1",
+        "code": "awds",
+        "stock": 10
+    },
+    {
+        "id": 5,
+        "title": "Navaja",
+        "description": "Stanley",
+        "price": 3000,
+        "thumbnail": "./img1",
+        "code": "awdssss",
+        "stock": 10
     }
 ]
