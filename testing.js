@@ -22,4 +22,4 @@ let executeAsyncFunctions = async () => {
     await Producto.deleteProduct(3)
     await Producto.deleteProduct(2)
 }
-executeAsyncFunctions()
+// executeAsyncFunctions()
