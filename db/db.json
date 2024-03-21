@@ -1,11 +1,1 @@
-[
-    {
-        "id": 1,
-        "title": "Martillo",
-        "description": "Stanley",
-        "price": 3000,
-        "thumbnail": "./img1",
-        "code": "awds",
-        "stock": 10
-    }
-]
+[]
