@@ -1,5 +1,6 @@
 const ProductManager = require("./ProductManager")
 
+
 const Producto = new ProductManager()
 
 //1)SIEMPRE llamar primero a la funcion getProducts(), sino no funcionan las validaciones.
@@ -16,10 +17,12 @@ const Producto = new ProductManager()
 let executeAsyncFunctions = async () => {
     await Producto.getProducts()
     await Producto.addProduct("Taladro", "Gamma", 3000, "./img1", "004", 15)
-    // await Producto.addProduct("Reposera", "Mor", 9000, "./img1", "005", 6)
-    // await Producto.addProduct("Martillo", "Stanley", 3000, "./img1", "006", 10)
+    await Producto.addProduct("Reposera", "Mor", 9000, "./img1", "005", 6)
+    await Producto.addProduct("Martillo", "Stanley", 3000, "./img1", "006", 10)
     // await Producto.updateProduct(2,"Notebook", "Hp", 3000, "./img1", "007", 10)
     // await Producto.deleteProduct(3)
     // await Producto.deleteProduct(2)
 }
 // executeAsyncFunctions()
+
+module.exports = Producto;

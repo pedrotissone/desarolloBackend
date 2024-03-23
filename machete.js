@@ -1,8 +1,11 @@
 const fs = require("fs")
 
-let rutaArchivo = "./carpetaArchivos/archivo1.txt"
 
-let texto1 = '"Raja turrito raja" (Los Siete Locos - Roberto Arlt)'
+//                                   F I L E  S Y S T E M
+
+// let rutaArchivo = "./carpetaArchivos/archivo1.txt"
+
+// let texto1 = '"Raja turrito raja" (Los Siete Locos - Roberto Arlt)'
 
 //Crear y escribir un archivo
 // fs.writeFileSync(rutaArchivo, texto1)
@@ -106,4 +109,10 @@ let texto1 = '"Raja turrito raja" (Los Siete Locos - Roberto Arlt)'
 // let lecturaDeArchivoJsonParseado = JSON.parse(fs.readFileSync(rutaArchivoJson, {encoding:"utf-8"}))
 // console.log(lecturaDeArchivoJsonParseado, typeof lecturaDeArchivoJsonParseado)
 // console.log(lecturaDeArchivoJsonParseado[1].nombre)
+
+
+
+//                              S E R V E R
+
+
 

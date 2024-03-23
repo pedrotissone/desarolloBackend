@@ -1,1 +1,29 @@
-[]
+[
+    {
+        "id": 1,
+        "title": "Taladro",
+        "description": "Gamma",
+        "price": 3000,
+        "thumbnail": "./img1",
+        "code": "004",
+        "stock": 15
+    },
+    {
+        "id": 2,
+        "title": "Reposera",
+        "description": "Mor",
+        "price": 9000,
+        "thumbnail": "./img1",
+        "code": "005",
+        "stock": 6
+    },
+    {
+        "id": 3,
+        "title": "Martillo",
+        "description": "Stanley",
+        "price": 3000,
+        "thumbnail": "./img1",
+        "code": "006",
+        "stock": 10
+    }
+]

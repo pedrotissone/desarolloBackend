@@ -73,18 +73,22 @@ class ProductManager {
             let productosParseados = JSON.parse(resultado);
     
             if (!Array.isArray(productosParseados)) {
-                throw new Error("Error, la DB no tiene un formato de array valido");//throw corta la ejecución y te lleva al catch mas cercano
+                throw new Error("Error, la DB no tiene un formato de array valido");//throw corta la ejecución y sale por el catch mas cercano
             }
     
             // 3) Agregar los productos al array this.products
             this.products.push(...productosParseados);
+            
     
-            // 4) Ordenar los productos por ID
-            let sortedProducts = this.products.sort((a, b) => a.id - b.id);
-    
-            console.log({sortedProducts}); // Mostrar los productos ordenados
+            // 4) Ordenar los productos por ID para verlos por consola
+            let sortedProducts = this.products.sort((a, b) => a.id - b.id);    
+            console.log(sortedProducts);
+
+            // 5) Devuelvo los productos
+            return productosParseados
+
         } catch (error) {
-            console.log("Error al leer o parsear la DB");
+            return "Error al leer o parsear la DB"
         }
     }
 
@@ -94,12 +98,12 @@ class ProductManager {
         try {            
             const producto = await this.products.find(elem => elem.id == id)
             if (producto) {
-                console.log({producto})
+                return producto
             } else {
-                console.log("No hay productos")
+                return "No hay productos con el id solicitado"
             }
         } catch (error) {
-            console.error("Not found")            
+            return "Error el id no es un número"           
         }        
     }
 
