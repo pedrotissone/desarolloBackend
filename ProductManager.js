@@ -1,5 +1,6 @@
-const fs = require("fs")
-const path = require("path")
+import fs from "fs"
+import path from "path"
+import __dirname from "./dirnameCasero.js"//Importe el __dirname que arme para usar con ESmodules
 
 class ProductManager {
     //Atributos
@@ -56,6 +57,7 @@ class ProductManager {
             console.log(`${nuevoProducto.title} agregado al array de productos`)
 
             //Escribo el array actualizado en la db
+            console.log(this.path)
             await fs.promises.writeFile(this.path, JSON.stringify(this.products, null, 4))
     
         } catch (error) {
@@ -182,8 +184,4 @@ class ProductManager {
 
 }
 
-module.exports = ProductManager;
-
-
-
-
+export default ProductManager

@@ -25,5 +25,14 @@
         "thumbnail": "./img1",
         "code": "006",
         "stock": 10
+    },
+    {
+        "id": 8,
+        "title": "Amoladora",
+        "description": "Stanley",
+        "price": 3000,
+        "thumbnail": "./img1",
+        "code": "008",
+        "stock": 10
     }
 ]

@@ -1,6 +1,5 @@
-const express = require("express")
-const fs = require("fs")
-const Producto = require("../testing")
+import express from "express"
+import { Producto } from "../testing.js" //De aca me traigo la instancia de mi clase con todas sus funciones
 
 
 const PORT = 3000
@@ -37,4 +36,5 @@ app.get("/products/:pid", async (req, res) => { //PARAMS
 
 app.listen(PORT, () => console.log(`Servidor escuchando en el puerto ${PORT}`))
 
-//01:44:30 
+
+//01:25:34

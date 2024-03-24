@@ -1,5 +1,4 @@
-const ProductManager = require("./ProductManager")
-
+import ProductManager from "./ProductManager.js"
 
 const Producto = new ProductManager()
 
@@ -16,13 +15,15 @@ const Producto = new ProductManager()
 //ENTORNO PARA MANEJAR EL ORDEN DE EJECUCION DE OPERACIONES ASYNCRONAS!!!
 let executeAsyncFunctions = async () => {
     await Producto.getProducts()
-    await Producto.addProduct("Taladro", "Gamma", 3000, "./img1", "004", 15)
-    await Producto.addProduct("Reposera", "Mor", 9000, "./img1", "005", 6)
-    await Producto.addProduct("Martillo", "Stanley", 3000, "./img1", "006", 10)
+    // await Producto.addProduct("Taladro", "Gamma", 3000, "./img1", "004", 15)
+    // await Producto.addProduct("Reposera", "Mor", 9000, "./img1", "005", 6)
+    // await Producto.addProduct("Amoladora", "Stanley", 3000, "./img1", "008", 10)
     // await Producto.updateProduct(2,"Notebook", "Hp", 3000, "./img1", "007", 10)
     // await Producto.deleteProduct(3)
     // await Producto.deleteProduct(2)
+
+
 }
 // executeAsyncFunctions()
 
-module.exports = Producto;
+export {Producto};
