@@ -1,67 +1,52 @@
 import fs from "fs"
 import path from "path"
-import __dirname from "./dirnameCasero.js"//Importe el __dirname que arme para usar con ESmodules
+import __dirname from "../../utils.js"//Importe el __dirname que arme para usar con ESmodules
 
 class ProductManager {
-    //Atributos
+    //Atributos (No se para que sirve tener products, path y idPath escritos aca fuera del constructor)
     products
     path
+    idPath
     static idProducts //Variable Global, iniciada en 0 en DB
 
     constructor() {
         this.products = [] //Array con todos los productos
-        // this.path = __dirname + "/db/db.json"
-        this.path = path.join(__dirname, "db", "db.json") //normalizo la ruta para cualquier OS con el modulo path
+        // this.path = __dirname + "/db/db.json" (path sin join)
+        this.path = path.join(__dirname, "src", "db", "products.json") //normalizo la ruta para cualquier OS con el modulo path
+        this.idPath = path.join(__dirname, "src", "db", "idProducts.txt")
     }
 
     //                              METODOS
 
 
     //1) Agregar nuevo producto a DB (SOLO AGREGAR USANDO ESTA FUNCION)
-    async addProduct(title, description, price, thumbnail, code, stock) {
+    async addProduct(obj) {
         try {            
-            //Requerir campos de forma obligatoria
-            if (!title || !description || !price || !thumbnail || !code || !stock) {
-                console.log("Faltan campos obligatorios")
-                return "Faltan campos obligatorios"
-            }
-            //Validar que no se repita el atributo code
-            const codigoRepetido = this.products.some(elem => elem.code == code)
-            if (codigoRepetido) {
-                console.log(`El codigo del ${title} esta repetido en otro producto`)
-                return "El codigo esta repetido en otro producto"
-            }
             //Traigo el id de la DB y actualizo mi variable Global
             await this.getIdProducts()
-    
             //id autoincremental
             ProductManager.idProducts += 1
             const id = ProductManager.idProducts
-            
+
             //Actualizo el valor de idProducts en la DB
-            // fs.writeFileSync("./db/idProducts.txt", id.toString())
-            await fs.promises.writeFile("./db/idProducts.txt", id.toString())
+            await fs.promises.writeFile(this.idPath, id.toString())
 
             //Confeccion del Nuevo producto
             const nuevoProducto = {
                 id: id,
-                title: title,
-                description: description,
-                price: price,
-                thumbnail: thumbnail,
-                code: code,
-                stock: stock
+                ...obj
             }
+
             //Agrego producto al array del constructor
-            this.products.push(nuevoProducto)
-            console.log(`${nuevoProducto.title} agregado al array de productos`)
+            this.products.push(nuevoProducto)            
 
             //Escribo el array actualizado en la db
-            console.log(this.path)
             await fs.promises.writeFile(this.path, JSON.stringify(this.products, null, 4))
+
+            return this.products
     
         } catch (error) {
-            console.log("error al agregar producto")            
+            return "error en la funcion al agregar producto"           
         }
     }
 
@@ -69,7 +54,7 @@ class ProductManager {
     async getProducts() { 
         try {
             // 1) Leer los productos de la DB de forma asíncrona            
-            let resultado = await fs.promises.readFile("./db/db.json", { encoding: "utf-8" })        
+            let resultado = await fs.promises.readFile(this.path, { encoding: "utf-8" })        
     
             // 2) Parseo de productos para agregar al array products
             let productosParseados = JSON.parse(resultado);
@@ -90,7 +75,7 @@ class ProductManager {
             return productosParseados
 
         } catch (error) {
-            return "Error al leer o parsear la DB"
+            return "Error en la función al querer leer o parsear la DB"
         }
     }
 
@@ -105,12 +90,12 @@ class ProductManager {
                 return "No hay productos con el id solicitado"
             }
         } catch (error) {
-            return "Error el id no es un número"           
+            return "Error en la función, el id proporcionado no es un número"           
         }        
     }
 
-    async deleteProduct(id) { //PROBAR ESCRIBIR ASYNC FUNC DE ESCRIBIR Y LEER Y LLAMARLAS DENTRO DE CADA METODO
-        try {            
+    async deleteProduct(id) {
+        try {          
             let producto = await this.products.find(elem => elem.id == id)
             if (producto) {
                 let index = this.products.indexOf(producto)
@@ -119,33 +104,27 @@ class ProductManager {
 
                 //Actualizo el cambio en la db
                 await fs.promises.writeFile(this.path, JSON.stringify(this.products, null, 4))
+                console.log(this.products)
+                return producto
                 
             } else {
-                console.log("El id del producto que desea eliminar no existe")
+                return "El id del producto que desea eliminar no existe"
             }            
         } catch (error) {
-            console.error("Error al querer eliminar producto")            
+            return "Error en la función al querer eliminar producto"          
         }
     }
 
-    async updateProduct(id, title, description, price, thumbnail, code, stock) {
+    async updateProduct(id, obj) {
         try {
+            
             let producto = await this.products.find(elem => elem.id == id)
             if (producto) {
                 console.log("El producto a editar es el " + producto.title)
             } else {
-                console.log("No se puede editar, el id del producto no existe")
-                return
+                return "El ID del producto a editar no existe"                
             }
-            if (!title || !description || !price || !thumbnail || !code || !stock) {
-                console.log("Faltan campos obligatorios para poder editar el producto")
-                return "Faltan campos obligatorios"
-            }
-            const codigoRepetido = this.products.some(elem => elem.code == code)
-            if (codigoRepetido) {
-                console.log(`No es posible editar, el codigo del ${title} esta repetido en otro producto`)
-                return "El codigo esta repetido en otro producto"
-            }
+
             
             let index = this.products.indexOf(producto)
             this.products.splice(index, 1)
@@ -155,33 +134,37 @@ class ProductManager {
             //Nuevos valores del producto
             producto = {
                 id: id,
-                title: title,
-                description: description,
-                price: price,
-                thumbnail: thumbnail,
-                code: code,
-                stock: stock
+                title: obj.title,
+                description: obj.description,
+                price: obj.price,
+                thumbnail: obj.thumbnail,
+                code: obj.code,
+                stock: obj.stock,
+                category: obj.category,
+                status: obj.status
             }
             this.products.push(producto)
 
             //Actualizo el cambio en la db
             await fs.promises.writeFile(this.path, JSON.stringify(this.products, null, 4))
-        } catch (error) {
-            console.log("Error al editar producto")            
-        }
+            console.log(this.products)
+            return producto
 
+        } catch (error) {
+            return "Error en la función al editar producto"            
+        }
     }
 
     async getIdProducts() {
         try {
-            const ultimoId = await fs.promises.readFile("./db/idProducts.txt", { encoding: "utf-8" })
+            const ultimoId = await fs.promises.readFile(this.idPath, { encoding: "utf-8" })
             return ProductManager.idProducts = parseInt(ultimoId)
 
         } catch (error) {
             console.log("Error al traer el ultimo id de la DB")
         }
     }
-
 }
+
 
 export default ProductManager
