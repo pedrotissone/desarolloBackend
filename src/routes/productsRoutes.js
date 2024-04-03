@@ -85,7 +85,7 @@ router.post("/", async (req, res) => {
 router.put("/:pid", async (req, res) => {
 
     try {
-        debugger
+        
         await Producto.getProducts()
 
         let id = parseInt(req.params.pid) //El id viene por params

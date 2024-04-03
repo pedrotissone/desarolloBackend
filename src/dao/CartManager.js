@@ -39,6 +39,7 @@ class CartManager {
     
             // 3) Agregar los carritos al array this.carts
             this.carts.push(...parsedCarts);
+            console.log(this.carts) //QUIERO VER QUE HAY!!!!!!!
             
     
             // 4) Ordenar los carritos por ID para verlos por consola
@@ -54,7 +55,7 @@ class CartManager {
     }
 
     async createCart() {
-        try {            
+        try {          
             //Traigo el id de la DB y actualizo mi variable Global
             await this.getIdCart()
 
@@ -72,7 +73,8 @@ class CartManager {
             }
 
             //Agrego producto al array del constructor
-            this.carts.push(nuevoCarrito)            
+            this.carts.push(nuevoCarrito)
+            console.log(this.carts)           
 
             //Escribo el array actualizado en la db
             await fs.promises.writeFile(this.path, JSON.stringify(this.carts, null, 4))
@@ -87,15 +89,33 @@ class CartManager {
     async getCartById(id) {
         try {            
             const carrito = await this.carts.find(elem => elem.id == id)
-            if (carrito) {
-                return carrito
-            } else {
-                return "No hay carritos con el id solicitado"
-            }
+            return carrito //Si no hay carrito devuelve undefined           
         } catch (error) {
             return "Error en la función, el id proporcionado no es un número"           
         }        
     }
+
+    async addToCart(carrito, pid) {
+
+        for(let i = 0; i < carrito.products.length; i++) {
+            for (let key in carrito.products[i])
+            if (carrito.products[i][key] == pid) {
+                console.log("Existe la propiedad!")
+                carrito.products[i].quantity += 1
+               return await fs.promises.writeFile(this.path, JSON.stringify(this.carts, null, 4))                                
+            } else {
+                console.log("No hay propiedad")                
+            }
+        }
+        let nuevoProducto = {
+            "producto": pid,
+            "quantity": 1
+        }
+        carrito.products.push(nuevoProducto)
+        return await fs.promises.writeFile(this.path, JSON.stringify(this.carts, null, 4))                 
+        
+    }
+
 
 }
 
