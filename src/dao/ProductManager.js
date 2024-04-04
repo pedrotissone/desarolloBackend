@@ -52,7 +52,7 @@ class ProductManager {
 
     //2) Devolver todos los productos de la DB
     async getProducts() { 
-        try {
+    
             // 1) Leer los productos de la DB de forma asíncrona            
             let resultado = await fs.promises.readFile(this.path, { encoding: "utf-8" })        
     
@@ -63,8 +63,10 @@ class ProductManager {
                 throw new Error("Error, la DB no tiene un formato de array valido");//throw corta la ejecución y sale por el catch mas cercano
             }
     
-            // 3) Agregar los productos al array this.products
-            this.products.push(...productosParseados);
+            // 3) Agregar los productos al array this.products SI ES QUE NO ESTAN YA CARGADOS EN MEMORIA XQ SINO LOS VA A DUPLICAR
+            if(productosParseados.length !== this.products.length) {
+                this.products.push(...productosParseados);
+            }
             
     
             // 4) Ordenar los productos por ID para verlos por consola
@@ -72,11 +74,7 @@ class ProductManager {
             console.log(sortedProducts);
 
             // 5) Devuelvo los productos
-            return productosParseados
-
-        } catch (error) {
-            return "Error en la función al querer leer o parsear la DB"
-        }
+            return productosParseados        
     }
 
 

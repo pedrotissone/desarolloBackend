@@ -8,7 +8,8 @@ const router = Router()
 router.get("/:cid", async (req, res) => {
 
     try {
-        await Carts.getCarts()
+            await Carts.getCarts()
+        
 
         let id = parseInt(req.params.cid)
         let carrito = await Carts.getCartById(id)

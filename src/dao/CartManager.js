@@ -26,7 +26,7 @@ class CartManager {
     }
 
     async getCarts() {
-        try {
+        
             // 1) Leer los carritos de la DB de forma asíncrona            
             let carts = await fs.promises.readFile(this.path, { encoding: "utf-8" })        
     
@@ -37,9 +37,9 @@ class CartManager {
                 throw new Error("Error, la DB no tiene un formato de array valido");//throw corta la ejecución y sale por el catch mas cercano
             }
     
-            // 3) Agregar los carritos al array this.carts
+            // 3) Agregar los carritos al array this.carts SI NO ESTAN CARGADOS EN MEMORIA
+            if (parsedCarts.length !== this.carts.length)
             this.carts.push(...parsedCarts);
-            console.log(this.carts) //QUIERO VER QUE HAY!!!!!!!
             
     
             // 4) Ordenar los carritos por ID para verlos por consola
@@ -47,12 +47,9 @@ class CartManager {
             console.log(sortedCarts);
 
             // 5) Devuelvo los carritos
-            return parsedCarts
-
-        } catch (error) {
-            return "Error en la función al querer leer o parsear la DB"
-        }
+            return parsedCarts       
     }
+
 
     async createCart() {
         try {          
@@ -86,14 +83,15 @@ class CartManager {
         }
     }
 
-    async getCartById(id) {
-        try {            
+    async getCartById(id) {               
             const carrito = await this.carts.find(elem => elem.id == id)
-            return carrito //Si no hay carrito devuelve undefined           
-        } catch (error) {
-            return "Error en la función, el id proporcionado no es un número"           
-        }        
+            if (carrito) {
+                return carrito //Si no hay carrito devuelve undefined
+            } else {
+                return "No existe carrito con el id proporcionado"
+            }           
     }
+
 
     async addToCart(carrito, pid) {
 
