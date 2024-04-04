@@ -63,10 +63,10 @@ class ProductManager {
                 throw new Error("Error, la DB no tiene un formato de array valido");//throw corta la ejecución y sale por el catch mas cercano
             }
     
-            // 3) Agregar los productos al array this.products SI ES QUE NO ESTAN YA CARGADOS EN MEMORIA XQ SINO LOS VA A DUPLICAR
-            if(productosParseados.length !== this.products.length) {
+            // 3) Agregar los productos al array this.products lo vacio antes por las dudas que me duplique los productos
+                this.products = []
                 this.products.push(...productosParseados);
-            }
+            
             
     
             // 4) Ordenar los productos por ID para verlos por consola

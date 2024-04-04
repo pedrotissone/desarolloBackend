@@ -37,8 +37,8 @@ class CartManager {
                 throw new Error("Error, la DB no tiene un formato de array valido");//throw corta la ejecución y sale por el catch mas cercano
             }
     
-            // 3) Agregar los carritos al array this.carts SI NO ESTAN CARGADOS EN MEMORIA
-            if (parsedCarts.length !== this.carts.length)
+            // 3) Agregar los carritos al array this.carts, lo vacio antes por las dudas que me duplique los productos
+            this.carts = []
             this.carts.push(...parsedCarts);
             
     
