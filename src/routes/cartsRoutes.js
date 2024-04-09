@@ -1,11 +1,17 @@
 import { Router } from "express"
 import CartManager from "../dao/CartManager.js" //Me traigo mi clase que tiene todas las funciones para manejar el carrito
+import { middleware3 } from "../middlewares/generales.js"
 
 const Carts = new CartManager() //Instancio mi clase
 
 const router = Router()
 
-router.get("/:cid", async (req, res) => {
+// router.use((req, res, next) => {
+//     console.log("Soy un middleware a nivel router") //Middleware en linea a nivel router (No es recomendable usarlo así)
+//     next()
+// })
+
+router.get("/:cid", middleware3, async (req, res) => { //Middleware a nivel endpoint
 
     try {
             await Carts.getCarts()

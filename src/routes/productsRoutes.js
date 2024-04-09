@@ -1,5 +1,6 @@
 import {Router} from "express"
 import ProductManager from "../dao/ProductManager.js"
+import { upload } from "../../utils.js"
 
 
 const Producto = new ProductManager()
@@ -49,12 +50,15 @@ router.get("/:pid", async (req, res) => {
 })
 
 
-router.post("/", async (req, res) => {
+router.post("/", upload.single("thumbnail"), async (req, res) => {
     
     try {
         await Producto.getProducts() //Llamo a getProducts() para poder validar el código del producto
 
-        let { title, description, price, thumbnail, code, stock, category, status } = req.body
+        let thumbnail = req.file.filename
+
+        let { title, description, price, code, stock, category, status } = req.body
+
     
         if (!title || !description || !price || !thumbnail || !code || !stock || !category || !status) {
             res.setHeader("Content-Type", "application/json")
@@ -70,6 +74,8 @@ router.post("/", async (req, res) => {
                 message: "Error 400 - El código del producto que se quiere agregar ya está repetido en otro producto"
             })
         }
+
+
         let nuevoProducto = await Producto.addProduct({ title, description, price, thumbnail, code, stock, category, status })
         res.setHeader("Content-Type", "application/json")
         return res.status(200).json(nuevoProducto)

@@ -1,6 +1,6 @@
 import fs from "fs"
 import path from "path"
-import __dirname from "../../utils.js"//Importe el __dirname que arme para usar con ESmodules
+import { __dirname } from "../../utils.js"//Importe el __dirname que arme para usar con ESmodules
 
 class ProductManager {
     //Atributos (No se para que sirve tener products, path y idPath escritos aca fuera del constructor)

@@ -1,1 +1,35 @@
-[]
+[
+    {
+        "id": 1,
+        "title": "pepe",
+        "description": "asd",
+        "price": "2",
+        "thumbnail": "1712648895362-carrousel tocado de flores img3.jpg",
+        "code": "dsd",
+        "stock": "2",
+        "category": "sd",
+        "status": "sd"
+    },
+    {
+        "id": 2,
+        "title": "pepe",
+        "description": "asd",
+        "price": "2",
+        "thumbnail": "1712649057008-carrousel tocado de flores img3.jpg",
+        "code": "dsdsd",
+        "stock": "2",
+        "category": "sd",
+        "status": "sd"
+    },
+    {
+        "id": 3,
+        "title": "pepe",
+        "description": "asd",
+        "price": "2",
+        "thumbnail": "1712650616237-champagne y mariposas img3.webp",
+        "code": "d0",
+        "stock": "2",
+        "category": "sd",
+        "status": "sd"
+    }
+]
