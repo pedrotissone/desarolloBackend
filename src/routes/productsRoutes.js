@@ -1,6 +1,7 @@
 import {Router} from "express"
 import ProductManager from "../dao/ProductManager.js"
 import { upload } from "../../utils.js"
+import { serverSocket} from "../app.js"
 
 
 const Producto = new ProductManager()
@@ -75,8 +76,10 @@ router.post("/", upload.single("thumbnail"), async (req, res) => {
             })
         }
 
-
         let nuevoProducto = await Producto.addProduct({ title, description, price, thumbnail, code, stock, category, status })
+        
+        serverSocket.emit("listadoActualizado", nuevoProducto)//Emit para la vista handlebars/realtimeproducts
+
         res.setHeader("Content-Type", "application/json")
         return res.status(200).json(nuevoProducto)
     } catch (error) {

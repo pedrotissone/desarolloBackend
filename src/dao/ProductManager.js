@@ -42,7 +42,7 @@ class ProductManager {
 
             //Escribo el array actualizado en la db
             await fs.promises.writeFile(this.path, JSON.stringify(this.products, null, 4))
-
+            //Devuelvo array con todos los productos
             return this.products
     
         } catch (error) {

@@ -6,12 +6,15 @@ const Carts = new CartManager() //Instancio mi clase
 
 const router = Router()
 
+//Middleware en linea a nivel router. No es recomendable usarlo así, se ejecuta para todas las rutas del router
 // router.use((req, res, next) => {
-//     console.log("Soy un middleware a nivel router") //Middleware en linea a nivel router (No es recomendable usarlo así)
+//     console.log("Soy un middleware en linea a nivel router") 
 //     next()
 // })
 
-router.get("/:cid", middleware3, async (req, res) => { //Middleware a nivel endpoint
+
+//Middleware a nivel endpoint
+router.get("/:cid", middleware3, async (req, res) => { 
 
     try {
             await Carts.getCarts()
