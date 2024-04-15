@@ -1,10 +1,12 @@
 {
   "name": "desarrolloackend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Aplicación Backend con Node",
+  "engines": { "node": "16.x" },
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "start": "node ./src/app.js",
     "dev": "nodemon ./src/app.js"
   },
   "keywords": [],

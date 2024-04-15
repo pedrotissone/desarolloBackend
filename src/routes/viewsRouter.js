@@ -27,7 +27,16 @@ router.get("/realtimeproducts", async (req, res) => {
         res.setHeader("Content-Type", "application/json")
         res.status(500).res.json({ Error: "Error 500 - Error inesperado en el servidor" })        
     }
-   
+})
+
+router.get("/chat", (req, res) => {
+    try {
+        res.setHeader("Content-Type", "text/html")
+        res.status(200).render("chat")        
+    } catch (error) {
+        res.setHeader("Content-Type", "application/json")
+        res.status(500).res.json({ Error: "Error 500 - Error inesperado en el servidor" })        
+    }
 })
 
 
