@@ -44,7 +44,8 @@ Swal.fire({
     inputMensaje.addEventListener("keyup", e => {
         e.preventDefault()
         //console.log(e, e.target.value)
-        if(e.code === "Enter" && e.target.value.trim().length > 0){ //Validación para no enviar solo espacios en blanco
+        //Cambié e.code por e.key a ver si me lo toma el celular
+        if(e.key === "Enter" && e.target.value.trim().length > 0){ //Validación para no enviar solo espacios en blanco
             socket.emit("mensaje", nombre, e.target.value.trim() )
             e.target.value = ""
             e.target.focus()
