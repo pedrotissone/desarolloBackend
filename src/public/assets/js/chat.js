@@ -14,6 +14,7 @@ Swal.fire({
     //Creo variables para conectarme con las etiquetas HTML
     let inputMensaje = document.getElementById("mensaje")
     let divMensajes = document.getElementById("mensajes")
+    let buttonSubmit = document.getElementById("submit")
     inputMensaje.focus()
 
     //1) Disparo peticion de conexion
@@ -44,12 +45,20 @@ Swal.fire({
     inputMensaje.addEventListener("keyup", e => {
         e.preventDefault()
         //console.log(e, e.target.value)
-        //Cambié e.code por e.key a ver si me lo toma el celular
-        if(e.key === "Enter" && e.target.value.trim().length > 0){ //Validación para no enviar solo espacios en blanco
+        if(e.code === "Enter" && e.target.value.trim().length > 0){ //Validación para no enviar solo espacios en blanco
             socket.emit("mensaje", nombre, e.target.value.trim() )
             e.target.value = ""
             e.target.focus()
         }
+    })
+    buttonSubmit.addEventListener("click", e => {
+        e.preventDefault()
+        if(inputMensaje.value.trim().length > 0) {
+            socket.emit("mensaje", nombre, inputMensaje.value.trim())
+            inputMensaje.value = ""
+            inputMensaje.focus()
+        }
+        
     })
 
     socket.on("nuevoMensaje", (nombre, mensaje) => {
