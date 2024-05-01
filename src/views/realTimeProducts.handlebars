@@ -1,10 +1,12 @@
 <h2>Listado de productos con SOCKET!</h2>
 
+
 <ul id="listadoActualizableConSocket">
     {{#each productos}}
         <li>{{title}}</li>
     {{/each}}
 </ul>
+
 
 {{!-- 1) Me traigo la libreria para usar websocket del lado del cliente a mi html a traves de un script. (Cliente websocket, ya viene con socketio) --}}
 <script src="/socket.io/socket.io.js"></script>
@@ -14,11 +16,12 @@
 
     const socket = io() //io viene de la libreria para usar websocket del lado del cliente. 1) va a disparar una busqueda de conexión
     socket.on("listadoActualizado", (productos) => {
+
         let ul = document.getElementById("listadoActualizableConSocket")
         ul.innerHTML = ""
-        productos.forEach(productos => {   
+        productos.forEach(producto => {  
         let li = document.createElement("li")
-        li.textContent = productos.title
+        li.textContent = producto.title
         ul.appendChild(li)
         })
     })

@@ -4,6 +4,7 @@ import { ProductManagerMongo as ProductManager } from "../dao/ProductManagerMong
 import { upload } from "../../utils.js"
 import { io } from "../app.js"
 import { isValidObjectId } from "mongoose"
+import { productsModel } from "../dao/models/productsModel.js"
 
 
 const Producto = new ProductManager()
@@ -166,7 +167,8 @@ router.post("/", upload.single("thumbnail"), async (req, res) => {
     try {
         let nuevoProducto = await Producto.addProduct({ title, description, price, thumbnail, code, stock, category, status })
 
-        io.emit("listadoActualizado", nuevoProducto)//Emit para la vista handlebars/realtimeproducts
+        let listadoActualizado = await productsModel.find() //Esta línea es para mongo, con FS envío nuevoProducto
+        io.emit("listadoActualizado", listadoActualizado)//Emit para la vista handlebars/realtimeproducts
 
         res.setHeader("Content-Type", "application/json")
         return res.status(200).json(nuevoProducto)
