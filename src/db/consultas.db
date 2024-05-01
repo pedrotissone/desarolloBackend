@@ -1,0 +1,84 @@
+//LINK DE CONECCIÓN A ATLAS
+mongodb+srv://pedrotissone:2ennu3dL@codercluster.bk90trh.mongodb.net/?retryWrites=true&w=majority&appName=coderCluster
+
+
+//COMANDOS BÁSICOS
+show dbs (Muestra las bases de datos que tenemos)
+use nombreBaseDeDatos (Crea o se posiciona sobre la db indicada)
+show collections (Muestra las colecciones de la db en la que estamos posicionados)
+
+db.createCollection("nombreCollection") (Crea colleccion)
+db.nombreCollection.insertOne({nombre: "pepe, apellido: "perez}) (Crea documento en la coleccion)
+db.products.insertMany([{title: "Taladro", code: 123}, {title: "Sierra", code: 456}])
+
+db.nombreCollection.find() (Lee el contenido de la coleccion)
+db.products.find({title: "Sierra"}) (Pasamos un obj para filtrar busqueda)
+db.products.countDocuments() (cuenta documentos)
+db.products.find({title: "Sierra"}).count() (Cuenta documentos con filtro)
+
+
+//PROYECCIONES (Es el segundo argumento de find()) 
+//NOTA: El primer argumento del metodo find siempre es el filtro!, pero podemos agregar más.
+
+db.products.find({}, {prop1:1, prop2:1}) (Aca en el 1 argumento digo que busque todos los documentos pero agrego PROYECCION para que aparezcan solo los que tengan la prop1 y la prop2)
+
+db.products.find({color: "rojo" }, {prop1:1, prop2:1}) (Busca todos los documentos con la prop indicada que ADEMÁS tengan la prop1 y la prop2)
+//NOTA El valor 1 indica las propiedades que queres que aparezcan y el valor 0 indica las que no queres que aparezcan en el resultado.
+
+//SORT (Se agrega luego del metodo find y se indica si el orden es ascendente o descendente)
+db.products.find({}, {prop1:1, prop2:1}).sort({name:-1}) (Va a ordenar de forma descendente por la propiedad name de la Z a la A o mayor a menor)
+
+//SKIP y LIMIT (Indicas la cantidad de documentos que queres que te saltee o muestre)
+db.products.find({}, {prop1:1, prop2:1}).skip(3) (Te va a saltear los primeros 3 documentos)
+db.products.find({}, {prop1:1, prop2:1}).limit(3) (Te limita el resultado a 3 documentos)
+
+
+//UPDATE (Tiene 3 argumentos, el filtro, la operacion de update, y otro es el upsert y es opcional)
+Antes de hacer Update revisar que la propiedad exista o este bien con un find()
+db.products.find({name: "hulk"})
+
+db.products.updateOne({name: "hulk"}, {$unset: {prop1: true}}) (Filtro por name Hulk y uso el operador $unset con el valor en true para que desaparezca la prop1)
+
+db.products.updateOne({name: "hulk"}, {$set: {prop1: value1}}) (Le devuelvo el valor de la propiedad que le saque con operador $set)
+
+db.products.updateOne({name: "hulk"}, {$rename: {"prop1":"propiedad1"}}) (Cambio el nombre de alguna propiedad con operador $rename)
+
+db.products.updateOne({name: "hulk"}, {$inc: {age:2}}) (Incremento el valor de la propiedad en 2)
+
+db.products.updateOne({name: "hulk"}, {$max: {age:20}}) (Compara el valor que tiene con el que le estoy pasando y deja el que sea mayor)
+
+db.products.updateMany({profesion: "medico"}, {$set: {especialidad:"clinico"}}) (A todos los medicos les agrego la especialidad de clinico)
+
+//DELETE
+
+db.products.deleteOne({profesion: "medico"}) (Borro 1)
+db.products.deleteMany({profesion: "medico"}) (borro todos)
+
+
+//COPIAR DOCUMENTOS A OTRA COLLECTION EN OTRA DB (eliminando el atributo _id)
+
+//1 Defino la DB de origen y a la que quiero copiarle la información
+const sourceDb = db.getSiblingDB('backendCoder');
+const targetDb = db.getSiblingDB('ecommerce');
+
+//2 Ejecuto esta función
+sourceDb.products.find().forEach(function(doc) {
+    delete doc._id;
+    targetDb.products.insertOne(doc);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

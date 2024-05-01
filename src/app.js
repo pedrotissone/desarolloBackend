@@ -1,4 +1,5 @@
 import express from "express"
+import mongoose from "mongoose"
 import { Server } from "socket.io"
 import { engine } from "express-handlebars"
 import {router as productsRouter} from "./routes/productsRoutes.js"
@@ -6,10 +7,27 @@ import {router as cartsRouter} from "./routes/cartsRoutes.js"
 import { router as viewsRouter } from "./routes/viewsRouter.js"
 import { middleware1, middleware2, middleware3 } from "./middlewares/generales.js"
 import { errorHandler } from "./middlewares/errorHandler.js"
+import { chatModel } from "./dao/models/chatModel.js"
 
 
 const PORT = 8080
 const app = express()
+
+//Coneccíon a la base de datos (indicar URL y el nombre de la DB)
+const conectionDB = async () => {
+    try {
+        await mongoose.connect("mongodb+srv://pedrotissone:2ennu3dL@codercluster.bk90trh.mongodb.net/?retryWrites=true&w=majority&appName=coderCluster",
+        {
+            dbName: "ecommerce"
+        }
+    )
+    console.log("DB online..")
+        
+    } catch (error) {
+        console.log("Error al conectar a la DB")        
+    }
+}
+conectionDB()
 
 //let serverSocket //Primero Lo declaré aca arriba por si tenia que pasarlo como middleware a un router, pero no fue necesario
 
@@ -62,18 +80,25 @@ const io = new Server(serverHTTP)
 io.on("connection", (socket) => { //2) Va a estar esuchando si llega una conexion
     console.log(`Se conecto al servidor el cliente ${socket.id}`)
 //                          L O G I C A  D E L  C H A T
-    socket.on("id", nombre => {
+    socket.on("id", async (nombre) => {
         //configuro los usuarios como un objeto y los pusheo a un array
-        usuarios.push({id: socket.id, nombre})
-        //Envio al usuario que se conectó los mensajes existentes en memoria
-        socket.emit("mensajesPrevios", mensajes)
+        // usuarios.push({id: socket.id, nombre})
+        //Envio al usuario que se conectó los mensajes existentes en MEMORIA!!!
+        // socket.emit("mensajesPrevios", mensajes)
+
+        //Envio al usuario que se conectó los mensajes existentes en MONGODB!!!
+        let mensajesEnMongo = await chatModel.find()
+        socket.emit("mensajesPrevios", mensajesEnMongo)
         //Envio a todos los demás clientes notificación de conexion de nuevo usuario
         socket.broadcast.emit("nuevoUsuario", nombre)
     })
 
-    socket.on("mensaje", (nombre, mensaje) => {
+    socket.on("mensaje", async (nombre, mensaje) => {
         //configuro los mensajes como objeto y los pusheo a un array
-        mensajes.push({nombre, mensaje})
+        // mensajes.push({user: nombre, message: mensaje})
+
+        //Creo documento en MongoDB!!!!
+       await chatModel.create({user: nombre, message: mensaje})
         //Reenvío a todos los clientes con io.emit
         io.emit("nuevoMensaje", nombre, mensaje)
     })
@@ -91,4 +116,3 @@ io.on("connection", (socket) => { //2) Va a estar esuchando si llega una conexio
 
 export {io}
 
-//01:45:50

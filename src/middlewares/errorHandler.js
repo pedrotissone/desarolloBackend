@@ -6,7 +6,7 @@ const errorHandler = (error, req, res, next) => {
         res.setHeader("Content-Type", "application/json")
         return res.status(500).json(
             {
-                error: "Error inesperado en el Servidor - (Middleware)"
+                error: "Error inesperado en el Servidor - (Middleware - handleError)"
             }
         )
     }

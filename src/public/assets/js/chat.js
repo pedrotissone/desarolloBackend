@@ -31,10 +31,11 @@ Swal.fire({
 
     socket.on("mensajesPrevios", mensajes => {//Esto es un array
         mensajes.forEach(m => {
-            divMensajes.innerHTML += `<span class="mensaje"><strong>${m.nombre}</strong> dice: <i>${m.mensaje}</i></span><br>`
+            divMensajes.innerHTML += `<span class="mensaje"><strong>${m.user}</strong> dice: <i>${m.message}</i></span><br>`
             //Linea para que siempre me muestre el fondo del div y así evitar el scroll
-            divMensajes.scrollTop = divMensajes.scrollHeight           
+            divMensajes.scrollTop = divMensajes.scrollHeight                     
         });
+        console.log(mensajes) 
     })
 
     socket.on("saleUsuario", nombre => {

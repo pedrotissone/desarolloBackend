@@ -16,8 +16,7 @@
     socket.on("listadoActualizado", (productos) => {
         let ul = document.getElementById("listadoActualizableConSocket")
         ul.innerHTML = ""
-        productos.forEach(productos => {
-
+        productos.forEach(productos => {   
         let li = document.createElement("li")
         li.textContent = productos.title
         ul.appendChild(li)

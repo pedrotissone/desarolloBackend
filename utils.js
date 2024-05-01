@@ -18,9 +18,8 @@ const storage = multer.diskStorage({
     //Valido que solo se puedan subir imagenes
     let tipo = file.mimetype.split("/")[0]
     if(tipo !== "image") {
-        return cb(new Error("Solo se admiten imagenes"))
+        return cb(new Error())
     }
-    
       cb(null, Date.now() + '-' + file.originalname)
     }
   })

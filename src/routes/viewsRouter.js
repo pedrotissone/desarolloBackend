@@ -1,5 +1,6 @@
 import { Router } from "express"
-import ProductManager from "../dao/ProductManager.js"
+// import ProductManager from "../dao/ProductManager.js"
+import { ProductManagerMongo as ProductManager } from "../dao/ProductManagerMongo.js"
 
 
 

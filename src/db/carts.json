@@ -1,1 +1,15 @@
-[]
+[
+    {
+        "id": 1,
+        "products": [
+            {
+                "producto": "Teclado",
+                "quantity": 2
+            },
+            {
+                "producto": "Radio",
+                "quantity": 1
+            }
+        ]
+    }
+]

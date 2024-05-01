@@ -85,10 +85,10 @@ class CartManager {
 
     async getCartById(id) {               
             const carrito = await this.carts.find(elem => elem.id == id)
-            if (carrito) {
+            if (carrito) {            
                 return carrito //Si no hay carrito devuelve undefined
-            } else {
-                return "No existe carrito con el id proporcionado"
+            } else {                
+                return carrito
             }           
     }
 
@@ -102,7 +102,7 @@ class CartManager {
                 carrito.products[i].quantity += 1
                return await fs.promises.writeFile(this.path, JSON.stringify(this.carts, null, 4))                                
             } else {
-                console.log("No hay propiedad")                
+                console.log("No hay propiedad, vamos a cargar el array con el nuevo pid")                
             }
         }
         let nuevoProducto = {

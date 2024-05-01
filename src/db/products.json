@@ -1,1 +1,24 @@
-[]
+[
+    {
+        "id": 1,
+        "title": "Taladro",
+        "description": "metalica",
+        "price": "100",
+        "thumbnail": "1714137266648-carrousel tocado de flores img3.jpg",
+        "code": "123",
+        "stock": "10",
+        "category": "herramienta",
+        "status": "ok"
+    },
+    {
+        "id": 2,
+        "title": "Sierra",
+        "description": "metalica",
+        "price": "100",
+        "thumbnail": "1714137287752-carrousel tocado de flores img3.jpg",
+        "code": "12",
+        "stock": "10",
+        "category": "herramienta",
+        "status": "ok"
+    }
+]
