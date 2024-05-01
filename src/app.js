@@ -108,10 +108,7 @@ io.on("connection", (socket) => { //2) Va a estar esuchando si llega una conexio
         if (usuario) {
             io.emit("saleUsuario", usuario.nombre)
         }
-    })
-
-    
-   
+    })   
 })
 
 export {io}
