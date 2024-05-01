@@ -16,60 +16,43 @@ class CartManagerMongo {
 
     //                                          METODOS
 
-        //1) METODO PARA CREAR CARRITO
-        async createCart(obj) {
-        
-            return await cartModel.create(obj) 
-        }
+    //1) METODO PARA CREAR CARRITO
+    async createCart(obj) {
 
-        //2) METODO PARA TRAER TODOS LOS CARRITOS
-        async getCarts() {
-               await cartModel.find()
-        }
+        return await cartModel.create(obj)
+    }
 
-    async getIdCart() {
-        try {
-            const ultimoId = await fs.promises.readFile(this.idPath, { encoding: "utf-8" })
-            return CartManager.idCarts = parseInt(ultimoId)
-
-        } catch (error) {
-            return "Error al traer el ultimo id de la DB"
-        }
+    //2) METODO PARA TRAER TODOS LOS CARRITOS
+    async getCarts() {
+        return await cartModel.find()
     }
 
 
-
-
-
-    async getCartById(id) {               
-            const carrito = await this.carts.find(elem => elem.id == id)
-            if (carrito) {
-                return carrito //Si no hay carrito devuelve undefined
-            } else {
-                return "No existe carrito con el id proporcionado"
-            }           
+    //3) METODO PARA TRAER CARRITO POR ID
+    async getCartById(id) {
+        return await cartModel.findOne({_id:id})
     }
 
 
     async addToCart(carrito, pid) {
 
-        for(let i = 0; i < carrito.products.length; i++) {
+        for (let i = 0; i < carrito.products.length; i++) {
             for (let key in carrito.products[i])
-            if (carrito.products[i][key] == pid) {
-                console.log("Existe la propiedad!")
-                carrito.products[i].quantity += 1
-               return await fs.promises.writeFile(this.path, JSON.stringify(this.carts, null, 4))                                
-            } else {
-                console.log("No hay propiedad")                
-            }
+                if (carrito.products[i][key] == pid) {
+                    console.log("Existe la propiedad!")
+                    carrito.products[i].quantity += 1
+                    return await fs.promises.writeFile(this.path, JSON.stringify(this.carts, null, 4))
+                } else {
+                    console.log("No hay propiedad")
+                }
         }
         let nuevoProducto = {
             "producto": pid,
             "quantity": 1
         }
         carrito.products.push(nuevoProducto)
-        return await fs.promises.writeFile(this.path, JSON.stringify(this.carts, null, 4))                 
-        
+        return await fs.promises.writeFile(this.path, JSON.stringify(this.carts, null, 4))
+
     }
 
 
