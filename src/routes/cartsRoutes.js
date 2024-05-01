@@ -1,6 +1,6 @@
 import { Router } from "express"
-// import CartManager from "../dao/CartManager.js" //Me traigo mi clase que tiene todas las funciones para manejar el carrito
-import { CartManagerMongo as CartManager } from "../dao/CartManagerMongo.js"
+import CartManager from "../dao/CartManager.js" //Me traigo mi clase que tiene todas las funciones para manejar el carrito
+// import { CartManagerMongo as CartManager } from "../dao/CartManagerMongo.js"
 import { middleware3 } from "../middlewares/generales.js"
 
 const Carts = new CartManager() //Instancio mi clase
@@ -23,8 +23,13 @@ router.get("/:cid", middleware3, async (req, res) => {
 
         let id = parseInt(req.params.cid)
         let carrito = await Carts.getCartById(id)
-        res.setHeader("Content-Type", "application/json")
-        return res.status(200).json(carrito)
+        if(carrito != undefined) {
+            res.setHeader("Content-Type", "application/json")
+            return res.status(200).json(carrito)
+        } else {
+            res.setHeader("Content-Type", "application/json")
+            return res.status(400).json("El id proporcionado no existe en ningun carrito")
+        }
         
     } catch (error) {
         res.setHeader("Content-Type", "application/json")
@@ -33,32 +38,32 @@ router.get("/:cid", middleware3, async (req, res) => {
 })
 
 router.post("/", async (req, res) => {
-//     try {
-//         await Carts.getCarts() //Primero me traigo a memoria los carritos de mi DB
+    try {
+        await Carts.getCarts() //Primero me traigo a memoria los carritos de mi DB
          
 
-//         let nuevoCarrito = await Carts.createCart()
-//         res.setHeader("Content-Type", "application/json")
-//         return res.json(nuevoCarrito)   
-        
-//     } catch (error) {
-//         res.setHeader("Content-Type", "application/json")
-//         return res.status(500).json("Error inesperado en el servidor")          
-//     }
-// })
-//                   C R E A T E   C A R T   B Y   M O N G O
-    try {
-        let newCart = {
-            products: []
-        }
-        await Carts.createCart(newCart)
+        let nuevoCarrito = await Carts.createCart()
         res.setHeader("Content-Type", "application/json")
-        return res.status(200).json(newCart)
+        return res.json(nuevoCarrito)   
+        
     } catch (error) {
         res.setHeader("Content-Type", "application/json")
-        return res.status(500).json("Error inesperado en el servidor al crear carrito")         
+        return res.status(500).json("Error inesperado en el servidor")          
     }
 })
+//                   C R E A T E   C A R T   B Y   M O N G O
+//     try {
+//         let newCart = {
+//             products: []
+//         }
+//         await Carts.createCart(newCart)
+//         res.setHeader("Content-Type", "application/json")
+//         return res.status(200).json(newCart)
+//     } catch (error) {
+//         res.setHeader("Content-Type", "application/json")
+//         return res.status(500).json("Error inesperado en el servidor al crear carrito")         
+//     }
+// })
 
 
 router.post("/:cid/products/:pid", async (req, res) => {

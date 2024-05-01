@@ -8,6 +8,15 @@
             },
             {
                 "producto": "Radio",
+                "quantity": 2
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "products": [
+            {
+                "producto": "Teclado",
                 "quantity": 1
             }
         ]
