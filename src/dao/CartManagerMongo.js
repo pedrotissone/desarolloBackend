@@ -30,32 +30,37 @@ class CartManagerMongo {
 
     //3) METODO PARA TRAER CARRITO POR ID
     async getCartById(id) {
-        return await cartModel.findOne({_id:id})
+        return await cartModel.findOne({ _id: id })
     }
 
 
-    async addToCart(carrito, pid) {
+    //4) METODO PARA AGREGAR PRODUCTOS AL CARRITO
+    async addToCart(cid, productos) { //Con FS cambiar cid por carrito y productos por pid
 
-        for (let i = 0; i < carrito.products.length; i++) {
-            for (let key in carrito.products[i])
-                if (carrito.products[i][key] == pid) {
-                    console.log("Existe la propiedad!")
-                    carrito.products[i].quantity += 1
-                    return await fs.promises.writeFile(this.path, JSON.stringify(this.carts, null, 4))
-                } else {
-                    console.log("No hay propiedad")
-                }
-        }
-        let nuevoProducto = {
-            "producto": pid,
-            "quantity": 1
-        }
-        carrito.products.push(nuevoProducto)
-        return await fs.promises.writeFile(this.path, JSON.stringify(this.carts, null, 4))
+        //     for (let i = 0; i < carrito.products.length; i++) {
+        //         for (let key in carrito.products[i])
+        //             if (carrito.products[i][key] == pid) {
+        //                 console.log("Existe la propiedad!")
+        //                 carrito.products[i].quantity += 1
+        //                 return await fs.promises.writeFile(this.path, JSON.stringify(this.carts, null, 4))
+        //             } else {
+        //                 console.log("No hay propiedad")
+        //             }
+        //     }
+        //     let nuevoProducto = {
+        //         "producto": pid,
+        //         "quantity": 1
+        //     }
+        //     carrito.products.push(nuevoProducto)
+        //     return await fs.promises.writeFile(this.path, JSON.stringify(this.carts, null, 4))
 
+        // }
+
+        //                      A D D  T O   C A R T   M O N G O
+        console.log(cid)
+        console.log(productos)
+        return await cartModel.updateOne({_id:cid}, {$set: {productos: productos}})
     }
-
-
 }
 
 export { CartManagerMongo };
