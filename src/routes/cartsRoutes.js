@@ -136,7 +136,7 @@ router.post("/:cid/products/:pid", async (req, res) => {
     let carrito
     let productos
     try {
-        carrito = await Carts.getCartById(cid)        
+        carrito = await Carts.getCartById(cid)
         if (carrito) {
             productos = carrito.productos
             // console.log(carrito.id)
@@ -164,9 +164,10 @@ router.post("/:cid/products/:pid", async (req, res) => {
                 // console.log(productos)
             } else {
                 console.log("No hay propiedad")
-            }}
-    
-    if (existePropiedad == false){
+            }
+    }
+
+    if (existePropiedad == false) {
         let nuevoProducto = {
             producto: pid,
             quantity: 1
@@ -180,12 +181,39 @@ router.post("/:cid/products/:pid", async (req, res) => {
         let resultado = await Carts.addToCart(cid, productos)
         res.setHeader("Content-Type", "application/json")
         return res.status(200).json(resultado)
-        
+
     } catch (error) {
         res.setHeader("Content-Type", "application/json")
-        return res.status(500).json("Error inesperado en el servidor al realizar addToCart()")        
+        return res.status(500).json("Error inesperado en el servidor al realizar addToCart()")
     }
 
-    })
+})
+
+router.delete("/:cid", async (req, res) => {
+    //Valido que el id tenga el formato de Mongodb
+    let id = req.params.cid
+    if (!isValidObjectId(id)) {
+        res.setHeader("Content-Type", "application/json")
+        return res.status(400).json({
+            message: "Error, el id requerido no tiene un formato valido de MongoDB"
+        })
+    }
+
+    try {
+        let resultado = await Carts.deleteCart(id)
+        if (resultado.deletedCount > 0) {
+            res.setHeader("Content-Type", "application/json")
+            return res.status(200).json(`producto con id: ${id} eliminado`)
+        } else {
+            res.setHeader("Content-Type", "application/json")
+            return res.status(404).json("El id del producto a eliminar no existe")
+        }
+        
+    } catch (error) {
+            res.setHeader("Content-Type", "application/json")
+            return res.status(500).json({ error: "Error en el Servidor al querer eliminar el carrito" })    
+    }
+
+})
 
 export { router }

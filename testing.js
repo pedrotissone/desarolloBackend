@@ -26,4 +26,17 @@ let executeAsyncFunctions = async () => {
 // executeAsyncFunctions()
 
 
+//                                  P O P U L A T E!!!!
+
+//Estructura del schema cart para usar con populate
+
+// productos: {
+//     [
+//         {
+//             producto: {type: mongoose.Types.ObjectId, ref: "products"}, //Aca indico nombre del Modelo/coleccion para popuate
+//             quantity: {type: Number}
+//         }
+//     ]
+// }
+
 // export {Producto};

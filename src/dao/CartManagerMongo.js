@@ -30,7 +30,7 @@ class CartManagerMongo {
 
     //3) METODO PARA TRAER CARRITO POR ID
     async getCartById(id) {
-        return await cartModel.findOne({ _id: id })
+        return await cartModel.findOne({ _id: id }).populate("productos.producto").lean()
     }
 
 
@@ -60,6 +60,11 @@ class CartManagerMongo {
         console.log(cid)
         console.log(productos)
         return await cartModel.updateOne({_id:cid}, {$set: {productos: productos}})
+    }
+
+    //5) ELIMINAR CARRITO
+    async deleteCart(id) {
+        return await cartModel.deleteOne({_id:id})
     }
 }
 

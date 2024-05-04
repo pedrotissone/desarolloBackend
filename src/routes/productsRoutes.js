@@ -16,6 +16,7 @@ router.get("/", async (req, res) => {
 
     try {
         let resultado = await Producto.getProducts()
+        console.log(resultado)
 
         //              QUERY PARAMS
         let limit = parseInt(req.query.limit)
