@@ -1,4 +1,5 @@
 import mongoose from "mongoose"
+import paginate from "mongoose-paginate-v2"//Este modulo le agrega funcionalidades a los metodos de find etc de mongoose
 
 //Defino el nombre del Modelo y a la coleccíon
 const productsCollection = "products"
@@ -19,6 +20,8 @@ const productsSchema = new mongoose.Schema(
         timpestamps: true
     }
 )
+//Agrego un plugin para utilizar el paginate con el esquema de productos
+productsSchema.plugin(paginate)
 
 //Exporto MODELO DE DATOS (ODM), respecto a una coleccion y con su respectivo esquema (El modelo tiene todas las funciones para realizar el CRUD)
 export const productsModel = mongoose.model(

@@ -29,6 +29,14 @@ class ProductManagerMongo {
         return await productsModel.find().lean()// Le agrego el lean() solo por el desperfecto de handlebars         
     }
 
+    //2B) Devolver todos los productos con Paginación
+    //indico que va a recibir una pagina como parametro y seteo defecto su valor en 1, lo saqué porque ya defini en la ruta eso
+    async getProductsPaginate(page) { 
+        //1 argumento es un filtro, el 2 es para indicar los aspectos del paginado
+        return await productsModel.paginate({}, {limit:1, page, lean:true}) 
+    }
+
+
     //3) Metodo especial para validar con MONGO cualquier propiedad o propiedades (Yo aca voy a usarlo solo para el code)
     async getProductsByFiltro(filtro) { //filtro= {code: 123, status:"ok", etc}
         return await productsModel.findOne(filtro)
