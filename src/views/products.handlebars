@@ -1,18 +1,13 @@
 <h2>Listado de productos con PAGINACIÓN</h2>
 
 <ul>
-    {{#each productos}}
-        <li>{{title}}</li>
-        <li>{{description}}</li>
-        <li>{{price}}</li>
-        <li>{{thumbnail}}</li>
-        <li>{{code}}</li>
-        <li>{{stock}}</li>
-        <li>{{category}}</li>
-        <li>{{status}}</li>
+    {{#each payload}}
+    <li>{{payload.title}}</li>
+
     {{/each}}
+    <button>Agregar al Carrito</button>
 </ul>
-<br>
+{{!-- <br>
 <a href="./products?pagina=1">Pág. 1</a>
 
 {{#if hasPrevPage}}
@@ -23,4 +18,8 @@
 <a href="./products?pagina={{nextPage}}">Sig.</a>
 {{/if}}
 
-<a href="./products?pagina={{totalPages}}">Ult. Pág.</a>
+<a href="./products?pagina={{totalPages}}">Ult. Pág.</a> --}}
+
+<script>
+    
+</script>

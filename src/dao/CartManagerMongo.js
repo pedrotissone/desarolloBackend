@@ -57,8 +57,8 @@ class CartManagerMongo {
         // }
 
         //                      A D D  T O   C A R T   M O N G O
-        console.log(cid)
-        console.log(productos)
+        // console.log(cid)
+        // console.log(productos)
         return await cartModel.updateOne({_id:cid}, {$set: {productos: productos}})
     }
 

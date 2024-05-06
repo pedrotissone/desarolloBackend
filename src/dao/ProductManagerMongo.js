@@ -16,11 +16,11 @@ class ProductManagerMongo {
 
     //1) Agregar nuevo producto a DB (SOLO AGREGAR USANDO ESTA FUNCION)
     async addProduct(obj) {
-        try {     
-           return await productsModel.create(obj)
-    
+        try {
+            return await productsModel.create(obj)
+
         } catch (error) {
-            return "error en la funcion al agregar producto"           
+            return "error en la funcion al agregar producto"
         }
     }
 
@@ -31,21 +31,51 @@ class ProductManagerMongo {
 
     //2B) Devolver todos los productos con Paginación
     //indico que va a recibir una pagina como parametro y seteo defecto su valor en 1, lo saqué porque ya defini en la ruta eso
-    async getProductsPaginate(page) { 
-        //1 argumento es un filtro, el 2 es para indicar los aspectos del paginado
-        return await productsModel.paginate({}, {limit:1, page, lean:true}) 
+    async getProductsPaginate(filtro, opciones) {
+        //1 argumento es un filtro, el 2do es para indicar ciertos aspectos del paginado
+        console.log(opciones)
+        let resultado = await productsModel.paginate(filtro, opciones)
+        console.log(resultado)
+
+        //Agrego validaciones para el sort
+        let sortOrder = opciones.sort
+        if (sortOrder == "asc") {
+            return resultado = resultado.docs.sort(function (a, b) { return a.price - b.price })
+
+        } else if (sortOrder == "desc") {
+            return resultado = resultado.docs.sort(function (a, b) { return b.price - a.price })
+
+        } else {
+            return resultado = {
+                status: "success",
+                payload: resultado.docs,
+                totalPages: resultado.totalPages,
+                prevPage: resultado.prevPage,
+                nextPage: resultado.nextPage,
+                page: resultado.page,
+                hasPrevPage: resultado.hasPrevPage,
+                hasNextPage: resultado.hasNextPage,
+                prevLink: "En construccion",
+                nextLink: "En construccion"
+            }
+        }        
     }
 
 
-    //3) Metodo especial para validar con MONGO cualquier propiedad o propiedades (Yo aca voy a usarlo solo para el code)
+    //3) Metodo especial para validar con MONGO cualquier propiedad o propiedades (Lo enseñó el profe, tengo que repasarlo)
     async getProductsByFiltro(filtro) { //filtro= {code: 123, status:"ok", etc}
         return await productsModel.findOne(filtro)
     }
 
+    //4) METODO DE FILTRO POR PROP Y VALUE
+    async getProductsByPropValue(productos, propiedad, valor) {
+        return productos.filter(producto => producto[propiedad] == valor)
+    }
+
     //4) Metodo para borrar un producto
     async deleteProduct(id) {
-       
-        return await productsModel.deleteOne({_id:id})
+
+        return await productsModel.deleteOne({ _id: id })
     }
 
     //5) Metodo para actualizar productos
@@ -53,7 +83,7 @@ class ProductManagerMongo {
         //updateOne(), no me va a devolver el producto modificado,por eso uso otro un metodo propio de MONGOOSE
         // return await productsModel.updateOne({_id:id}, obj)
 
-        return await productsModel.findByIdAndUpdate(id, obj, {runValidators: true, returnDocument: "after"})
+        return await productsModel.findByIdAndUpdate(id, obj, { runValidators: true, returnDocument: "after" })
         //El tercer argumento es para correr validaciones de mongo y para que te muestre el documento actualizado, sino te muestra el original, así viene por defecto
     }
 

@@ -5,6 +5,7 @@ import { upload } from "../../utils.js"
 import { io } from "../app.js"
 import { isValidObjectId } from "mongoose"
 import { productsModel } from "../dao/models/productsModel.js"
+import { paginateSubDocs } from "mongoose-paginate-v2"
 
 
 const Producto = new ProductManager()
@@ -15,19 +16,36 @@ const router = Router()
 router.get("/", async (req, res) => {
 
     try {
-        let resultado = await Producto.getProducts()
-        console.log(resultado)
-
         //              QUERY PARAMS
-        let limit = parseInt(req.query.limit)
-        if (limit) {
-            let productosLimitados = resultado.slice(0, limit)
-            res.setHeader("Content-Type", "application/json")
-            return res.json(productosLimitados)
+        let page = parseInt(req.query.page) || 1
+        let limit = parseInt(req.query.limit) || 10
+        let propiedad = req.query.propiedad
+        let valor = req.query.valor
+        let sort = req.query.sort || undefined
+        let stock = parseInt(req.query.stock) || undefined
+
+        let filtro = {} 
+
+        if (propiedad && valor) {
+            filtro[propiedad] = valor
         }
-        //     //            FIN QUERY PARAMS
-        res.setHeader("Content-Type", "application/json")
-        res.json(resultado)
+         if (stock) {
+            filtro.stock = {$gte: stock}
+         }
+
+
+        let opciones = {
+            page: page,
+            limit: limit,
+            lean: true,
+            sort: sort
+        }
+
+
+        const resultado = await Producto.getProductsPaginate(filtro, opciones)
+            res.setHeader("Content-Type", "application/json")
+            res.json(resultado)
+    
 
     } catch (error) {
         res.setHeader("Content-Type", "application/json")
@@ -37,49 +55,49 @@ router.get("/", async (req, res) => {
 
 
 router.get("/:pid", async (req, res) => {
-//     try {
-//         await Producto.getProducts()
+    //     try {
+    //         await Producto.getProducts()
 
-//         //          P A R A M S
-//         let id = parseInt(req.params.pid)
-//         let resultado = await Producto.getProductById(id)
-//         res.setHeader("Content-Type", "application/json")
-//         return res.json(resultado)
+    //         //          P A R A M S
+    //         let id = parseInt(req.params.pid)
+    //         let resultado = await Producto.getProductById(id)
+    //         res.setHeader("Content-Type", "application/json")
+    //         return res.json(resultado)
 
-//     } catch (error) {
-//         res.setHeader("Content-Type", "application/json")
-//         return res.status(500).json({
-//             message: "Error 500 - Error inesperado en el Servidor"
-//         })
-//     }
-// })
+    //     } catch (error) {
+    //         res.setHeader("Content-Type", "application/json")
+    //         return res.status(500).json({
+    //             message: "Error 500 - Error inesperado en el Servidor"
+    //         })
+    //     }
+    // })
 
-//                      G E T  B Y  ID  M O N G O
-//Valido que el id tenga el formato de Mongodb
-let  id  = req.params.pid
-if (!isValidObjectId(id)) {
-    res.setHeader("Content-Type", "application/json")
+    //                      G E T  B Y  ID  M O N G O
+    //Valido que el id tenga el formato de Mongodb
+    let id = req.params.pid
+    if (!isValidObjectId(id)) {
+        res.setHeader("Content-Type", "application/json")
         return res.status(400).json({
             message: "Error, el id requerido no tiene un formato valido de MongoDB"
         })
-}
-
-try {
-    let resultado = await Producto.getProductsByFiltro({_id:id})
-    if(resultado) {
-        res.setHeader("Content-Type", "application/json")
-        return res.json(resultado)
-    } else {
-        res.setHeader("Content-Type", "application/json")
-        return res.json("No existe producto con el id requerido")
     }
 
-} catch (error) {
-    res.setHeader("Content-Type", "application/json")
-    return res.status(400).json({
-        message: "Error al realizar la función de filtro por _id"
-    })    
-}
+    try {
+        let resultado = await Producto.getProductsByFiltro({ _id: id })
+        if (resultado) {
+            res.setHeader("Content-Type", "application/json")
+            return res.json(resultado)
+        } else {
+            res.setHeader("Content-Type", "application/json")
+            return res.json("No existe producto con el id requerido")
+        }
+
+    } catch (error) {
+        res.setHeader("Content-Type", "application/json")
+        return res.status(400).json({
+            message: "Error al realizar la función de filtro por _id"
+        })
+    }
 })
 
 
@@ -132,7 +150,7 @@ router.post("/", upload.single("thumbnail"), async (req, res) => {
     //                    R U T A  P O S T  V E R S I O N  M O N G O
     //Validación de que se cargue alguna imagen
     let thumbnail
-    if(req.file) {
+    if (req.file) {
         thumbnail = req.file.filename
     } else {
         return res.status(400).json({
@@ -184,115 +202,115 @@ router.post("/", upload.single("thumbnail"), async (req, res) => {
 
 router.put("/:pid", async (req, res) => {
 
-//     try {
+    //     try {
 
-//         await Producto.getProducts()
+    //         await Producto.getProducts()
 
-//         let id = parseInt(req.params.pid) //El id viene por params
-//         let { title, description, price, thumbnail, code, stock, category, status } = req.body //En el body viene el objeto
+    //         let id = parseInt(req.params.pid) //El id viene por params
+    //         let { title, description, price, thumbnail, code, stock, category, status } = req.body //En el body viene el objeto
 
-//         //                                          VALIDACIONES
-//         if (!title || !description || !price || !thumbnail || !code || !stock || !category || !status) {
-//             res.setHeader("Content-Type", "application/json")
-//             return res.status(400).json({
-//                 message: "Error 400 - No se enviaron todos los datos necesarios para editar un producto"
-//             })
-//         }
+    //         //                                          VALIDACIONES
+    //         if (!title || !description || !price || !thumbnail || !code || !stock || !category || !status) {
+    //             res.setHeader("Content-Type", "application/json")
+    //             return res.status(400).json({
+    //                 message: "Error 400 - No se enviaron todos los datos necesarios para editar un producto"
+    //             })
+    //         }
 
-//         let codigoRepetido = Producto.products.some(elem => elem.code == code)
-//         if (codigoRepetido) {
-//             res.setHeader("Content-Type", "application/json")
-//             return res.status(400).json({
-//                 message: "Error 400 - El código del producto que se quiere agregar ya está repetido en otro producto"
-//             })
-//         }
+    //         let codigoRepetido = Producto.products.some(elem => elem.code == code)
+    //         if (codigoRepetido) {
+    //             res.setHeader("Content-Type", "application/json")
+    //             return res.status(400).json({
+    //                 message: "Error 400 - El código del producto que se quiere agregar ya está repetido en otro producto"
+    //             })
+    //         }
 
-//         let nuevoProducto = await Producto.updateProduct(id, { title, description, price, thumbnail, code, stock, category, status })
-//         res.setHeader("Content-Type", "application/json")
-//         return res.status(200).json(nuevoProducto)
+    //         let nuevoProducto = await Producto.updateProduct(id, { title, description, price, thumbnail, code, stock, category, status })
+    //         res.setHeader("Content-Type", "application/json")
+    //         return res.status(200).json(nuevoProducto)
 
-//     } catch (error) {
-//         res.setHeader("Content-Type", "application/json")
-//         return res.status(500).json({ error: "Error en el Servidor al devolver el producto a editar" })
-//     }
-// })
+    //     } catch (error) {
+    //         res.setHeader("Content-Type", "application/json")
+    //         return res.status(500).json({ error: "Error en el Servidor al devolver el producto a editar" })
+    //     }
+    // })
 
-//                          M E T O D O   P U T   C O N   M O N G O!
-//Valido que el id tenga el formato de Mongodb
-let  id  = req.params.pid
-if (!isValidObjectId(id)) {
-    res.setHeader("Content-Type", "application/json")
+    //                          M E T O D O   P U T   C O N   M O N G O!
+    //Valido que el id tenga el formato de Mongodb
+    let id = req.params.pid
+    if (!isValidObjectId(id)) {
+        res.setHeader("Content-Type", "application/json")
         return res.status(400).json({
             message: "Error, el id requerido no tiene un formato valido de MongoDB"
         })
-}
-
-let aModificar = req.body
-
-if (aModificar.code) {
-    let existe
-    try {
-        existe = await Producto.getProductsByFiltro({code:aModificar.code})
-        if (existe) {
-            res.setHeader("Content-Type", "application/json")
-            return res.status(400).json("Ya existe otro producto con el mismo código")
-        }       
-    } catch (error) {
-        res.setHeader("Content-Type", "application/json")
-        return res.status(500).json({ error: "Error en el Servidor al querer validar otro producto con el mismo codigo" })        
     }
-}
 
-try {
-    let productoModificado = await Producto.updateProduct(id, aModificar)
+    let aModificar = req.body
+
+    if (aModificar.code) {
+        let existe
+        try {
+            existe = await Producto.getProductsByFiltro({ code: aModificar.code })
+            if (existe) {
+                res.setHeader("Content-Type", "application/json")
+                return res.status(400).json("Ya existe otro producto con el mismo código")
+            }
+        } catch (error) {
+            res.setHeader("Content-Type", "application/json")
+            return res.status(500).json({ error: "Error en el Servidor al querer validar otro producto con el mismo codigo" })
+        }
+    }
+
+    try {
+        let productoModificado = await Producto.updateProduct(id, aModificar)
         res.setHeader("Content-Type", "application/json")
         return res.status(200).json(productoModificado)
-    
-} catch (error) {
-    res.setHeader("Content-Type", "application/json")
-    return res.status(500).json({ error: "Error en el Servidor al querer actualizar el producto" })    
-}
+
+    } catch (error) {
+        res.setHeader("Content-Type", "application/json")
+        return res.status(500).json({ error: "Error en el Servidor al querer actualizar el producto" })
+    }
 })
 
 
 router.delete("/:pid", async (req, res) => {
-//     try {
-//         await Producto.getProducts()
-//         let id = parseInt(req.params.pid)
-//         let producto = await Producto.deleteProduct(id)
-//         res.setHeader("Content-Type", "application/json")
-//         res.status(200).json(producto)
-//     } catch (error) {
-//         res.setHeader("Content-Type", "application/json")
-//         return res.status(500).json({ error: "Error en el Servidor al querer eliminar el producto" })
-//     }
-// })
+    //     try {
+    //         await Producto.getProducts()
+    //         let id = parseInt(req.params.pid)
+    //         let producto = await Producto.deleteProduct(id)
+    //         res.setHeader("Content-Type", "application/json")
+    //         res.status(200).json(producto)
+    //     } catch (error) {
+    //         res.setHeader("Content-Type", "application/json")
+    //         return res.status(500).json({ error: "Error en el Servidor al querer eliminar el producto" })
+    //     }
+    // })
 
-//                      D E L E T E   B Y   M O N G O
+    //                      D E L E T E   B Y   M O N G O
 
-//Valido que el id tenga el formato de Mongodb
-let  id  = req.params.pid
-if (!isValidObjectId(id)) {
-    res.setHeader("Content-Type", "application/json")
+    //Valido que el id tenga el formato de Mongodb
+    let id = req.params.pid
+    if (!isValidObjectId(id)) {
+        res.setHeader("Content-Type", "application/json")
         return res.status(400).json({
             message: "Error, el id requerido no tiene un formato valido de MongoDB"
         })
-}
-
-try {
-    let resultado = await Producto.deleteProduct(id)
-    if (resultado.deletedCount > 0) {
-        res.setHeader("Content-Type", "application/json")
-        return res.status(200).json(`producto con id: ${id} eliminado`)
-    } else {
-        res.setHeader("Content-Type", "application/json")
-        return res.status(404).json("El id del producto a eliminar no existe")
     }
-    
-} catch (error) {
+
+    try {
+        let resultado = await Producto.deleteProduct(id)
+        if (resultado.deletedCount > 0) {
+            res.setHeader("Content-Type", "application/json")
+            return res.status(200).json(`producto con id: ${id} eliminado`)
+        } else {
+            res.setHeader("Content-Type", "application/json")
+            return res.status(404).json("El id del producto a eliminar no existe")
+        }
+
+    } catch (error) {
         res.setHeader("Content-Type", "application/json")
-        return res.status(500).json({ error: "Error en el Servidor al querer eliminar el producto" })    
-}
+        return res.status(500).json({ error: "Error en el Servidor al querer eliminar el producto" })
+    }
 
 })
 
