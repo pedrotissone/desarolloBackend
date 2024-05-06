@@ -42,7 +42,7 @@ router.get("/products", async (req, res) => {
     try {
         //              QUERY PARAMS
         let page = parseInt(req.query.page) || 1
-        let limit = parseInt(req.query.limit) || 10
+        let limit = parseInt(req.query.limit) || 3
         let propiedad = req.query.propiedad
         let valor = req.query.valor
         let sort = req.query.sort || undefined

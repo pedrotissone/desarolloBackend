@@ -2,24 +2,30 @@
 
 <ul>
     {{#each payload}}
-    <li>{{payload.title}}</li>
-
-    {{/each}}
+    <br>
+    <li>{{this.title}}</li>
+    <li>{{this.description}}</li>
+    <li>{{this.price}}</li>
+    <li>{{this.thumbnail}}</li>
+    <li>{{this.code}}</li>
+    <li>{{this.stock}}</li>
+    <li>{{this.category}}</li>
+    <li>{{this.status}}</li>
     <button>Agregar al Carrito</button>
+    <br>
+    
+    {{/each}}
 </ul>
-{{!-- <br>
-<a href="./products?pagina=1">Pág. 1</a>
+
+<br>
+<a href="./products?page=1">Pág. 1</a>
 
 {{#if hasPrevPage}}
-<a href="./products?pagina={{prevPage}}">Ant.</a>
+<a href="./products?page={{prevPage}}">Ant.</a>
 {{/if}}
 
 {{#if hasNextPage}}
-<a href="./products?pagina={{nextPage}}">Sig.</a>
+<a href="./products?page={{nextPage}}">Sig.</a>
 {{/if}}
 
-<a href="./products?pagina={{totalPages}}">Ult. Pág.</a> --}}
-
-<script>
-    
-</script>
+<a href="./products?page={{totalPages}}">Ult. Pág.</a>

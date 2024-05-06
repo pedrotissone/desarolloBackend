@@ -41,7 +41,7 @@ class ProductManagerMongo {
         let sortOrder = opciones.sort
         if (sortOrder == "asc") {
             return resultado = resultado.docs.sort(function (a, b) { return a.price - b.price })
-
+            
         } else if (sortOrder == "desc") {
             return resultado = resultado.docs.sort(function (a, b) { return b.price - a.price })
 
@@ -58,6 +58,7 @@ class ProductManagerMongo {
                 prevLink: "En construccion",
                 nextLink: "En construccion"
             }
+           
         }        
     }
 
