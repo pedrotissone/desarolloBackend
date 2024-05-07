@@ -280,6 +280,14 @@ router.put("/:cid/products/:pid", async (req, res) => { //SOLO ACTUALIZA CANTIDA
 
     let cantidadASumar = req.body
     // console.log(cantidadASumar.cantidad)
+    // console.log(Number.isInteger(cantidadASumar.cantidad))
+    if (Number.isInteger(cantidadASumar.cantidad)) {
+        console.log("perfecto, la cantidad es numerica y entera")
+    } else {
+        res.setHeader("Content-Type", "application/json")
+        return res.status(400).json("La cantidad que desea agregarle al producto no es numerica o no es un entero")
+
+    }
 
     // //Valido que exista el producto a la que voy a sumarla la cantidad
     let productoABuscar = productos.find( elem => elem.producto._id.toString() == pid)
@@ -292,9 +300,9 @@ router.put("/:cid/products/:pid", async (req, res) => { //SOLO ACTUALIZA CANTIDA
     } else {
         console.log("Existe el producto, seguimos..")
     }
-    console.log(productoABuscar.quantity)
+    // console.log(productoABuscar.quantity)
     let nuevaCantidad = cantidadASumar.cantidad + productoABuscar.quantity
-    console.log(nuevaCantidad)
+    // console.log(nuevaCantidad)
 
 
 
@@ -306,8 +314,7 @@ router.put("/:cid/products/:pid", async (req, res) => { //SOLO ACTUALIZA CANTIDA
     } catch (error) {
         res.setHeader("Content-Type", "application/json")
         return res.status(500).json("Error inesperado en el servidor al realizar addToCart()")
-    }   
-
+    }
 })
 
 router.delete("/:cid", async (req, res) => {
