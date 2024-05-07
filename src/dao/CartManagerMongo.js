@@ -62,6 +62,12 @@ class CartManagerMongo {
         return await cartModel.updateOne({_id:cid}, {$set: {productos: productos}})
     }
 
+    //METODO PARA ACTUALIZAR SOLO LA CANTIDAD DE UN PRODUCTO
+    async updateQuantity(cid, pid, nuevaCantidad) {
+        return await cartModel.updateOne({_id:cid, "productos.producto": pid}, {$set:{"productos.$.quantity": nuevaCantidad}})
+
+    }
+
     //5) ELIMINAR CARRITO
     async deleteCart(id) {
         return await cartModel.deleteOne({_id:id})

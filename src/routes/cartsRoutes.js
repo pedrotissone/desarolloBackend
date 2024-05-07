@@ -3,6 +3,7 @@ import { Router } from "express"
 import { CartManagerMongo as CartManager } from "../dao/CartManagerMongo.js"
 import { isValidObjectId } from "mongoose"
 import { middleware3 } from "../middlewares/generales.js"
+import { cartModel } from "../dao/models/cartModel.js"
 
 const Carts = new CartManager() //Instancio mi clase
 
@@ -95,7 +96,7 @@ router.post("/", async (req, res) => {
 })
 
 
-router.post("/:cid/products/:pid", async (req, res) => {
+router.post("/:cid/products/:pid", async (req, res) => { //MODIFICAR CART REEMPLAZANDO TODO EL DOCUMENTO
     // try {
     //     await Carts.getCarts()
 
@@ -153,28 +154,29 @@ router.post("/:cid/products/:pid", async (req, res) => {
     }
 
     //2) Reviso si existe o no la propiedad a actualizar
-    let existePropiedad = false
+    // let existePropiedad = false
+    // for (let i = 0; i < productos.length; i++) {
+    //     for (let key in productos[i])
+    //         if (productos[i][key] == pid) {
+    //             console.log("Existe la propiedad!")
+    //             existePropiedad = true
+    //             productos[i].quantity += 1
+    //             // console.log(productos)
+    //         } else {
+    //             console.log("No hay propiedad")
+    //         }
+    // }
+    // if (existePropiedad == false) {
+    //     let nuevoProducto = {
+    //         producto: pid,
+    //         quantity: 1
+    //     }
+    //     productos.push(nuevoProducto)
+    //     // console.log(productos)
+    // }
 
-    for (let i = 0; i < productos.length; i++) {
-        for (let key in productos[i])
-            if (productos[i][key] == pid) {
-                console.log("Existe la propiedad!")
-                existePropiedad = true
-                productos[i].quantity += 1
-                // console.log(productos)
-            } else {
-                console.log("No hay propiedad")
-            }
-    }
 
-    if (existePropiedad == false) {
-        let nuevoProducto = {
-            producto: pid,
-            quantity: 1
-        }
-        productos.push(nuevoProducto)
-        // console.log(productos)
-    }
+
 
     try {
 
@@ -186,6 +188,125 @@ router.post("/:cid/products/:pid", async (req, res) => {
         res.setHeader("Content-Type", "application/json")
         return res.status(500).json("Error inesperado en el servidor al realizar addToCart()")
     }
+
+})
+
+
+
+router.put("/:cid", async (req, res) => {//SOLO ACTUALIZA EL CARRITO PUSHEANDO NUEVO ARRAY
+    let cid = req.params.cid
+
+    if (!isValidObjectId(cid)) {
+        res.setHeader("Content-Type", "application/json")
+        return res.status(400).json({
+            message: "Error, el id requerido no tiene un formato valido de MongoDB"
+        })
+    }
+    //1) Busco el carrito a actualizar
+    let carrito
+    let productos
+
+    try {
+        carrito = await Carts.getCartById(cid)
+        if (carrito) {
+            productos = carrito.productos
+            
+        } else {
+            res.setHeader("Content-Type", "application/json")
+            return res.status(400).json("El id proporcionado no existe en ningun carrito")
+        }
+
+    } catch (error) {
+        res.setHeader("Content-Type", "application/json")
+        return res.status(500).json("Error inesperado en el servidor al buscar carrito por id")
+    } 
+
+    let nuevoProducto = req.body
+    // console.log(productos[0].producto._id.toString() == nuevoProducto.producto )
+    // console.log(nuevoProducto.producto)
+
+    //Valido que el ID del Nuevo producto no se encuentre repetido en mi carrito
+    let busqueda = productos.find( elem => elem.producto._id.toString() == nuevoProducto.producto)
+    // console.log(busqueda)
+
+    if(busqueda == undefined) {
+        productos.push(nuevoProducto)
+        console.log("Se agrego producto")
+    } else {
+        res.setHeader("Content-Type", "application/json")
+        return res.status(400).json("No se puede agregar el producto porque ya esta agregado al carrito")
+    }
+
+    try {
+        let resultado = await Carts.addToCart(cid, productos)
+        res.setHeader("Content-Type", "application/json")
+        return res.status(200).json(resultado)
+
+    } catch (error) {
+        res.setHeader("Content-Type", "application/json")
+        return res.status(500).json("Error inesperado en el servidor al realizar addToCart()")
+    }
+})
+
+router.put("/:cid/products/:pid", async (req, res) => { //SOLO ACTUALIZA CANTIDAD DEL PRODUCTO
+    let cid = req.params.cid
+    let pid = req.params.pid
+
+    if (!isValidObjectId(cid)) {
+        res.setHeader("Content-Type", "application/json")
+        return res.status(400).json({
+            message: "Error, el id requerido no tiene un formato valido de MongoDB"
+        })
+    }
+    //1) Busco el carrito a actualizar
+    let carrito
+    let productos
+
+    try {
+        carrito = await Carts.getCartById(cid)
+        if (carrito) {
+            productos = carrito.productos          
+            // console.log(productos)
+            
+        } else {
+            res.setHeader("Content-Type", "application/json")
+            return res.status(400).json("El id proporcionado no existe en ningun carrito")
+        }
+
+    } catch (error) {
+        res.setHeader("Content-Type", "application/json")
+        return res.status(500).json("Error inesperado en el servidor al buscar carrito por id")
+    } 
+
+    let cantidadASumar = req.body
+    // console.log(cantidadASumar.cantidad)
+
+    // //Valido que exista el producto a la que voy a sumarla la cantidad
+    let productoABuscar = productos.find( elem => elem.producto._id.toString() == pid)
+    // console.log(productoABuscar)
+
+    if(productoABuscar == undefined) {
+        res.setHeader("Content-Type", "application/json")
+        return res.status(400).json("No se puede actualizar la cantidad porque el producto no existe en el carrito")
+        
+    } else {
+        console.log("Existe el producto, seguimos..")
+    }
+    console.log(productoABuscar.quantity)
+    let nuevaCantidad = cantidadASumar.cantidad + productoABuscar.quantity
+    console.log(nuevaCantidad)
+
+
+
+    try {
+        let resultado = await Carts.updateQuantity(cid, pid, nuevaCantidad)
+        res.setHeader("Content-Type", "application/json")
+        return res.status(200).json(resultado)
+
+    } catch (error) {
+        res.setHeader("Content-Type", "application/json")
+        return res.status(500).json("Error inesperado en el servidor al realizar addToCart()")
+    }   
 
 })
 
