@@ -72,6 +72,10 @@ class CartManagerMongo {
     async deleteCart(id) {
         return await cartModel.deleteOne({_id:id})
     }
+
+    async deleteProductInCart(cid, pid) {
+        return await cartModel.updateOne({_id:cid}, {$pull: {productos: {producto: pid}}})
+    }
 }
 
 export { CartManagerMongo };
