@@ -1,4 +1,5 @@
 <h2>Listado de productos con PAGINACIÓN</h2>
+<input type="text" value="{{carritoId}}" id="carrito">
 
 <ul>
     {{#each payload}}
@@ -11,7 +12,7 @@
     <li>{{this.stock}}</li>
     <li>{{this.category}}</li>
     <li>{{this.status}}</li>
-    <button>Agregar al Carrito</button>
+    <button onclick="agregar('{{this._id}}')">Agregar al Carrito</button>
     <br>
     
     {{/each}}
@@ -29,3 +30,6 @@
 {{/if}}
 
 <a href="./products?page={{totalPages}}">Ult. Pág.</a>
+
+
+<script src="/assets/js/products.js"></script>

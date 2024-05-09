@@ -1,11 +1,13 @@
 import { Router } from "express"
 // import CartManager from "../dao/CartManager.js" //Me traigo mi clase que tiene todas las funciones para manejar el carrito
 import { CartManagerMongo as CartManager } from "../dao/CartManagerMongo.js"
+import { ProductManagerMongo as ProductManager } from "../dao/ProductManagerMongo.js"
 import { isValidObjectId } from "mongoose"
 import { middleware3 } from "../middlewares/generales.js"
-import { cartModel } from "../dao/models/cartModel.js"
+
 
 const Carts = new CartManager() //Instancio mi clase
+const Producto = new ProductManager()
 
 const router = Router()
 
@@ -96,102 +98,6 @@ router.post("/", async (req, res) => {//    CREAR NUEVO CARRITO
 })
 
 
-router.post("/:cid/products/:pid", async (req, res) => { //     YA NO SIRVE!!!
-    // try {
-    //     await Carts.getCarts()
-
-    //     let cid = req.params.cid
-    //     let pid = req.params.pid
-
-    //     let carrito = await Carts.getCartById(cid)
-    //     if(carrito == undefined) {
-    //         res.setHeader("Content-Type", "application/json")
-    //         return res.json("No existe el carrito en el que desea agregar productos") 
-    //     }
-
-    //     await Carts.addToCart(carrito, pid)         
-
-    //     let dbActualizada = await Carts.getCarts()
-    //     res.setHeader("Content-Type", "application/json")
-    //     return res.json(dbActualizada) 
-
-
-    // } catch (error) {
-    //     res.setHeader("Content-Type", "application/json")
-    //     return res.status(500).json("Error inesperado en el servidor")        
-    // }
-
-    // })
-    //              P O S T   P R O D U C T O S   B Y   M O N G O
-
-    let cid = req.params.cid
-    let pid = req.params.pid
-
-    if (!isValidObjectId(cid)) {
-        res.setHeader("Content-Type", "application/json")
-        return res.status(400).json({
-            message: "Error, el id requerido no tiene un formato valido de MongoDB"
-        })
-    }
-    //1) Busco el carrito a actualizar
-    let carrito
-    let productos
-    try {
-        carrito = await Carts.getCartById(cid)
-        if (carrito) {
-            productos = carrito.productos
-            // console.log(carrito.id)
-            // console.log(productos)
-        } else {
-            res.setHeader("Content-Type", "application/json")
-            return res.status(400).json("El id proporcionado no existe en ningun carrito")
-        }
-
-    } catch (error) {
-        res.setHeader("Content-Type", "application/json")
-        return res.status(500).json("Error inesperado en el servidor al buscar carrito por id")
-
-    }
-
-    //2) Reviso si existe o no la propiedad a actualizar
-    // let existePropiedad = false
-    // for (let i = 0; i < productos.length; i++) {
-    //     for (let key in productos[i])
-    //         if (productos[i][key] == pid) {
-    //             console.log("Existe la propiedad!")
-    //             existePropiedad = true
-    //             productos[i].quantity += 1
-    //             // console.log(productos)
-    //         } else {
-    //             console.log("No hay propiedad")
-    //         }
-    // }
-    // if (existePropiedad == false) {
-    //     let nuevoProducto = {
-    //         producto: pid,
-    //         quantity: 1
-    //     }
-    //     productos.push(nuevoProducto)
-    //     // console.log(productos)
-    // }
-
-
-
-
-    try {
-
-        let resultado = await Carts.addToCart(cid, productos)
-        res.setHeader("Content-Type", "application/json")
-        return res.status(200).json(resultado)
-
-    } catch (error) {
-        res.setHeader("Content-Type", "application/json")
-        return res.status(500).json("Error inesperado en el servidor al realizar addToCart()")
-    }
-
-})
-
-
 
 router.put("/:cid", async (req, res) => {//     AGREGAR PRODUCTO AL CARRITO
     let cid = req.params.cid
@@ -210,6 +116,7 @@ router.put("/:cid", async (req, res) => {//     AGREGAR PRODUCTO AL CARRITO
         carrito = await Carts.getCartById(cid)
         if (carrito) {
             productos = carrito.productos
+            console.log(carrito)
 
         } else {
             res.setHeader("Content-Type", "application/json")
@@ -223,9 +130,9 @@ router.put("/:cid", async (req, res) => {//     AGREGAR PRODUCTO AL CARRITO
 
     let nuevoProducto = req.body
     // console.log(productos[0].producto._id.toString() == nuevoProducto.producto )
-    // console.log(nuevoProducto.producto)
+    console.log(nuevoProducto.producto)
 
-    //Valido que el ID del Nuevo producto no se encuentre repetido en mi carrito
+    // Valido que el ID del Nuevo producto no se encuentre repetido en mi carrito
     let busqueda = productos.find(elem => elem.producto._id.toString() == nuevoProducto.producto)
     // console.log(busqueda)
 
@@ -410,8 +317,6 @@ router.delete("/:cid", async (req, res) => {//  ELIMINAR TODOS LOS PRODUCTOS DEL
         res.setHeader("Content-Type", "application/json")
         return res.status(500).json("Error inesperado en el servidor al realizar addToCart()")
     }
-
-
 })
 
 
@@ -442,6 +347,112 @@ router.delete("/:cid", async (req, res) => {//  ELIMINAR CARRITO
     } catch (error) {
         res.setHeader("Content-Type", "application/json")
         return res.status(500).json({ error: "Error en el Servidor al querer eliminar el carrito" })
+    }
+})
+
+
+
+router.post("/:cid/products/:pid", async (req, res) => { //     AGREGAR PRODUCTO AL CARRITO HANDLEBAR
+    // try {
+    //     await Carts.getCarts()
+
+    //     let cid = req.params.cid
+    //     let pid = req.params.pid
+
+    //     let carrito = await Carts.getCartById(cid)
+    //     if(carrito == undefined) {
+    //         res.setHeader("Content-Type", "application/json")
+    //         return res.json("No existe el carrito en el que desea agregar productos") 
+    //     }
+
+    //     await Carts.addToCart(carrito, pid)         
+
+    //     let dbActualizada = await Carts.getCarts()
+    //     res.setHeader("Content-Type", "application/json")
+    //     return res.json(dbActualizada) 
+
+
+    // } catch (error) {
+    //     res.setHeader("Content-Type", "application/json")
+    //     return res.status(500).json("Error inesperado en el servidor")        
+    // }
+
+    // })
+    //              P O S T   P R O D U C T O S   B Y   M O N G O
+
+
+    let cid = req.params.cid
+    let pid = req.params.pid
+    console.log(`El pid es: ${pid}`)
+
+    if (!isValidObjectId(cid)) {
+        res.setHeader("Content-Type", "application/json")
+        return res.status(400).json({
+            message: "Error, el id requerido no tiene un formato valido de MongoDB"
+        })
+    }
+    //1) Busco el carrito a actualizar
+    let carrito
+    let nuevoProducto //Producto a agregar
+    let productos//Array de productos del carrito
+    try {
+        carrito = await Carts.getCartById(cid)
+        if (carrito) {
+            productos = carrito.productos
+            console.log("El carrito de abajo existe seguimos...")
+            // console.log(JSON.stringify(carrito))
+            console.log("lo de abajo es el carrito")
+            console.log(carrito)
+            // console.log(productos)
+        } else {
+            res.setHeader("Content-Type", "application/json")
+            return res.status(400).json("El id proporcionado no existe en ningun carrito")
+        }
+        //Valido que el producto exista
+        nuevoProducto = await Producto.getProductsByFiltro({ _id: pid })
+        if (nuevoProducto) {
+            console.log("El producto de abajo existe seguimos...")
+            console.log(nuevoProducto)
+        } else {
+            res.setHeader("Content-Type", "application/json")
+            return res.status(400).json("El producto que se desea agregar no existe")
+        }
+
+    } catch (error) {
+        res.setHeader("Content-Type", "application/json")
+        return res.status(500).json("Error inesperado en el servidor al buscar carrito por id")
+    }
+
+    //PASO 1
+    let elProductoEsNuevo = false
+    //Valido que el ID del Nuevo producto no se encuentre repetido en mi carrito
+    let busqueda = productos.find(elem => elem.producto._id.toString() == nuevoProducto._id)
+    console.log("el resultado de la busqueda es lo de abajo")
+    // console.log(busqueda)
+
+    if (busqueda == undefined) {
+        console.log("El producto no esta agregado al carrito, lo pusheo")
+        productos.push(
+            {
+                producto: nuevoProducto,
+                quantity: 1
+            }
+        )
+        elProductoEsNuevo = true
+    } else {
+        busqueda.quantity += 1
+    }
+
+    // console.log(carrito)
+
+    try {
+        let resultado = await Carts.addToCart(cid, productos)
+        res.setHeader("Content-Type", "application/json")
+        return res.status(200).json(resultado)
+
+    } catch (error) {
+        res.setHeader("Content-Type", "application/json")
+        return res.status(500).json("Error inesperado en el servidor al realizar addToCart()")
     }
 })
 

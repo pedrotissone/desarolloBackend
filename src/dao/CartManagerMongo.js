@@ -20,6 +20,10 @@ class CartManagerMongo {
     async createCart(obj) {
 
         return await cartModel.create(obj)
+
+        //Agregué el toJSON() para poder mostrarlo en una vista
+        // let carrito = await cartModel.create({productos: []})
+        // return carrito.toJSON()
     }
 
     //2) METODO PARA TRAER TODOS LOS CARRITOS
@@ -30,6 +34,7 @@ class CartManagerMongo {
 
     //3) METODO PARA TRAER CARRITO POR ID
     async getCartById(id) {
+        //Le agrego el metodo populate() para poblar ese documento, sino solo me traería el id de los productos agregados
         return await cartModel.findOne({ _id: id }).populate("productos.producto").lean()
     }
 
@@ -66,6 +71,10 @@ class CartManagerMongo {
     async updateQuantity(cid, pid, nuevaCantidad) {
         return await cartModel.updateOne({_id:cid, "productos.producto": pid}, {$set:{"productos.$.quantity": nuevaCantidad}})
 
+    }
+    //ACA SIEMPRE SUMO LA CANTIDAD + 1, NO HAY OTRA POSIBILIDAD
+    async updateQuantityHandlebars(cid, pid) {
+        return await cartModel.updateOne({_id:cid, "productos.producto": pid},{$inc: {"productos.$.quantity": 1}})
     }
 
     //5) ELIMINAR CARRITO
