@@ -95,10 +95,15 @@ router.get("/chat", (req, res) => {
     }
 })
 
-router.get("/carts/:cid", (req, res) => {
+router.get("/carts/:cid", async (req, res) => {
+    let id = req.params.cid
+    let productos
     try {
+        let carrito = await Carts.getCartById(id)
+        console.log(carrito)
+        productos = carrito.productos
         res.setHeader("Content-Type", "text/html")
-        res.status(200).render("cart")
+        res.status(200).render("cart",{productos})
     } catch (error) {
         res.setHeader("Content-Type", "application/json")
         res.status(500).res.json({ Error: "Error 500 - Error inesperado en el servidor" })        
