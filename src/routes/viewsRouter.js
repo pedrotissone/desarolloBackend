@@ -2,6 +2,7 @@ import { Router } from "express"
 // import ProductManager from "../dao/ProductManager.js"
 import { ProductManagerMongo as ProductManager } from "../dao/ProductManagerMongo.js"
 import { CartManagerMongo as CartManager } from "../dao/CartManagerMongo.js"
+import { auth } from "../middlewares/auth.js"
 
 
 
@@ -11,18 +12,28 @@ const router = Router()
 
 
 router.get("/", async (req, res) => {
+    //Prueba de creación de cookies desde el servidor
+    let datos = {nombre: "pepeJefe", rol: "admin"}
+    let datos2 = {nombre: "juanEmpleado", rol: "usuario"}
+    //Le doy una medida de seguraridad a la cookie firmandola, para que no me la puedan modificar
+    res.cookie("user", datos, {signed: true})
+     //El tercer argumento es para indicar vencimiento, si lo dejo así duran solo durante la session
+    res.cookie("user2", datos2, {})
+
+    let user = req.session.usuario
+    console.log(user)
     try {
         let productos = await Producto.getProducts()
         res.setHeader("Content-Type", "text/html")
-        res.status(200).render("home", {productos}) //Para la vista home, paso la variable products
+        res.status(200).render("home", {productos, user}) //Para la vista home, paso la variable products
     } catch (error) {
         res.setHeader("Content-Type", "application/json")
-        res.status(500).res.json({ Error: "Error 500 - Error inesperado en el servidor" })        
+        res.status(500).json({ Error: "Error 500 - Error inesperado en el servidor" })        
     }
 })
 
 //METODO GET con paginación
-router.get("/products", async (req, res) => {
+router.get("/products", async (req, res) => {    
 
     //Por ahora uso carrito fijo para el desafío
     let carritoId = "663bc0e40a2c511258d8e42f"
@@ -68,7 +79,7 @@ router.get("/products", async (req, res) => {
 
     } catch (error) {
         res.setHeader("Content-Type", "application/json")
-        res.status(500).res.json({ Error: "Error 500 - Error inesperado en el servidor" })
+        res.status(500).json({ Error: "Error 500 - Error inesperado en el servidor" })
     }
 })
 
@@ -81,7 +92,7 @@ router.get("/realtimeproducts", async (req, res) => {
         res.status(200).render("realTimeProducts", {productos})
     } catch (error) {
         res.setHeader("Content-Type", "application/json")
-        res.status(500).res.json({ Error: "Error 500 - Error inesperado en el servidor" })        
+        res.status(500).json({ Error: "Error 500 - Error inesperado en el servidor" })        
     }
 })
 
@@ -91,7 +102,7 @@ router.get("/chat", (req, res) => {
         res.status(200).render("chat")        
     } catch (error) {
         res.setHeader("Content-Type", "application/json")
-        res.status(500).res.json({ Error: "Error 500 - Error inesperado en el servidor" })        
+        res.status(500).json({ Error: "Error 500 - Error inesperado en el servidor" })        
     }
 })
 
@@ -106,10 +117,28 @@ router.get("/carts/:cid", async (req, res) => {
         res.status(200).render("cart",{productos})
     } catch (error) {
         res.setHeader("Content-Type", "application/json")
-        res.status(500).res.json({ Error: "Error 500 - Error inesperado en el servidor" })        
+        res.status(500).json({ Error: "Error 500 - Error inesperado en el servidor" })        
     }
-
 })
+
+router.get("/signUp", (req, res) => {
+    res.setHeader("Content-Type", "text/html")
+    res.status(200).render("signUp")
+})
+
+router.get("/login", (req, res) => {
+    res.setHeader("Content-Type", "text/html")
+    res.status(200).render("login")
+})
+
+router.get("/perfil", auth, (req, res) => { //Ruta protegida con middleware de autenticación
+    res.setHeader("Content-Type", "text/html")    
+    res.status(200).render("perfil", {
+        usuario:req.session.usuario
+    })
+})
+
+
 
 
 export {router}

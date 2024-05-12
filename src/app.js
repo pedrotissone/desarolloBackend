@@ -1,10 +1,13 @@
 import express from "express"
 import mongoose from "mongoose"
+import cookieParser from "cookie-parser"
+import sessions from "express-session"
 import { Server } from "socket.io"
 import { engine } from "express-handlebars"
 import {router as productsRouter} from "./routes/productsRoutes.js"
 import {router as cartsRouter} from "./routes/cartsRoutes.js"
 import { router as viewsRouter } from "./routes/viewsRouter.js"
+import { router as sessionsRouter } from "./routes/sessionsRouter.js"
 import { middleware1, middleware2, middleware3 } from "./middlewares/generales.js"
 import { errorHandler } from "./middlewares/errorHandler.js"
 import { chatModel } from "./dao/models/chatModel.js"
@@ -46,12 +49,23 @@ app.use(express.static("./src/public"))
 //Esta linea es un ejemplo de middleware a nivel aplicacion. Se ejecutan en cascada y sirven para manipular la request, formatearla y/o realizar validaciones antes de llegar al endpoint
 // app.use(middleware1, middleware2, middleware3) //Middlewares a nivel aplicación
 
+//Esta dependencia es un middleware que me maneja las cookies, también se puede hacer sin dependencia por headers
+app.use(cookieParser("coderCoder"))
+//Utilizo la dependencia express-sessions, para obtener UNA session por cada usuario que se conecte al servidor (lo realiza a traves de una cookie de session)
+app.use(sessions({ //le paso un objeto de configuracion como argumento
+    secret: "coderCoder",
+    resave: true, saveUninitialized: true
+}))
+
 
 
 //                                          RUTAS CON ROUTER
+app.use("/", viewsRouter) //Truco para que el home sea mi archivo de handlebars
 app.use("/api/products", productsRouter)
 app.use("/api/carts", cartsRouter)
 app.use("/handlebars", viewsRouter)
+app.use("/api/sessions", sessionsRouter)
+
 //                                          RUTAS CON ROUTER
 
 
@@ -61,7 +75,7 @@ app.use("/handlebars", viewsRouter)
 app.get("*", (req, res) => {
     res.setHeader("Content-Type", "application/json")
     res.status(404).json({
-        message: "Error 404 - page not found"
+        message: "Error 404 - page not found!"
     })
 })
 
@@ -113,4 +127,6 @@ io.on("connection", (socket) => { //2) Va a estar esuchando si llega una conexio
 
 export {io}
 
-//00:25:00
+//01:37:00
+
+//02:01:00 creacion de cookie

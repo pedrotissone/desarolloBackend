@@ -1,0 +1,14 @@
+{{>navBar}}
+<br>
+<h2>Login de usuarios</h2>
+<br>
+<form action="/api/sessions/login", method="post">
+<input type="email" name="email", placeholder="correo electrónico">
+<input type="password" name="password", placeholder="contraseña">
+{{!-- Este input va a existir pero no lo voy a ver --}}
+<input type="text", name="web", value="web", hidden>
+<br>
+<br>
+<input type="submit", value="login">
+
+</form>

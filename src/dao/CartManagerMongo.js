@@ -34,7 +34,7 @@ class CartManagerMongo {
 
     //3) METODO PARA TRAER CARRITO POR ID
     async getCartById(id) {
-        //Le agrego el metodo populate() para poblar ese documento, sino solo me traería el id de los productos agregados
+        //Le agrego el metodo POPULATE() para poblar ese documento, sino SOLO me traería el id de los productos agregados
         return await cartModel.findOne({ _id: id }).populate("productos.producto").lean()
     }
 

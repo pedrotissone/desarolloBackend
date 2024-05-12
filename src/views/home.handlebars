@@ -1,9 +1,15 @@
+{{>navBar}}
+<br>
 <h2>Listado de productos</h2>
+
+{{#if user}}
+<p>Bienvenido {{user.nombre}}!</p>
+{{/if}}
 
 <ul>
     {{#each productos}}
         <li>{{title}}</li>
     {{/each}}
 </ul>
-
+<br>
 <a href="/handlebars/chat">Ir al chat </a>

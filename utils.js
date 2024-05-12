@@ -1,6 +1,7 @@
 import {fileURLToPath} from "url"
 import {dirname, join} from "path"
 import multer from "multer"
+import crypto from "crypto"
 
 //__DIRNAME CASERO
 const __filename = fileURLToPath(import.meta.url)
@@ -22,9 +23,14 @@ const storage = multer.diskStorage({
     }
       cb(null, Date.now() + '-' + file.originalname)
     }
-  })
-  
+  })  
   const upload = multer({ storage: storage })
 
+  //HASH DE PASSWORDS CON MODULO CRYPTO (así es la sintaxis, muy rara)
+  let SECRET = "coderCoder123"
+  const generateHash = password => crypto.createHmac("sha256", SECRET).update(password).digest("hex")
 
-  export {__dirname, upload};
+
+
+
+  export {__dirname, upload, generateHash};

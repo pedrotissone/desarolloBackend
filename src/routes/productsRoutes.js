@@ -14,6 +14,9 @@ const Producto = new ProductManager()
 const router = Router()
 
 router.get("/", async (req, res) => {
+    //Leo las cookies (Estan todas dentro de un objeto de javascript)
+    let lecturaDeCookies = req.cookies //Leo todas las cookies de la request
+    let lecturaFirmadas = req.signedCookies //Leo sólo las cookies firmadas de la request, si alguien las modifica se bloquean para no viajar con la response
 
     try {
         //              QUERY PARAMS
@@ -43,8 +46,10 @@ router.get("/", async (req, res) => {
 
 
         const resultado = await Producto.getProductsPaginate(filtro, opciones)
-            res.setHeader("Content-Type", "application/json")
+            res.setHeader("Content-Type", "application/json")          
             res.json(resultado)
+            // res.json(lecturaFirmadas)
+            
     
 
     } catch (error) {
