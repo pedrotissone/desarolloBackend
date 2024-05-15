@@ -5,7 +5,6 @@ import { upload } from "../../utils.js"
 import { io } from "../app.js"
 import { isValidObjectId } from "mongoose"
 import { productsModel } from "../dao/models/productsModel.js"
-import { paginateSubDocs } from "mongoose-paginate-v2"
 
 
 const Producto = new ProductManager()
@@ -14,48 +13,52 @@ const Producto = new ProductManager()
 const router = Router()
 
 router.get("/", async (req, res) => {
-    
-    //Leo las cookies (Estan todas dentro de un objeto de javascript)
-    let lecturaDeCookies = req.cookies //Leo todas las cookies de la request
-    let lecturaFirmadas = req.signedCookies //Leo sólo las cookies firmadas de la request, si alguien las modifica se bloquean para no viajar con la response
+    //Prueba de lectura de cookies
+    // let lecturaDeCookies = req.cookies //Leo todas las cookies de la request
+    // let lecturaFirmadas = req.signedCookies //Leo sólo las cookies firmadas de la request, si alguien las modifica se bloquean para no viajar con la response
 
     try {
         //              QUERY PARAMS
         let page = parseInt(req.query.page) || 1
         let limit = parseInt(req.query.limit) || 10
-        let propiedad = req.query.propiedad
-        let valor = req.query.valor
-        let sort = req.query.sort || undefined
+        let query = req.query.query
+        let sort = req.query.sort || "asc"
         let stock = parseInt(req.query.stock) || undefined
 
-        let filtro = {} 
-
-        if (propiedad && valor) {
-            filtro[propiedad] = valor
+        let filtro = {}
+        if (query) {
+            const parametros = query.split(':');
+            const campo = parametros[0];
+            const valor = parametros[1];
+            filtro[campo] = valor
         }
-         if (stock) {
-            filtro.stock = {$gte: stock}
-         }
+
+        if (stock) {
+            filtro.stock = { $gte: stock }//sintaxis mongoose
+        }
 
 
         let opciones = {
             page: page,
-            limit: limit,
-            lean: true,
-            sort: sort
+            limit: limit,            
         }
 
+        const sortOptions = {};
 
-        const resultado = await Producto.getProductsPaginate(filtro, opciones)
-            res.setHeader("Content-Type", "application/json")          
-            res.json(resultado)
-            // res.json(lecturaFirmadas)
-            
-    
+        if (sort === 'asc') {
+            sortOptions.price = 1; // Orden ascendente por precio
+        } else if (sort === 'desc') {
+            sortOptions.price = -1; // Orden descendente por precio
+        }
+
+        let resultado = await Producto.getProductsPaginate(filtro, opciones, sortOptions)
+        res.setHeader("Content-Type", "application/json")
+        res.status(200).json(resultado)
+
 
     } catch (error) {
         res.setHeader("Content-Type", "application/json")
-        res.status(500).res.json({ Error: "Error 500 - Error inesperado en el servidor" })
+        res.status(500).json("Error en el servidor al paginar productos")
     }
 })
 

@@ -24,42 +24,29 @@ class ProductManagerMongo {
         }
     }
 
-    //2) Devolver todos los productos de la DB
-    async getProducts() {
+    
+    async getProducts() { // Devolver todos los productos de la DB
         return await productsModel.find().lean()// Le agrego el lean() solo por el desperfecto de handlebars         
     }
 
-    //2B) Devolver todos los productos con Paginación
-    //indico que va a recibir una pagina como parametro y seteo defecto su valor en 1, lo saqué porque ya defini en la ruta eso
-    async getProductsPaginate(filtro, opciones) {
-        //1 argumento es un filtro, el 2do es para indicar ciertos aspectos del paginado
-        console.log(opciones)
-        let resultado = await productsModel.paginate(filtro, opciones)
-        console.log(resultado)
 
-        //Agrego validaciones para el sort
-        let sortOrder = opciones.sort
-        if (sortOrder == "asc") {
-            return resultado = resultado.docs.sort(function (a, b) { return a.price - b.price })
-            
-        } else if (sortOrder == "desc") {
-            return resultado = resultado.docs.sort(function (a, b) { return b.price - a.price })
 
-        } else {
-            return resultado = {
-                status: "success",
-                payload: resultado.docs,
-                totalPages: resultado.totalPages,
-                prevPage: resultado.prevPage,
-                nextPage: resultado.nextPage,
-                page: resultado.page,
-                hasPrevPage: resultado.hasPrevPage,
-                hasNextPage: resultado.hasNextPage,
-                prevLink: "En construccion",
-                nextLink: "En construccion"
-            }
-           
-        }        
+   
+    async getProductsPaginate(filtro, opciones, sortOptions) { //Devolver productos con Paginación
+
+        let resultado = await productsModel.paginate(filtro, {limit: opciones.limit, page: opciones.page, lean: true, sort: sortOptions})
+        return resultado = {
+                    status: "success",
+                    payload: resultado.docs,
+                    totalPages: resultado.totalPages,
+                    prevPage: resultado.prevPage,
+                    nextPage: resultado.nextPage,
+                    page: resultado.page,
+                    hasPrevPage: resultado.hasPrevPage,
+                    hasNextPage: resultado.hasNextPage,
+                    prevLink: "En construccion",
+                    nextLink: "En construccion"
+                }     
     }
 
 
