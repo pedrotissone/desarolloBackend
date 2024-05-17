@@ -1,7 +1,9 @@
 import express from "express"
 import mongoose from "mongoose"
 import cookieParser from "cookie-parser"
-import sessions from "express-session"
+import sessions from "express-session" //Las sessiones viven en memoria
+import FileStore from "session-file-store"//Con esto las sessiones pasan a vivir en un archivo
+import MongoStore from "connect-mongo"
 import { Server } from "socket.io"
 import { engine } from "express-handlebars"
 import {router as productsRouter} from "./routes/productsRoutes.js"
@@ -32,7 +34,11 @@ const conectionDB = async () => {
 }
 conectionDB()
 
-//let serverSocket //Primero Lo declaré aca arriba por si tenia que pasarlo como middleware a un router, pero no fue necesario
+//instancio FileStore y le paso la dependencia de express-sessions como argumento(Lo dejo de lado por Mongo)
+// const fileStore = FileStore(sessions)
+
+//Primero Lo declaré aca arriba por si tenia que pasarlo como middleware a un router, pero no fue necesario
+//let serverSocket 
 
 //Estas 2 líneas son para que nuestro servidor interprete automaticamente msjes tipo JSON (CLAVE, son middlewares)
 app.use(express.json())
@@ -51,10 +57,21 @@ app.use(express.static("./src/public"))
 
 //Esta dependencia es un middleware que me maneja las cookies, también se puede hacer sin dependencia por headers
 app.use(cookieParser("coderCoder"))
+
 //Utilizo la dependencia express-sessions, para obtener UNA session por cada usuario que se conecte al servidor (lo realiza a traves de una cookie de session)
 app.use(sessions({ //le paso un objeto de configuracion como argumento
     secret: "coderCoder",
-    resave: true, saveUninitialized: true
+    resave: true, saveUninitialized: true,
+
+    //Configuracion del FileStore para las sessiones (lo cambié por mongo)
+    // store: new fileStore({
+    //     ttl: 3600, retries: 0,
+    //     path: "./src/sessions"
+    // })
+    store: MongoStore.create({
+        ttl: 3600,
+        mongoUrl: "mongodb+srv://pedrotissone:2ennu3dL@codercluster.bk90trh.mongodb.net/?retryWrites=true&w=majority&appName=coderCluster&dbName=ecommerce"
+    })
 }))
 
 
@@ -127,6 +144,5 @@ io.on("connection", (socket) => { //2) Va a estar esuchando si llega una conexio
 
 export {io}
 
-//01:37:00
+//00:56:00
 
-//02:01:00 creacion de cookie

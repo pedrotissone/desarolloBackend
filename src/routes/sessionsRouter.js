@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { UsersManagerMongo as UsersManager } from "../dao/UsersManagerMongo.js";
-import { generateHash } from "../../utils.js";
+import { generateHash, validaPassword } from "../../utils.js";
 
 
 
@@ -25,8 +25,8 @@ router.post("/signUp", async (req, res) => { // registro para un nuevo usuario
             res.setHeader("Content-Type", "application/json")
             return res.status(400).json("Ya existe registrado un usuario con el mismo email")
         }
-
-        password = generateHash(password) //Hasheo la contraseña antes de subirla a la DB
+        //Hasheo la contraseña antes de subirla a la DB
+        password = generateHash(password)
 
         let nuevoUsuario = await usersManager.create({ nombre, email, password, rol:"usuario" })//Por defecto los usuarios van a tener siempre ese rol
 
@@ -40,7 +40,7 @@ router.post("/signUp", async (req, res) => { // registro para un nuevo usuario
 })
 
 router.post("/login", async (req, res) => { //Me logeo con usuario ya registrado
-
+    // web es un input hidden para modificar comportamiento con respecto a una peticion de postman
     let { email, password, web } = req.body
 
     if (!email || !password) {
@@ -49,21 +49,31 @@ router.post("/login", async (req, res) => { //Me logeo con usuario ya registrado
     }
 
     try {
-        let usuario = await usersManager.getBy({ email, password: generateHash(password) }) //Valido email y contraseña
-        if (!usuario) {
+        // let usuario = await usersManager.getBy({ email, password: generateHash(password) }) //Valido email y contraseña (crypto)
+
+        //1ra validacion bcrypt, el email
+        let usuario = await usersManager.getBy({ email }) //Validación con bcrypt, son 2 etapas
+
+        if (!usuario) {           
             res.setHeader("Content-Type", "application/json")
             return res.status(400).json("Credenciales inválidas")
         }
-        //Si me logeo desde la web me redirijo al home
+
+        //2da validacion bcrypt, la password
+        if (!validaPassword(password, usuario.password )) {
+            res.setHeader("Content-Type", "application/json")
+            return res.status(400).json("Credenciales inválidas")
+        }
+
+        //El usuario existe!, ahora si me logeo desde la web lo redirijo al home
         if (web) {
             //Por seguridad elimino la contraseña para que no se muestre
             usuario = { ...usuario }//No se para que hago esto..
             delete usuario.password
-            //Creo una session para el usuario
+            //IMPORTANTE: Creo una session para el usuario
             req.session.usuario = usuario
             return res.redirect("/handlebars/")
         } else {
-
             //Por seguridad elimino la contraseña para que no se muestre
             usuario = { ...usuario }//No se para que hago esto..
             delete usuario.password

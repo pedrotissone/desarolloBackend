@@ -9,10 +9,21 @@ let agregar = async (pid) => {
 
 }
 
-function modificarPageQuery(url, amount) {
-    return url.replace(/(page=) (\d+)/, (match, p1, p2) => {
-        const newValue = parseInt(p2) + amount //Sumo o resto segun corresponda
-        return p1 + newValue
-    })
+function modificarPageQuery(url, amount) { //Esta funcion la tengo que modificar para mantener el resto de las queries al cambiar de pagina
+    const urlObject = new URL(url);
+    const searchParams = new URLSearchParams(urlObject.search);
 
+    // Obtener el valor actual de la página
+    let currentPage = parseInt(searchParams.get("page")) || 1;
+
+    // Sumar o restar según corresponda
+    currentPage += amount;
+
+    // Establecer el nuevo valor de página
+    searchParams.set("page", currentPage);
+
+    // Establecer el nuevo parámetro de búsqueda en la URL
+    urlObject.search = searchParams.toString();
+
+    return urlObject.toString();
 }

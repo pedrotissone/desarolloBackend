@@ -12,20 +12,20 @@ const router = Router()
 
 
 router.get("/", async (req, res) => {
-    //Prueba de creación de cookies desde el servidor
-    let datos = { nombre: "pepeJefe", rol: "admin" }
-    let datos2 = { nombre: "juanEmpleado", rol: "usuario" }
-    //Le doy una medida de seguraridad a la cookie firmandola, para que no me la puedan modificar
-    res.cookie("user", datos, { signed: true })
-    //El tercer argumento es para indicar vencimiento, si lo dejo así duran solo durante la session
-    res.cookie("user2", datos2, {})
+    // //Prueba de creación de cookies desde el servidor
+    // let datos = { nombre: "pepeJefe", rol: "admin" }
+    // let datos2 = { nombre: "juanEmpleado", rol: "usuario" }
+    // //Le doy una medida de seguraridad a la cookie firmandola, para que no me la puedan modificar
+    // res.cookie("user", datos, { signed: true })
+    // //El tercer argumento es para indicar vencimiento, si lo dejo así duran solo durante la session
+    // res.cookie("user2", datos2, {})
 
-    let user = req.session.usuario
-    console.log(user)
+    let usuario = req.session.usuario
+    console.log(usuario)
     try {
         let productos = await Producto.getProducts()
         res.setHeader("Content-Type", "text/html")
-        res.status(200).render("home", { productos, user }) //Para la vista home, paso la variable products
+        res.status(200).render("home", { productos, usuario }) //Para la vista home, paso la variable products
     } catch (error) {
         res.setHeader("Content-Type", "application/json")
         res.status(500).json({ Error: "Error 500 - Error inesperado en el servidor" })
@@ -42,6 +42,7 @@ router.get("/products", async (req, res) => { //Paginacion con Handlebars
         //Me creo un carrito para agregarle productos
         carrito = await Carts.getCartById(carritoId)
         // console.log(JSON.stringify(carrito.productos))//Asi lo veo como string
+        
 
         //              QUERY PARAMS
         let page = parseInt(req.query.page) || 1
@@ -82,7 +83,7 @@ router.get("/products", async (req, res) => { //Paginacion con Handlebars
         //Desestructuro el resultado en las propiedades que necesito
         let { payload, totalPages, hasPrevPage, hasNextPage, prevPage, nextPage } = resultado
         res.setHeader("Content-Type", "text/html")
-        res.status(200).render("products", { payload, totalPages, hasPrevPage, hasNextPage, prevPage, nextPage, carritoId })
+        res.status(200).render("products", { payload, totalPages, hasPrevPage, hasNextPage, prevPage, nextPage, carritoId})
 
 
     } catch (error) {
