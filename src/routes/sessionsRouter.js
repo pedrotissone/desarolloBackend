@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { UsersManagerMongo as UsersManager } from "../dao/UsersManagerMongo.js";
 import { generateHash, validaPassword } from "../../utils.js";
+import passport from "passport";
 
 
 
@@ -8,35 +9,45 @@ export const router = Router()
 
 const usersManager = new UsersManager() //Instancio mi clase
 
+router.get("/error", (req, res) => {
+    res.setHeader("Content-Type", "application/json")
+    res.status(500).json("Error en el servidor al intentar crear usuario")
+})
 
-router.post("/signUp", async (req, res) => { // registro para un nuevo usuario
+// 3er paso de passport, agrego middleware a la ruta y le indico el nombre de la estrategia elegida
+router.post("/signUp", passport.authenticate("signUp", { failureRedirect: "/api/sessions/error" }), async (req, res) => { // registro para un nuevo usuario
 
-    let { nombre, email, password } = req.body
-    console.log(req.body)
+    //Si sale todo bien passport crea un req.user y nos deja los datos ahi
+    res.setHeader("Content-Type", "application/json")
+    return res.status(201).json({ nuevoUsuario: req.user })
 
-    if (!nombre || !email || !password) {
-        res.setHeader("Content-Type", "application/json")
-        return res.status(400).json("No se enviaron todos los datos para crear el usuario")
-    }
+    //LOGICA PREVIA A IMPLEMENTACIÓN DE PASSPORT
+    // let { nombre, email, password } = req.body
+    // console.log(req.body)
 
-    try {
-        let existe = await usersManager.getBy({ email }) //Es igual que poner {email:email}
-        if (existe) {
-            res.setHeader("Content-Type", "application/json")
-            return res.status(400).json("Ya existe registrado un usuario con el mismo email")
-        }
-        //Hasheo la contraseña antes de subirla a la DB
-        password = generateHash(password)
+    // if (!nombre || !email || !password) {
+    //     res.setHeader("Content-Type", "application/json")
+    //     return res.status(400).json("No se enviaron todos los datos para crear el usuario")
+    // }
 
-        let nuevoUsuario = await usersManager.create({ nombre, email, password, rol:"usuario" })//Por defecto los usuarios van a tener siempre ese rol
+    // try {
+    //     let existe = await usersManager.getBy({ email }) //Es igual que poner {email:email}
+    //     if (existe) {
+    //         res.setHeader("Content-Type", "application/json")
+    //         return res.status(400).json("Ya existe registrado un usuario con el mismo email")
+    //     }
+    //     //Hasheo la contraseña antes de subirla a la DB
+    //     password = generateHash(password)
 
-        res.setHeader("Content-Type", "application/json")
-        return res.status(200).json(nuevoUsuario)
+    //     let nuevoUsuario = await usersManager.create({ nombre, email, password, rol:"usuario" })//Por defecto los usuarios van a tener siempre ese rol
 
-    } catch (error) {
-        res.setHeader("Content-Type", "application/json")
-        res.status(500).json("Error en el servidor al crear el usuario")
-    }
+    //     res.setHeader("Content-Type", "application/json")
+    //     return res.status(200).json(nuevoUsuario)
+
+    // } catch (error) {
+    //     res.setHeader("Content-Type", "application/json")
+    //     res.status(500).json("Error en el servidor al crear el usuario")
+    // }
 })
 
 router.post("/login", async (req, res) => { //Me logeo con usuario ya registrado
@@ -54,13 +65,13 @@ router.post("/login", async (req, res) => { //Me logeo con usuario ya registrado
         //1ra validacion bcrypt, el email
         let usuario = await usersManager.getBy({ email }) //Validación con bcrypt, son 2 etapas
 
-        if (!usuario) {           
+        if (!usuario) {
             res.setHeader("Content-Type", "application/json")
             return res.status(400).json("Credenciales inválidas")
         }
 
         //2da validacion bcrypt, la password
-        if (!validaPassword(password, usuario.password )) {
+        if (!validaPassword(password, usuario.password)) {
             res.setHeader("Content-Type", "application/json")
             return res.status(400).json("Credenciales inválidas")
         }
@@ -80,7 +91,7 @@ router.post("/login", async (req, res) => { //Me logeo con usuario ya registrado
 
             //IMPORTANTE: Aca creo una session para el usuario!!!
             req.session.usuario = usuario
-    
+
             res.setHeader("Content-Type", "application/json")
             res.status(200).json({ payload: "login correcto", usuario })
         }

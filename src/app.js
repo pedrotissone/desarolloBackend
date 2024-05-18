@@ -4,6 +4,8 @@ import cookieParser from "cookie-parser"
 import sessions from "express-session" //Las sessiones viven en memoria
 import FileStore from "session-file-store"//Con esto las sessiones pasan a vivir en un archivo
 import MongoStore from "connect-mongo"
+import passport from "passport"
+import { initPassport } from "./config/passport.config.js" //importo mi funcion de config de passport
 import { Server } from "socket.io"
 import { engine } from "express-handlebars"
 import {router as productsRouter} from "./routes/productsRoutes.js"
@@ -73,8 +75,10 @@ app.use(sessions({ //le paso un objeto de configuracion como argumento
         mongoUrl: "mongodb+srv://pedrotissone:2ennu3dL@codercluster.bk90trh.mongodb.net/?retryWrites=true&w=majority&appName=coderCluster&dbName=ecommerce"
     })
 }))
-
-
+//1er paso B) de configuracion de passport (Solo si uso sessiones y tiene que ir debajo del middleware de sessions)
+initPassport()
+app.use(passport.initialize())
+app.use(passport.session()) //Solo si uso sessions
 
 //                                          RUTAS CON ROUTER
 app.use("/", viewsRouter) //Truco para que el home sea mi archivo de handlebars
@@ -144,5 +148,5 @@ io.on("connection", (socket) => { //2) Va a estar esuchando si llega una conexio
 
 export {io}
 
-//00:56:00
+//01:26:00
 
