@@ -11,7 +11,7 @@ const usersManager = new UsersManager() //Instancio mi clase
 
 router.get("/error", (req, res) => {
     res.setHeader("Content-Type", "application/json")
-    res.status(500).json("Error en el servidor al intentar crear usuario")
+    res.status(500).json("Error en la autenticación")
 })
 
 // 3er paso de passport, agrego middleware a la ruta y le indico el nombre de la estrategia elegida
@@ -50,56 +50,79 @@ router.post("/signUp", passport.authenticate("signUp", { failureRedirect: "/api/
     // }
 })
 
-router.post("/login", async (req, res) => { //Me logeo con usuario ya registrado
-    // web es un input hidden para modificar comportamiento con respecto a una peticion de postman
-    let { email, password, web } = req.body
+// 3er paso de passport, agrego middleware a la ruta y le indico el nombre de la estrategia elegida
+router.post("/login", passport.authenticate("login", { failureRedirect: "/api/sessions/error" }), async (req, res) => { //Me logeo con usuario ya registrado
 
-    if (!email || !password) {
+    let { web } = req.body
+
+    if (web) { //Si sale todo OK en passport, este crea un req.user
+        let usuario = { ...req.user } //spread operator
+        delete usuario.password
+        //Aca creo una session para el usuario
+        req.session.usuario = usuario
+        return res.redirect("/handlebars/")
+    } else {
+        //Por seguridad elimino la contraseña para que no se muestre
+        usuario = { ...req.user }
+        delete usuario.password
+        //Aca creo una session para el usuario!!!
+        req.session.usuario = usuario
+
         res.setHeader("Content-Type", "application/json")
-        return res.status(400).json("Complete el email y la contraseña!")
+        res.status(200).json({ payload: "login correcto", usuario })
     }
 
-    try {
-        // let usuario = await usersManager.getBy({ email, password: generateHash(password) }) //Valido email y contraseña (crypto)
+    // LOGICA PREVIA A LA IMPLEMENTACION DE PASSPORT
 
-        //1ra validacion bcrypt, el email
-        let usuario = await usersManager.getBy({ email }) //Validación con bcrypt, son 2 etapas
+    // // web es un input hidden para modificar comportamiento con respecto a una peticion de postman
+    // let { email, password, web } = req.body
 
-        if (!usuario) {
-            res.setHeader("Content-Type", "application/json")
-            return res.status(400).json("Credenciales inválidas")
-        }
+    // if (!email || !password) {
+    //     res.setHeader("Content-Type", "application/json")
+    //     return res.status(400).json("Complete el email y la contraseña!")
+    // }
 
-        //2da validacion bcrypt, la password
-        if (!validaPassword(password, usuario.password)) {
-            res.setHeader("Content-Type", "application/json")
-            return res.status(400).json("Credenciales inválidas")
-        }
+    // try {
+    //     // let usuario = await usersManager.getBy({ email, password: generateHash(password) }) //Valido email y contraseña (crypto)
 
-        //El usuario existe!, ahora si me logeo desde la web lo redirijo al home
-        if (web) {
-            //Por seguridad elimino la contraseña para que no se muestre
-            usuario = { ...usuario }//No se para que hago esto..
-            delete usuario.password
-            //IMPORTANTE: Creo una session para el usuario
-            req.session.usuario = usuario
-            return res.redirect("/handlebars/")
-        } else {
-            //Por seguridad elimino la contraseña para que no se muestre
-            usuario = { ...usuario }//No se para que hago esto..
-            delete usuario.password
+    //     //1ra validacion bcrypt, el email
+    //     let usuario = await usersManager.getBy({ email }) //Validación con bcrypt, son 2 etapas
 
-            //IMPORTANTE: Aca creo una session para el usuario!!!
-            req.session.usuario = usuario
+    //     if (!usuario) {
+    //         res.setHeader("Content-Type", "application/json")
+    //         return res.status(400).json("Credenciales inválidas")
+    //     }
 
-            res.setHeader("Content-Type", "application/json")
-            res.status(200).json({ payload: "login correcto", usuario })
-        }
+    //     //2da validacion bcrypt, la password
+    //     if (!validaPassword(password, usuario.password)) {
+    //         res.setHeader("Content-Type", "application/json")
+    //         return res.status(400).json("Credenciales inválidas")
+    //     }
 
-    } catch (error) {
-        res.setHeader("Content-Type", "application/json")
-        res.status(500).json("Error en el servidor al logearse")
-    }
+    //     //El usuario existe!, ahora si me logeo desde la web lo redirijo al home
+    //     if (web) {
+    //         //Por seguridad elimino la contraseña para que no se muestre
+    //         usuario = { ...usuario }//No se para que hago esto..
+    //         delete usuario.password
+    //         //IMPORTANTE: Creo una session para el usuario
+    //         req.session.usuario = usuario
+    //         return res.redirect("/handlebars/")
+    //     } else {
+    //         //Por seguridad elimino la contraseña para que no se muestre
+    //         usuario = { ...usuario }//No se para que hago esto..
+    //         delete usuario.password
+
+    //         //IMPORTANTE: Aca creo una session para el usuario!!!
+    //         req.session.usuario = usuario
+
+    //         res.setHeader("Content-Type", "application/json")
+    //         res.status(200).json({ payload: "login correcto", usuario })
+    //     }
+
+    // } catch (error) {
+    //     res.setHeader("Content-Type", "application/json")
+    //     res.status(500).json("Error en el servidor al logearse")
+    // }
 })
 
 router.get("/logout", (req, res) => {//Destruyo la session para el logout
@@ -111,7 +134,6 @@ router.get("/logout", (req, res) => {//Destruyo la session para el logout
         }
     })
 
-    // return res.status(200).json("Logout exitoso")
     res.setHeader("Content-Type", "text/html")
     return res.redirect("/handlebars/login")
 })

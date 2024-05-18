@@ -20,6 +20,7 @@ router.get("/", async (req, res) => {
     // //El tercer argumento es para indicar vencimiento, si lo dejo así duran solo durante la session
     // res.cookie("user2", datos2, {})
 
+
     let usuario = req.session.usuario
     console.log(usuario)
     try {

@@ -63,8 +63,8 @@ app.use(cookieParser("coderCoder"))
 //Utilizo la dependencia express-sessions, para obtener UNA session por cada usuario que se conecte al servidor (lo realiza a traves de una cookie de session)
 app.use(sessions({ //le paso un objeto de configuracion como argumento
     secret: "coderCoder",
-    resave: true, saveUninitialized: true,
-
+    resave: true,
+    saveUninitialized: true,
     //Configuracion del FileStore para las sessiones (lo cambié por mongo)
     // store: new fileStore({
     //     ttl: 3600, retries: 0,
@@ -75,10 +75,10 @@ app.use(sessions({ //le paso un objeto de configuracion como argumento
         mongoUrl: "mongodb+srv://pedrotissone:2ennu3dL@codercluster.bk90trh.mongodb.net/?retryWrites=true&w=majority&appName=coderCluster&dbName=ecommerce"
     })
 }))
-//1er paso B) de configuracion de passport (Solo si uso sessiones y tiene que ir debajo del middleware de sessions)
+//2do paso de configuracion de passport
 initPassport()
 app.use(passport.initialize())
-app.use(passport.session()) //Solo si uso sessions
+app.use(passport.session()) //1er paso B)(Solo si uso sessiones y tiene que ir debajo del middleware de sessions, sino esta linea no va)
 
 //                                          RUTAS CON ROUTER
 app.use("/", viewsRouter) //Truco para que el home sea mi archivo de handlebars
@@ -148,5 +148,5 @@ io.on("connection", (socket) => { //2) Va a estar esuchando si llega una conexio
 
 export {io}
 
-//01:26:00
+//00:57:00
 
