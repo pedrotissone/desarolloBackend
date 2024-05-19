@@ -1,6 +1,7 @@
 import passport from "passport"; //Importo el nucleo (Core)
 import local from "passport-local" //Importo la estrategia de autenticación que quiero (Hay como 500)
-import { UsersManagerMongo as UsersManager } from "../dao/UsersManagerMongo.js";
+import github from "passport-github2"
+import { UsersManagerMongo as UsersManager } from "../dao/UsersManagerMongo.js";//Importo mi manager para crear los usuarios
 import { generateHash, validaPassword } from "../../utils.js";
 
 //PASSPORT NOS PERMITE ENCAPSULAR TODA NUESTRA LOGICA DE AUTENTICACION DENTRO DE UN SOLO SCRIPT CON UNA ESTRUCTURA DETERMINADA.
@@ -10,7 +11,7 @@ const usersManager = new UsersManager()
 
 //1er paso de configuracion de passport
 export const initPassport = () => {
-    //SignUp
+    //SignUp Local
     passport.use(
         "signUp",//Nombre que le doy a la estrategia
         new local.Strategy(// Instancio la estrategia elegida y la configuro a través de 2 argumentos, 1ro: un objeto donde configuro la estrategia, 2do: una async () => que lleva parametros segun la estrategia elegida y en donde va a ir mi logica
@@ -48,7 +49,7 @@ export const initPassport = () => {
         )
     )
 
-    //Login
+    //Login Local
     passport.use(
         "login", //Nombre que le doy a la estrategia
         new local.Strategy(
@@ -72,6 +73,25 @@ export const initPassport = () => {
 
                 } catch (error) {
                     return done(error)
+                }
+            }
+        )
+    )
+
+    //Login Github
+    passport.use(
+        "github",
+        new github.Strategy(
+            {
+                clientID: "Iv23liBAvhuqZXD4cqVT",
+                clientSecret: "7cd930479ba65f90ffd222136a2785f7f3fcdb87",
+                callbackURL: "http://localhost:8080/api/sessions/callbackGithub"
+            },
+            async (tokenAcceso, tokenRefresh, profile, done) => {
+                try {
+                    console.log(profile)
+                } catch (error) {
+                    done(error)                    
                 }
             }
         )

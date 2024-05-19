@@ -75,7 +75,7 @@ app.use(sessions({ //le paso un objeto de configuracion como argumento
         mongoUrl: "mongodb+srv://pedrotissone:2ennu3dL@codercluster.bk90trh.mongodb.net/?retryWrites=true&w=majority&appName=coderCluster&dbName=ecommerce"
     })
 }))
-//2do paso de configuracion de passport
+//2do paso de configuracion de passport (Siempre debajo de sessiones y antes de las rutas)
 initPassport()
 app.use(passport.initialize())
 app.use(passport.session()) //1er paso B)(Solo si uso sessiones y tiene que ir debajo del middleware de sessions, sino esta linea no va)
@@ -148,5 +148,5 @@ io.on("connection", (socket) => { //2) Va a estar esuchando si llega una conexio
 
 export {io}
 
-//00:57:00
+//01:14:00
 

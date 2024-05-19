@@ -125,6 +125,15 @@ router.post("/login", passport.authenticate("login", { failureRedirect: "/api/se
     // }
 })
 
+
+router.get("/github", passport.authenticate("github", {}), (req, res) => {//peticion de login vía github
+
+})
+
+router.get("/callbackGithub", passport.authenticate("github", {failureRedirect: "/api/sessions/error"}), (req, res) => {//callbackURL github
+    
+})
+
 router.get("/logout", (req, res) => {//Destruyo la session para el logout
     req.session.destroy((error) => {//Así es la sintaxis de este metodo..
         if (error) {
