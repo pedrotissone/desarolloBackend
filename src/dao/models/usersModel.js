@@ -7,4 +7,9 @@ export const usersModel = mongoose.model("users", new mongoose.Schema({
     email: { type: String, unique: true },//Unique es para que no se pueda grabar dos emails iguales en la DB
     password: String,
     rol: {type: String, default: "usuario"}
-}))
+},
+{
+    timestamps: true,
+    strict: false //Me permite agregar otros campos que no esten en el modelo
+}
+))

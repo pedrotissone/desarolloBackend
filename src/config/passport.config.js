@@ -89,7 +89,19 @@ export const initPassport = () => {
             },
             async (tokenAcceso, tokenRefresh, profile, done) => {
                 try {
-                    console.log(profile)
+                    // console.log(profile)//Aca veo los datos que me trae y extraigo los que necesito
+                    let email = profile._json.email
+                    let nombre = profile._json.name
+                    //Compruebo si el usuario ya existe o no en mi DB
+                    let usuario = await usersManager.getBy({email})
+                    if(!usuario) {
+                        usuario = await usersManager.create({
+                            nombre, email, profile
+                        })
+                    }
+
+                    return done(null, usuario) //Devuelvo el usuario que encontre o que cree
+
                 } catch (error) {
                     done(error)                    
                 }

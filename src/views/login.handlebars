@@ -1,6 +1,8 @@
 {{>navBar}}
 <br>
 <h2>Login de usuarios</h2>
+<a href="/api/sessions/github">Acceder con Github</a>
+<br>
 <br>
 <form action="/api/sessions/login", method="post">
 <input type="email" name="email", placeholder="correo electrónico">
@@ -10,5 +12,4 @@
 <br>
 <br>
 <input type="submit", value="login">
-
 </form>

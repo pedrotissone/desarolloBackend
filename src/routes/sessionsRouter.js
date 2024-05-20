@@ -125,13 +125,22 @@ router.post("/login", passport.authenticate("login", { failureRedirect: "/api/se
     // }
 })
 
-
-router.get("/github", passport.authenticate("github", {}), (req, res) => {//peticion de login vía github
+ 
+router.get("/github", passport.authenticate("github", {}), (req, res) => {//peticion de login vía github (Github va a preguntarme si autorizo a x programa a tener acceso a mis datos)
 
 })
 
-router.get("/callbackGithub", passport.authenticate("github", {failureRedirect: "/api/sessions/error"}), (req, res) => {//callbackURL github
+router.get("/callbackGithub", passport.authenticate("github", {failureRedirect: "/api/sessions/error"}), (req, res) => {//callbackURL github (Si todo sale bien github devuelve los datos a esta ruta)
+
+    //Creo la session
+    req.session.usuario = req.user
     
+    res.setHeader("Content-Type", "application/json")
+    //Aca devuelvo todos los datos
+    res.status(200).json({ payload: req.user})
+
+    //Aca redirecciono al home
+    // return res.redirect("/handlebars/")
 })
 
 router.get("/logout", (req, res) => {//Destruyo la session para el logout
