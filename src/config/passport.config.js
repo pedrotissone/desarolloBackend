@@ -1,44 +1,51 @@
 import passport from "passport"; //Importo el nucleo (Core)
 import local from "passport-local" //Importo la estrategia de autenticación que quiero (Hay como 500)
 import github from "passport-github2"
-import { UsersManagerMongo as UsersManager } from "../dao/UsersManagerMongo.js";//Importo mi manager para crear los usuarios
 import { generateHash, validaPassword } from "../../utils.js";
+import { UsersManagerMongo as UsersManager } from "../dao/UsersManagerMongo.js";//Importo mi manager para crear los usuarios
+import { CartManagerMongo as CartManager } from "../dao/CartManagerMongo.js";
 
 //PASSPORT NOS PERMITE ENCAPSULAR TODA NUESTRA LOGICA DE AUTENTICACION DENTRO DE UN SOLO SCRIPT CON UNA ESTRUCTURA DETERMINADA.
 
 
 const usersManager = new UsersManager()
 
+const cartManager = new CartManager()
+
 //1er paso de configuracion de passport
 export const initPassport = () => {
     //SignUp Local
     passport.use(
         "signUp",//Nombre que le doy a la estrategia
-        new local.Strategy(// Instancio la estrategia elegida y la configuro a través de 2 argumentos, 1ro: un objeto donde configuro la estrategia, 2do: una async () => que lleva parametros segun la estrategia elegida y en donde va a ir mi logica
+        new local.Strategy(// Instancio la estrategia elegida y la configuro a través de 2 argumentos, 1ro: un objeto donde parametrizo la estrategia, 2do: una async () => que lleva parametros segun la estrategia elegida y en donde va a ir mi logica
             {
                 usernameField: "email", //El usernameField va a ser el email en este caso
                 passReqToCallback: true
             },
             async (req, username, password, done) => { //Los parametros de la async ()=> van a cambiar segun cada estrategia, aca son estos
-                try { //Aca va nuestra logica del sign up
+                try {
 
-                    //OJO recordar que el username en mi caso va a ser el email!!!
+                    //OJO recordar que el username en mi caso va a ser el email
                     let { nombre } = req.body
 
+                    //Validacion
                     if (!nombre) { //los return de passport son con su formato de callback "done"
                         return done(null, false) //No hay error, pero algo esta mal en la peticion
                     }
-
+                    //Validacion
                     let existe = await usersManager.getBy({ email: username }) //email es el username
                     if (existe) {
                         return done(null, false)// No hay error, pero tampoco el usuario requerido
                     }
 
+                    //Creo un carrito para el usuario
+                    let nuevoCarrito = await cartManager.createCart()
+
                     //Hasheo la contraseña antes de subirla a la DB
                     password = generateHash(password)
 
-                    //Recordar que el valor de email lo tengo en username
-                    let nuevoUsuario = await usersManager.create({ nombre, email: username, password, rol: "usuario" })//Por defecto los usuarios van a tener siempre ese rol
+                    //Creo nuevo usuario y le agrego el campo carrito con su _id
+                    let nuevoUsuario = await usersManager.create({ nombre, email:username, password, rol: "usuario", carrito: nuevoCarrito._id })//Por defecto los usuarios van a tener siempre ese rol
                     return done(null, nuevoUsuario) //No hay error y se creo correctamente el usuario
 
                 } catch (error) {
@@ -58,6 +65,7 @@ export const initPassport = () => {
             },
             async (username, password, done) => {
                 try {
+                    //passport valida automaticamente si se envió usuario y contraseña
                     let usuario = await usersManager.getBy({ email: username })
 
                     if (!usuario) {
@@ -83,8 +91,8 @@ export const initPassport = () => {
         "github",
         new github.Strategy(
             {
-                clientID: "",
-                clientSecret: "",
+                clientID: "Iv23liBAvhuqZXD4cqVT",
+                clientSecret: "7cd930479ba65f90ffd222136a2785f7f3fcdb87",
                 callbackURL: "http://localhost:8080/api/sessions/callbackGithub"
             },
             async (tokenAcceso, tokenRefresh, profile, done) => {
@@ -92,11 +100,19 @@ export const initPassport = () => {
                     // console.log(profile)//Aca veo los datos que me trae y extraigo los que necesito
                     let email = profile._json.email
                     let nombre = profile._json.name
+
+                    //Si el usuario de github no tiene consfigurado su email en el profile, devuelvo error
+                    if(!email) {
+                        return done(null, false)
+                    }                    
+
                     //Compruebo si el usuario ya existe o no en mi DB
-                    let usuario = await usersManager.getBy({email})
+                    let usuario = await usersManager.getBy({email}) //Crear funcion getByPopulate para ver el carrito (after passport 01:39)
                     if(!usuario) {
+                        let nuevoCarrito = await cartManager.createCart()
+                        
                         usuario = await usersManager.create({
-                            nombre, email, profile
+                            nombre, email, profile, carrito: nuevoCarrito._id
                         })
                     }
 

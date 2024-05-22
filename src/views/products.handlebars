@@ -1,5 +1,8 @@
 <h2>Listado de productos con PAGINACIÓN</h2>
-<input type="text" value="{{carritoId}}" id="carrito">
+{{>navBar}}
+<br>
+<br>
+<input type="text" value="{{carrito._id}}" id="carrito"><a href="/handlebars/carts/{{carrito._id}}">Ver carrito</a>
 
 <ul>
     {{#each payload}}

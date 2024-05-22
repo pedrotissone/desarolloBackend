@@ -34,16 +34,14 @@ router.get("/", async (req, res) => {
 })
 
 //METODO GET con paginación
-router.get("/products", async (req, res) => { //Paginacion con Handlebars
+router.get("/products", auth, async (req, res) => { //Paginacion con Handlebars
 
-    //Por ahora uso carrito fijo para el desafío
-    let carritoId = "663bc0e40a2c511258d8e42f"
-    let carrito
-    try {
-        //Me creo un carrito para agregarle productos
-        carrito = await Carts.getCartById(carritoId)
-        // console.log(JSON.stringify(carrito.productos))//Asi lo veo como string
-        
+
+    let carrito = {
+        _id: req.session.usuario.carrito
+    }
+    
+    try {        
 
         //              QUERY PARAMS
         let page = parseInt(req.query.page) || 1
@@ -84,7 +82,7 @@ router.get("/products", async (req, res) => { //Paginacion con Handlebars
         //Desestructuro el resultado en las propiedades que necesito
         let { payload, totalPages, hasPrevPage, hasNextPage, prevPage, nextPage } = resultado
         res.setHeader("Content-Type", "text/html")
-        res.status(200).render("products", { payload, totalPages, hasPrevPage, hasNextPage, prevPage, nextPage, carritoId})
+        res.status(200).render("products", { payload, totalPages, hasPrevPage, hasNextPage, prevPage, nextPage, carrito})
 
 
     } catch (error) {

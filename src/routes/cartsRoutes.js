@@ -4,6 +4,7 @@ import { CartManagerMongo as CartManager } from "../dao/CartManagerMongo.js"
 import { ProductManagerMongo as ProductManager } from "../dao/ProductManagerMongo.js"
 import { isValidObjectId } from "mongoose"
 import { middleware3 } from "../middlewares/generales.js"
+import { auth } from "../middlewares/auth.js"
 
 
 const Carts = new CartManager() //Instancio mi clase
@@ -352,7 +353,7 @@ router.delete("/:cid", async (req, res) => {//  ELIMINAR CARRITO
 
 
 
-router.post("/:cid/products/:pid", async (req, res) => { //     AGREGAR PRODUCTO AL CARRITO HANDLEBAR
+router.post("/:cid/products/:pid", auth, async (req, res) => { //     AGREGAR PRODUCTO AL CARRITO HANDLEBAR
     // try {
     //     await Carts.getCarts()
 

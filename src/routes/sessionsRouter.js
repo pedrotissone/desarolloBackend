@@ -62,10 +62,11 @@ router.post("/login", passport.authenticate("login", { failureRedirect: "/api/se
         req.session.usuario = usuario
         return res.redirect("/handlebars/")
     } else {
-        //Por seguridad elimino la contraseña para que no se muestre
-        usuario = { ...req.user }
+        //Rompo la referencia usando el spread (para que no me elimine la password del usuario de la DB) y le borro la contraseña para no devolverla en la response
+        usuario = { ...req.user }//No es necesario xq es un usuario en memoria no el de la DB
         delete usuario.password
-        //Aca creo una session para el usuario!!!
+
+        //creo una session para el usuario!
         req.session.usuario = usuario
 
         res.setHeader("Content-Type", "application/json")

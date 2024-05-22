@@ -5,6 +5,7 @@ import { upload } from "../../utils.js"
 import { io } from "../app.js"
 import { isValidObjectId } from "mongoose"
 import { productsModel } from "../dao/models/productsModel.js"
+import { auth } from "../middlewares/auth.js"
 
 
 const Producto = new ProductManager()
@@ -110,7 +111,7 @@ router.get("/:pid", async (req, res) => {
 })
 
 
-router.post("/", upload.single("thumbnail"), async (req, res) => {
+router.post("/", auth, upload.single("thumbnail"), async (req, res) => {
 
     // try {        
     // await Producto.getProducts()
@@ -188,7 +189,7 @@ router.post("/", upload.single("thumbnail"), async (req, res) => {
     if (existeFiltro) {
         res.setHeader("Content-Type", "application/json")
         return res.status(400).json({
-            message: "Error 400 - El filtro proporcionado se encuentra repetido en otro producto"
+            message: "Error 400 - El filtro proporcionado (code) se encuentra repetido en otro producto"
         })
     }
 
