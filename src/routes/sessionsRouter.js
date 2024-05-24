@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { UsersManagerMongo as UsersManager } from "../dao/UsersManagerMongo.js";
-import { generateHash, validaPassword } from "../../utils.js";
+import { SECRET } from "../../utils.js";
+import jwt from "jsonwebtoken";
 import passport from "passport";
 
 
@@ -63,14 +64,19 @@ router.post("/login", passport.authenticate("login", { failureRedirect: "/api/se
         return res.redirect("/handlebars/")
     } else {
         //Rompo la referencia usando el spread (para que no me elimine la password del usuario de la DB) y le borro la contraseña para no devolverla en la response
-        usuario = { ...req.user }//No es necesario xq es un usuario en memoria no el de la DB
+        let usuario = { ...req.user }//No es necesario xq es un usuario en memoria no el de la DB
         delete usuario.password
 
         //creo una session para el usuario!
         req.session.usuario = usuario
 
+        //Tambien creo token (No debería convivir con sessions, si se rompe borrar y tambien en la .res el token)
+        let token = jwt.sign(usuario, SECRET, {expiresIn: 10})// 30segs
+        res.cookie("codercookie", token, {httpOnly: true})//Creo cookie desde el servidor
+
+
         res.setHeader("Content-Type", "application/json")
-        res.status(200).json({ payload: "login correcto", usuario })
+        res.status(200).json({ payload: "login correcto", usuario, token })
     }
 
     // LOGICA PREVIA A LA IMPLEMENTACION DE PASSPORT
@@ -138,10 +144,10 @@ router.get("/callbackGithub", passport.authenticate("github", {failureRedirect: 
     
     res.setHeader("Content-Type", "application/json")
     //Aca devuelvo todos los datos
-    res.status(200).json({ payload: req.user})
+    // res.status(200).json({ payload: req.user})
 
     //Aca redirecciono al home
-    // return res.redirect("/handlebars/")
+    return res.redirect("/handlebars/")
 })
 
 router.get("/logout", (req, res) => {//Destruyo la session para el logout
@@ -155,6 +161,13 @@ router.get("/logout", (req, res) => {//Destruyo la session para el logout
 
     res.setHeader("Content-Type", "text/html")
     return res.redirect("/handlebars/login")
+})
+
+//Ruta para probar JWT (Le indico sessions:false para que sepa que no estoy manejando sessiones)
+router.get("/current", passport.authenticate("current", {session: false}), (req, res) => {
+    res.setHeader("Content-Type", "application/json")
+    return res.status(200).json(req.user)
+
 })
 
 

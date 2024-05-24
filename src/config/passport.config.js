@@ -1,7 +1,8 @@
 import passport from "passport"; //Importo el nucleo (Core)
 import local from "passport-local" //Importo la estrategia de autenticación que quiero (Hay como 500)
-import github from "passport-github2"
-import { generateHash, validaPassword } from "../../utils.js";
+import github from "passport-github2" //estrategia
+import passportJWT from "passport-jwt"// estrategia
+import { SECRET, generateHash, validaPassword } from "../../utils.js";
 import { UsersManagerMongo as UsersManager } from "../dao/UsersManagerMongo.js";//Importo mi manager para crear los usuarios
 import { CartManagerMongo as CartManager } from "../dao/CartManagerMongo.js";
 
@@ -11,6 +12,16 @@ import { CartManagerMongo as CartManager } from "../dao/CartManagerMongo.js";
 const usersManager = new UsersManager()
 
 const cartManager = new CartManager()
+
+const buscaToken = (req) => {
+    let token = null
+
+    if (req.cookies["codercookie"]) {
+        token = req.cookies["codercookie"]
+    }
+
+    return token
+}
 
 //1er paso de configuracion de passport
 export const initPassport = () => {
@@ -125,6 +136,25 @@ export const initPassport = () => {
         )
     )
 
+    //JWT current
+    passport.use(
+        "current",
+        new passportJWT.Strategy(
+            {
+                secretOrKey: SECRET, //Una clave secreta, la tengo en utils.js
+                jwtFromRequest: new passportJWT.ExtractJwt.fromExtractors([buscaToken]) //El argumento es una funcion y la tengo definida arriba
+            },
+            async (contenidoToken, done) => { //Se lo suele llamar usuario xq el token suele tener datos del usuario
+                try {
+                    console.log(contenidoToken)
+                    return done(null, contenidoToken) //Será null o la token
+                    
+                } catch (error) {
+                    return done(error)                    
+                }
+            }
+        )
+    )
 
     //1er paso B), Solo en caso de usar sessiones, debo además configurar la serializacion y deserializacion
     passport.serializeUser((usuario, done) => {//Esto es para guardar el usuario para la session creo

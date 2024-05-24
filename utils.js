@@ -40,4 +40,4 @@ const storage = multer.diskStorage({
 
 
 
-  export {__dirname, upload, generateHash, validaPassword};
+  export {__dirname, upload, generateHash, validaPassword, SECRET};
