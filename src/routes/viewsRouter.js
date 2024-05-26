@@ -5,21 +5,12 @@ import { CartManagerMongo as CartManager } from "../dao/CartManagerMongo.js"
 import { auth } from "../middlewares/auth.js"
 
 
-
 const Producto = new ProductManager()
 const Carts = new CartManager()
 const router = Router()
 
 
 router.get("/", async (req, res) => {
-    // //Prueba de creación de cookies desde el servidor
-    // let datos = { nombre: "pepeJefe", rol: "admin" }
-    // let datos2 = { nombre: "juanEmpleado", rol: "usuario" }
-    // //Le doy una medida de seguraridad a la cookie firmandola, para que no me la puedan modificar
-    // res.cookie("user", datos, { signed: true })
-    // //El tercer argumento es para indicar vencimiento, si lo dejo así duran solo durante la session
-    // res.cookie("user2", datos2, {})
-
 
     let usuario = req.session.usuario
     console.log(usuario)
@@ -34,7 +25,7 @@ router.get("/", async (req, res) => {
 })
 
 //METODO GET con paginación
-router.get("/products", auth, async (req, res) => { //Paginacion con Handlebars
+router.get("/products", auth(["usuario"]), async (req, res) => { //Paginacion con Handlebars
 
 
     let carrito = {
@@ -62,7 +53,6 @@ router.get("/products", auth, async (req, res) => { //Paginacion con Handlebars
             filtro.stock = { $gte: stock }//sintaxis mongoose
         }
 
-
         let opciones = {
             page: page,
             limit: limit,
@@ -75,7 +65,6 @@ router.get("/products", auth, async (req, res) => { //Paginacion con Handlebars
         } else if (sort === 'desc') {
             sortOptions.price = -1; // Orden descendente por precio
         }
-
 
         const resultado = await Producto.getProductsPaginate(filtro, opciones, sortOptions)
 
@@ -139,13 +128,12 @@ router.get("/login", (req, res) => {
     res.status(200).render("login")
 })
 
-router.get("/perfil", auth, (req, res) => { //Ruta protegida con middleware de autenticación
+router.get("/perfil", auth(["usuario"]), (req, res) => { //Ruta protegida con middleware de autenticación
     res.setHeader("Content-Type", "text/html")
     res.status(200).render("perfil", {
         usuario: req.session.usuario
     })
 })
-
 
 
 

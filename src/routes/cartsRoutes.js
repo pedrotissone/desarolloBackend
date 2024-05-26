@@ -353,7 +353,7 @@ router.delete("/:cid", async (req, res) => {//  ELIMINAR CARRITO
 
 
 
-router.post("/:cid/products/:pid", auth, async (req, res) => { //     AGREGAR PRODUCTO AL CARRITO HANDLEBAR
+router.post("/:cid/products/:pid", auth(["usuario"]), async (req, res) => { //     AGREGAR PRODUCTO AL CARRITO HANDLEBAR
     // try {
     //     await Carts.getCarts()
 

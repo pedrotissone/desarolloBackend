@@ -3,6 +3,7 @@ import {dirname, join} from "path"
 import multer from "multer"
 import crypto from "crypto"
 import bcrypt from "bcrypt"
+import passport from "passport"
 
 //__DIRNAME CASERO
 const __filename = fileURLToPath(import.meta.url)
@@ -32,12 +33,29 @@ const storage = multer.diskStorage({
   //Hasheo con el modulo crypto de node
   // const generateHash = password => crypto.createHmac("sha256", SECRET).update(password).digest("hex")
 
+  
   //Hasheo con una libreria externa mas segura llamada bcrypt (Uso la version síncrona)
   const generateHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10))
   //Le agrego una función adicional para validar por el plus de seguridad que le da los saltos
   const validaPassword = (password, passwordHash) => bcrypt.compareSync(password, passwordHash)
 
 
+  //Funcion de callback de passport para mayor control, la armó aca de forma dinamica y la exporto
+  const passportCall = (estrategia) => {
+    return function(req, res, next) {
+      passport.authenticate(estrategia, function(err, user, info, status) {
+        if (err) { return next(err) } //Desde passport.config hay error
+        if (!user) {//desde passsport devuelvo un done(null, false)
+          res.setHeader("Content-Type", "application/json")
+          return res.status(401).json({error: info.message ? info.message : info.toString()}) //info es el tercer argumento que podes darle al done, para dar un mensaje. EJ done(null, false, {message: "no estas autorizado papa"})
+        } 
+        req.user = user; //Si passport devuelve done(null, usuario) creo el req.user
+        return next() //passport es un middleware hay que darle next() para que siga
+      })(req, res, next);
+    };
+  }
 
 
-  export {__dirname, upload, generateHash, validaPassword, SECRET};
+
+
+  export {__dirname, upload, generateHash, validaPassword, SECRET, passportCall};

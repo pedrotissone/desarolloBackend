@@ -2,8 +2,8 @@ import express from "express"
 import mongoose from "mongoose"
 import cookieParser from "cookie-parser"
 import sessions from "express-session" //Las sessiones viven en memoria
-import FileStore from "session-file-store"//Con esto las sessiones pasan a vivir en un archivo
-import MongoStore from "connect-mongo"
+import FileStore from "session-file-store"//Con esto las sessiones vivian en un archivo local
+import MongoStore from "connect-mongo" //Con esto las sessiones viven en mongo
 import passport from "passport"
 import { initPassport } from "./config/passport.config.js" //importo mi funcion de config de passport
 import { Server } from "socket.io"
@@ -12,7 +12,6 @@ import {router as productsRouter} from "./routes/productsRoutes.js"
 import {router as cartsRouter} from "./routes/cartsRoutes.js"
 import { router as viewsRouter } from "./routes/viewsRouter.js"
 import { router as sessionsRouter } from "./routes/sessionsRouter.js"
-import { middleware1, middleware2, middleware3 } from "./middlewares/generales.js"
 import { errorHandler } from "./middlewares/errorHandler.js"
 import { chatModel } from "./dao/models/chatModel.js"
 
@@ -36,12 +35,6 @@ const conectionDB = async () => {
 }
 conectionDB()
 
-//instancio FileStore y le paso la dependencia de express-sessions como argumento(Lo dejo de lado por Mongo)
-// const fileStore = FileStore(sessions)
-
-//Primero Lo declaré aca arriba por si tenia que pasarlo como middleware a un router, pero no fue necesario
-//let serverSocket 
-
 //Estas 2 líneas son para que nuestro servidor interprete automaticamente msjes tipo JSON (CLAVE, son middlewares)
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
@@ -53,9 +46,6 @@ app.set("views", "./src/views")
 
  //Esta linea me permite mostrar TODO lo que haya dentro de la carpeta public, indicando DIRECTAMENTE en el navegador la ruta correspondiente a cada archivo desde public
 app.use(express.static("./src/public"))
-
-//Esta linea es un ejemplo de middleware a nivel aplicacion. Se ejecutan en cascada y sirven para manipular la request, formatearla y/o realizar validaciones antes de llegar al endpoint
-// app.use(middleware1, middleware2, middleware3) //Middlewares a nivel aplicación
 
 //Esta dependencia es un middleware que me maneja las cookies, también se puede hacer sin dependencia por headers
 app.use(cookieParser("coderCoder"))
@@ -148,5 +138,5 @@ io.on("connection", (socket) => { //2) Va a estar esuchando si llega una conexio
 
 export {io}
 
-//01:14:00
+//00:57:00
 

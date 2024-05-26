@@ -136,7 +136,7 @@ export const initPassport = () => {
         )
     )
 
-    //JWT current
+    //JSON WEB TOKEN
     passport.use(
         "current",
         new passportJWT.Strategy(
@@ -146,8 +146,8 @@ export const initPassport = () => {
             },
             async (contenidoToken, done) => { //Se lo suele llamar usuario xq el token suele tener datos del usuario
                 try {
-                    console.log(contenidoToken)
-                    return done(null, contenidoToken) //Será null o la token
+                    
+                    return done(null, contenidoToken) //contenidoToken será null o la token
                     
                 } catch (error) {
                     return done(error)                    

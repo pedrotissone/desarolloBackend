@@ -1,8 +1,9 @@
 import { Router } from "express";
 import { UsersManagerMongo as UsersManager } from "../dao/UsersManagerMongo.js";
-import { SECRET } from "../../utils.js";
+import { SECRET, passportCall } from "../../utils.js";
 import jwt from "jsonwebtoken";
 import passport from "passport";
+import { auth } from "../middlewares/auth.js";
 
 
 
@@ -59,8 +60,14 @@ router.post("/login", passport.authenticate("login", { failureRedirect: "/api/se
     if (web) { //Si sale todo OK en passport, este crea un req.user
         let usuario = { ...req.user } //spread operator
         delete usuario.password
+
         //Aca creo una session para el usuario
         req.session.usuario = usuario
+
+        //Tambien creo token (No debería convivir con sessions, si se rompe borrar y tambien en la .res el token)
+        let token = jwt.sign(usuario, SECRET, { expiresIn: "1h" })// Creo token
+        res.cookie("codercookie", token, { httpOnly: true })//Creo cookie desde el servidor y guardo el token
+        console.log(token)
         return res.redirect("/handlebars/")
     } else {
         //Rompo la referencia usando el spread (para que no me elimine la password del usuario de la DB) y le borro la contraseña para no devolverla en la response
@@ -71,82 +78,41 @@ router.post("/login", passport.authenticate("login", { failureRedirect: "/api/se
         req.session.usuario = usuario
 
         //Tambien creo token (No debería convivir con sessions, si se rompe borrar y tambien en la .res el token)
-        let token = jwt.sign(usuario, SECRET, {expiresIn: 10})// 30segs
-        res.cookie("codercookie", token, {httpOnly: true})//Creo cookie desde el servidor
+        let token = jwt.sign(usuario, SECRET, { expiresIn: "1h" })// Creo token
+        res.cookie("codercookie", token, { httpOnly: true })//Creo cookie desde el servidor y guardo el token
 
 
         res.setHeader("Content-Type", "application/json")
         res.status(200).json({ payload: "login correcto", usuario, token })
     }
-
-    // LOGICA PREVIA A LA IMPLEMENTACION DE PASSPORT
-
-    // // web es un input hidden para modificar comportamiento con respecto a una peticion de postman
-    // let { email, password, web } = req.body
-
-    // if (!email || !password) {
-    //     res.setHeader("Content-Type", "application/json")
-    //     return res.status(400).json("Complete el email y la contraseña!")
-    // }
-
-    // try {
-    //     // let usuario = await usersManager.getBy({ email, password: generateHash(password) }) //Valido email y contraseña (crypto)
-
-    //     //1ra validacion bcrypt, el email
-    //     let usuario = await usersManager.getBy({ email }) //Validación con bcrypt, son 2 etapas
-
-    //     if (!usuario) {
-    //         res.setHeader("Content-Type", "application/json")
-    //         return res.status(400).json("Credenciales inválidas")
-    //     }
-
-    //     //2da validacion bcrypt, la password
-    //     if (!validaPassword(password, usuario.password)) {
-    //         res.setHeader("Content-Type", "application/json")
-    //         return res.status(400).json("Credenciales inválidas")
-    //     }
-
-    //     //El usuario existe!, ahora si me logeo desde la web lo redirijo al home
-    //     if (web) {
-    //         //Por seguridad elimino la contraseña para que no se muestre
-    //         usuario = { ...usuario }//No se para que hago esto..
-    //         delete usuario.password
-    //         //IMPORTANTE: Creo una session para el usuario
-    //         req.session.usuario = usuario
-    //         return res.redirect("/handlebars/")
-    //     } else {
-    //         //Por seguridad elimino la contraseña para que no se muestre
-    //         usuario = { ...usuario }//No se para que hago esto..
-    //         delete usuario.password
-
-    //         //IMPORTANTE: Aca creo una session para el usuario!!!
-    //         req.session.usuario = usuario
-
-    //         res.setHeader("Content-Type", "application/json")
-    //         res.status(200).json({ payload: "login correcto", usuario })
-    //     }
-
-    // } catch (error) {
-    //     res.setHeader("Content-Type", "application/json")
-    //     res.status(500).json("Error en el servidor al logearse")
-    // }
 })
 
- 
+
 router.get("/github", passport.authenticate("github", {}), (req, res) => {//peticion de login vía github (Github va a preguntarme si autorizo a x programa a tener acceso a mis datos)
 
 })
 
-router.get("/callbackGithub", passport.authenticate("github", {failureRedirect: "/api/sessions/error"}), (req, res) => {//callbackURL github (Si todo sale bien github devuelve los datos a esta ruta)
+router.get("/callbackGithub", passport.authenticate("github", { failureRedirect: "/api/sessions/error" }), (req, res) => {//callbackURL github (Si todo sale bien github devuelve los datos a esta ruta)
 
     //Creo la session
     req.session.usuario = req.user
-    
-    res.setHeader("Content-Type", "application/json")
+
+    //Achico los datos que me devuelve github sino no voy a poder guardarlo como cookie para JWT
+    let datosToken = {
+        nombre: req.user.nombre,
+        email: req.user.email,
+        rol: req.user.rol,
+        carrito: req.user.carrito
+    }   
+    //Tambien creo token (No debería convivir con sessions, si se rompe borrar y tambien en la .res el token)
+    let token = jwt.sign(datosToken, SECRET, { expiresIn: "1h" })// Creo token
+    res.cookie("codercookie", token, { httpOnly: true })//Creo cookie desde el servidor y guardo el token
+
     //Aca devuelvo todos los datos
+    // res.setHeader("Content-Type", "application/json")
     // res.status(200).json({ payload: req.user})
 
-    //Aca redirecciono al home
+    //O Aca redirecciono al home
     return res.redirect("/handlebars/")
 })
 
@@ -164,10 +130,16 @@ router.get("/logout", (req, res) => {//Destruyo la session para el logout
 })
 
 //Ruta para probar JWT (Le indico sessions:false para que sepa que no estoy manejando sessiones)
-router.get("/current", passport.authenticate("current", {session: false}), (req, res) => {
+// router.get("/current", passport.authenticate("current", {session: false}), (req, res) => {
+//     res.setHeader("Content-Type", "application/json")
+//     return res.status(200).json(req.user)
+
+// })
+
+//Ruta para probar current con la funcion de callback de passport para mayor control (Yo la llamé passportCall)
+router.get("/current", passportCall("current"), (req, res) => {
     res.setHeader("Content-Type", "application/json")
     return res.status(200).json(req.user)
-
 })
 
 
