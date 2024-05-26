@@ -37,16 +37,16 @@ export const initPassport = () => {
                 try {
 
                     //OJO recordar que el username en mi caso va a ser el email
-                    let { nombre } = req.body
+                    let { nombre, apellido, edad } = req.body
 
                     //Validacion
-                    if (!nombre) { //los return de passport son con su formato de callback "done"
+                    if (!nombre || !apellido || !edad) { //los return de passport son con su formato de callback "done"
                         return done(null, false) //No hay error, pero algo esta mal en la peticion
                     }
                     //Validacion
                     let existe = await usersManager.getBy({ email: username }) //email es el username
                     if (existe) {
-                        return done(null, false)// No hay error, pero tampoco el usuario requerido
+                        return done(null, false)// No hay error, pero el email ya fue registrado por otro usuario en la DB
                     }
 
                     //Creo un carrito para el usuario
@@ -56,7 +56,7 @@ export const initPassport = () => {
                     password = generateHash(password)
 
                     //Creo nuevo usuario y le agrego el campo carrito con su _id
-                    let nuevoUsuario = await usersManager.create({ nombre, email:username, password, rol: "usuario", carrito: nuevoCarrito._id })//Por defecto los usuarios van a tener siempre ese rol
+                    let nuevoUsuario = await usersManager.create({ nombre, apellido, edad, email:username, password, rol: "usuario", carrito: nuevoCarrito._id })//Por defecto los usuarios van a tener siempre ese rol
                     return done(null, nuevoUsuario) //No hay error y se creo correctamente el usuario
 
                 } catch (error) {

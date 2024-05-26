@@ -22,34 +22,6 @@ router.post("/signUp", passport.authenticate("signUp", { failureRedirect: "/api/
     //Si sale todo bien passport crea un req.user y nos deja los datos ahi
     res.setHeader("Content-Type", "application/json")
     return res.status(201).json({ nuevoUsuario: req.user })
-
-    //LOGICA PREVIA A IMPLEMENTACIÓN DE PASSPORT
-    // let { nombre, email, password } = req.body
-    // console.log(req.body)
-
-    // if (!nombre || !email || !password) {
-    //     res.setHeader("Content-Type", "application/json")
-    //     return res.status(400).json("No se enviaron todos los datos para crear el usuario")
-    // }
-
-    // try {
-    //     let existe = await usersManager.getBy({ email }) //Es igual que poner {email:email}
-    //     if (existe) {
-    //         res.setHeader("Content-Type", "application/json")
-    //         return res.status(400).json("Ya existe registrado un usuario con el mismo email")
-    //     }
-    //     //Hasheo la contraseña antes de subirla a la DB
-    //     password = generateHash(password)
-
-    //     let nuevoUsuario = await usersManager.create({ nombre, email, password, rol:"usuario" })//Por defecto los usuarios van a tener siempre ese rol
-
-    //     res.setHeader("Content-Type", "application/json")
-    //     return res.status(200).json(nuevoUsuario)
-
-    // } catch (error) {
-    //     res.setHeader("Content-Type", "application/json")
-    //     res.status(500).json("Error en el servidor al crear el usuario")
-    // }
 })
 
 // 3er paso de passport, agrego middleware a la ruta y le indico el nombre de la estrategia elegida

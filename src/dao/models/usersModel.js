@@ -4,6 +4,8 @@ import mongoose from "mongoose";
 export const usersModel = mongoose.model("users", new mongoose.Schema({
 
     nombre: String,
+    apellido: String,
+    edad: Number,
     email: { type: String, unique: true },//Unique es para que no se pueda grabar dos emails iguales en la DB
     password: String,
     rol: {type: String, default: "usuario"},
