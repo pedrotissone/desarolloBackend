@@ -112,7 +112,7 @@ router.get("/callbackGithub", passport.authenticate("github", { failureRedirect:
     // res.setHeader("Content-Type", "application/json")
     // res.status(200).json({ payload: req.user})
 
-    //O Aca redirecciono al home
+    //O Aca redirecciono al home!
     return res.redirect("/handlebars/")
 })
 
