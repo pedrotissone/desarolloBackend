@@ -138,5 +138,5 @@ io.on("connection", (socket) => { //2) Va a estar esuchando si llega una conexio
 
 export {io}
 
-//00:57:00
+//00:00:00
 
