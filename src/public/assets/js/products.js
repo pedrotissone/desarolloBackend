@@ -9,21 +9,19 @@ let agregar = async (pid) => {
 
 }
 
-function modificarPageQuery(url, amount) { //Esta funcion la tengo que modificar para mantener el resto de las queries al cambiar de pagina
-    const urlObject = new URL(url);
-    const searchParams = new URLSearchParams(urlObject.search);
+function getQueryParams() { //Obtengo la url
+    const params = {};
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    urlParams.forEach((value, key) => {
+        params[key] = value;
+    });
+    return params;
+}
 
-    // Obtener el valor actual de la página
-    let currentPage = parseInt(searchParams.get("page")) || 1;
-
-    // Sumar o restar según corresponda
-    currentPage += amount;
-
-    // Establecer el nuevo valor de página
-    searchParams.set("page", currentPage);
-
-    // Establecer el nuevo parámetro de búsqueda en la URL
-    urlObject.search = searchParams.toString();
-
-    return urlObject.toString();
+function changePage(page) { //Modifico solo el query page de la url
+    const params = getQueryParams();
+    params.page = page;
+    const queryString = new URLSearchParams(params).toString();
+    window.location.href = './products?' + queryString;
 }

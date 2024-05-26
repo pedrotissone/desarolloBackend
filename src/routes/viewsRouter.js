@@ -68,6 +68,7 @@ router.get("/products", auth(["usuario"]), async (req, res) => { //Paginacion co
 
         const resultado = await Producto.getProductsPaginate(filtro, opciones, sortOptions)
 
+
         //Desestructuro el resultado en las propiedades que necesito
         let { payload, totalPages, hasPrevPage, hasNextPage, prevPage, nextPage } = resultado
         res.setHeader("Content-Type", "text/html")

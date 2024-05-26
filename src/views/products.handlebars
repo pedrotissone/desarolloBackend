@@ -22,7 +22,7 @@
 </ul>
 
 <br>
-<a href="./products?page=1">Pág. 1</a>
+{{!-- <a href="./products?page=1">Pág. 1</a>
 
 {{#if hasPrevPage}}
 <a href="./products?page={{prevPage}}">Ant.</a>
@@ -32,7 +32,18 @@
 <a href="./products?page={{nextPage}}">Sig.</a>
 {{/if}}
 
-<a href="./products?page={{totalPages}}">Ult. Pág.</a>
+<a href="./products?page={{totalPages}}">Ult. Pág.</a> --}}
+<a href="#" onclick="changePage(1)">Pág. 1</a>
+
+{{#if hasPrevPage}}
+<a href="#" onclick="changePage({{prevPage}})">Ant.</a>
+{{/if}}
+
+{{#if hasNextPage}}
+<a href="#" onclick="changePage({{nextPage}})">Sig.</a>
+{{/if}}
+
+<a href="#" onclick="changePage({{totalPages}})">Ult. Pág.</a>
 
 
 <script src="/assets/js/products.js"></script>
