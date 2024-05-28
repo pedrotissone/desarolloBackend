@@ -13,7 +13,6 @@ const router = Router()
 router.get("/", async (req, res) => {
 
     let usuario = req.session.usuario
-    console.log(usuario)
     try {
         let productos = await Producto.getProducts()
         res.setHeader("Content-Type", "text/html")
@@ -31,8 +30,8 @@ router.get("/products", auth(["usuario"]), async (req, res) => { //Paginacion co
     let carrito = {
         _id: req.session.usuario.carrito
     }
-    
-    try {        
+
+    try {
 
         //              QUERY PARAMS
         let page = parseInt(req.query.page) || 1
@@ -72,7 +71,7 @@ router.get("/products", auth(["usuario"]), async (req, res) => { //Paginacion co
         //Desestructuro el resultado en las propiedades que necesito
         let { payload, totalPages, hasPrevPage, hasNextPage, prevPage, nextPage } = resultado
         res.setHeader("Content-Type", "text/html")
-        res.status(200).render("products", { payload, totalPages, hasPrevPage, hasNextPage, prevPage, nextPage, carrito})
+        res.status(200).render("products", { payload, totalPages, hasPrevPage, hasNextPage, prevPage, nextPage, carrito })
 
 
     } catch (error) {
@@ -94,7 +93,7 @@ router.get("/realtimeproducts", async (req, res) => {
     }
 })
 
-router.get("/chat", (req, res) => {
+router.get("/chat", auth(["usuario"]), (req, res) => {
     try {
         res.setHeader("Content-Type", "text/html")
         res.status(200).render("chat")
@@ -129,7 +128,7 @@ router.get("/login", (req, res) => {
     res.status(200).render("login")
 })
 
-router.get("/perfil", auth(["usuario"]), (req, res) => { //Ruta protegida con middleware de autenticación
+router.get("/perfil", auth(["usuario", "admin"]), (req, res) => {
     res.setHeader("Content-Type", "text/html")
     res.status(200).render("perfil", {
         usuario: req.session.usuario

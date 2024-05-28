@@ -14,9 +14,6 @@ const Producto = new ProductManager()
 const router = Router()
 
 router.get("/", async (req, res) => {
-    //Prueba de lectura de cookies
-    // let lecturaDeCookies = req.cookies //Leo todas las cookies de la request
-    // let lecturaFirmadas = req.signedCookies //Leo sólo las cookies firmadas de la request, si alguien las modifica se bloquean para no viajar con la response
 
     try {
         //              QUERY PARAMS
@@ -111,7 +108,7 @@ router.get("/:pid", async (req, res) => {
 })
 
 
-router.post("/", auth, upload.single("thumbnail"), async (req, res) => {
+router.post("/", auth(["admin"]), upload.single("thumbnail"), async (req, res) => {
 
     // try {        
     // await Producto.getProducts()
@@ -210,7 +207,7 @@ router.post("/", auth, upload.single("thumbnail"), async (req, res) => {
 
 
 
-router.put("/:pid", async (req, res) => {
+router.put("/:pid", auth(["admin"]), async (req, res) => {
 
     //     try {
 
@@ -283,7 +280,7 @@ router.put("/:pid", async (req, res) => {
 })
 
 
-router.delete("/:pid", async (req, res) => {
+router.delete("/:pid", auth(["admin"]), async (req, res) => {
     //     try {
     //         await Producto.getProducts()
     //         let id = parseInt(req.params.pid)

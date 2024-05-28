@@ -1,0 +1,13 @@
+
+.homeTitle {
+    width: fit-content;
+    margin: auto;
+}
+
+.homeUl {
+    list-style: none;    
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around
+
+}

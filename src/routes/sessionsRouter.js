@@ -3,7 +3,6 @@ import { UsersManagerMongo as UsersManager } from "../dao/UsersManagerMongo.js";
 import { SECRET, passportCall } from "../../utils.js";
 import jwt from "jsonwebtoken";
 import passport from "passport";
-import { auth } from "../middlewares/auth.js";
 
 
 
@@ -88,14 +87,17 @@ router.get("/callbackGithub", passport.authenticate("github", { failureRedirect:
     return res.redirect("/handlebars/")
 })
 
-router.get("/logout", (req, res) => {//Destruyo la session para el logout
-    req.session.destroy((error) => {//Así es la sintaxis de este metodo..
+router.get("/logout", (req, res) => {//Destruyo la session o JWT cookie para el logout
+    //Destruyo session
+    req.session.destroy((error) => {
         if (error) {
-            console.log(error)
             res.setHeader("Content-Type", "application/json")
             return res.status(500).json("Error en el servidor al querer destruir la session")
         }
     })
+
+    //Destruyo cookie de JWT
+    res.clearCookie("codercookie", { httpOnly: true})
 
     res.setHeader("Content-Type", "text/html")
     return res.redirect("/handlebars/login")
@@ -105,8 +107,8 @@ router.get("/logout", (req, res) => {//Destruyo la session para el logout
 // router.get("/current", passport.authenticate("current", {session: false}), (req, res) => {
 //     res.setHeader("Content-Type", "application/json")
 //     return res.status(200).json(req.user)
-
 // })
+
 
 //Ruta para probar current con la funcion de callback de passport para mayor control (Yo la llamé passportCall)
 router.get("/current", passportCall("current"), (req, res) => {

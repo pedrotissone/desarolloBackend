@@ -40,7 +40,7 @@ const storage = multer.diskStorage({
   const validaPassword = (password, passwordHash) => bcrypt.compareSync(password, passwordHash)
 
 
-  //Funcion de callback de passport para mayor control, la armó aca de forma dinamica y la exporto
+  //Funcion de callback de passport para configurar manualmente el metodo authenticate con mensajes especificos y demás
   const passportCall = (estrategia) => {
     return function(req, res, next) {
       passport.authenticate(estrategia, function(err, user, info, status) {

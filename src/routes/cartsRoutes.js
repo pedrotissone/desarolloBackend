@@ -3,7 +3,6 @@ import { Router } from "express"
 import { CartManagerMongo as CartManager } from "../dao/CartManagerMongo.js"
 import { ProductManagerMongo as ProductManager } from "../dao/ProductManagerMongo.js"
 import { isValidObjectId } from "mongoose"
-import { middleware3 } from "../middlewares/generales.js"
 import { auth } from "../middlewares/auth.js"
 
 
@@ -20,7 +19,7 @@ const router = Router()
 
 
 //Middleware a nivel endpoint
-router.get("/:cid", middleware3, async (req, res) => {//    BUSCAR CARRITO POR ID
+router.get("/:cid", async (req, res) => {//    BUSCAR CARRITO POR ID
     //     try {
     //             await Carts.getCarts()
 
@@ -100,7 +99,7 @@ router.post("/", async (req, res) => {//    CREAR NUEVO CARRITO
 
 
 
-router.put("/:cid", async (req, res) => {//     AGREGAR PRODUCTO AL CARRITO
+router.put("/:cid", auth(["admin", "usuario"]), async (req, res) => {//     AGREGAR PRODUCTO AL CARRITO
     let cid = req.params.cid
 
     if (!isValidObjectId(cid)) {
@@ -156,7 +155,7 @@ router.put("/:cid", async (req, res) => {//     AGREGAR PRODUCTO AL CARRITO
     }
 })
 
-router.put("/:cid/products/:pid", async (req, res) => { //  MODIFICAR CANTIDAD DEL PRODUCTO
+router.put("/:cid/products/:pid", auth(["admin", "usuario"]), async (req, res) => { //  MODIFICAR CANTIDAD DEL PRODUCTO
     let cid = req.params.cid
     let pid = req.params.pid
 
@@ -225,7 +224,7 @@ router.put("/:cid/products/:pid", async (req, res) => { //  MODIFICAR CANTIDAD D
     }
 })
 
-router.delete("/:cid/products/:pid", async (req, res) => {//    ELIMINAR PRODUCTO DEL CARRITO
+router.delete("/:cid/products/:pid", auth(["admin", "usuario"]), async (req, res) => {//    ELIMINAR PRODUCTO DEL CARRITO
     let cid = req.params.cid
     let pid = req.params.pid
 
@@ -277,7 +276,7 @@ router.delete("/:cid/products/:pid", async (req, res) => {//    ELIMINAR PRODUCT
 })
 
 
-router.delete("/:cid", async (req, res) => {//  ELIMINAR TODOS LOS PRODUCTOS DEL CARRITO
+router.delete("/:cid", auth(["admin", "usuario"]), async (req, res) => {//  ELIMINAR TODOS LOS PRODUCTOS DEL CARRITO
     let cid = req.params.cid
 
     if (!isValidObjectId(cid)) {
@@ -325,31 +324,31 @@ router.delete("/:cid", async (req, res) => {//  ELIMINAR TODOS LOS PRODUCTOS DEL
 
 
 //          OJO A ESTA RUTA NO SE VA A LLEGAR NUNCA PORQUE ES IGUAL A LA DE ARRIBA!!!
-router.delete("/:cid", async (req, res) => {//  ELIMINAR CARRITO
-    //Valido que el id tenga el formato de Mongodb
-    let id = req.params.cid
-    if (!isValidObjectId(id)) {
-        res.setHeader("Content-Type", "application/json")
-        return res.status(400).json({
-            message: "Error, el id requerido no tiene un formato valido de MongoDB"
-        })
-    }
+// router.delete("/:cid", async (req, res) => {//  ELIMINAR CARRITO
+//     //Valido que el id tenga el formato de Mongodb
+//     let id = req.params.cid
+//     if (!isValidObjectId(id)) {
+//         res.setHeader("Content-Type", "application/json")
+//         return res.status(400).json({
+//             message: "Error, el id requerido no tiene un formato valido de MongoDB"
+//         })
+//     }
 
-    try {
-        let resultado = await Carts.deleteCart(id)
-        if (resultado.deletedCount > 0) {
-            res.setHeader("Content-Type", "application/json")
-            return res.status(200).json(`producto con id: ${id} eliminado`)
-        } else {
-            res.setHeader("Content-Type", "application/json")
-            return res.status(404).json("El id del producto a eliminar no existe")
-        }
+//     try {
+//         let resultado = await Carts.deleteCart(id)
+//         if (resultado.deletedCount > 0) {
+//             res.setHeader("Content-Type", "application/json")
+//             return res.status(200).json(`producto con id: ${id} eliminado`)
+//         } else {
+//             res.setHeader("Content-Type", "application/json")
+//             return res.status(404).json("El id del producto a eliminar no existe")
+//         }
 
-    } catch (error) {
-        res.setHeader("Content-Type", "application/json")
-        return res.status(500).json({ error: "Error en el Servidor al querer eliminar el carrito" })
-    }
-})
+//     } catch (error) {
+//         res.setHeader("Content-Type", "application/json")
+//         return res.status(500).json({ error: "Error en el Servidor al querer eliminar el carrito" })
+//     }
+// })
 
 
 

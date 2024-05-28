@@ -136,7 +136,7 @@ export const initPassport = () => {
         )
     )
 
-    //JSON WEB TOKEN
+    //ESTRATEGIA DE AUTENTICACION CON JSON WEB TOKEN
     passport.use(
         "current",
         new passportJWT.Strategy(

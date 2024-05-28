@@ -1,12 +1,12 @@
 {{>navBar}}
 <br>
-<h2>Listado de productos</h2>
+<h2 class="homeTitle">Listado de productos</h2>
 
 {{#if usuario}}
-<p>Bienvenido {{usuario.nombre}}!</p>
+<p><strong>Bienvenido {{usuario.nombre}}!</strong></p>
 {{/if}}
 
-<ul>
+<ul class="homeUl">
     {{#each productos}}
         <li>{{title}}</li>
     {{/each}}

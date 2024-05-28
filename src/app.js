@@ -44,7 +44,7 @@ app.engine("handlebars", engine())
 app.set("view engine", "handlebars")
 app.set("views", "./src/views")
 
- //Esta linea me permite mostrar TODO lo que haya dentro de la carpeta public, indicando DIRECTAMENTE en el navegador la ruta correspondiente a cada archivo desde public
+//Esta linea me permite mostrar TODO lo que haya dentro de la carpeta public, indicando DIRECTAMENTE en el navegador la ruta correspondiente a cada archivo desde public
 app.use(express.static("./src/public"))
 
 //Esta dependencia es un middleware que me maneja las cookies, también se puede hacer sin dependencia por headers
@@ -82,7 +82,7 @@ app.use("/api/sessions", sessionsRouter)
 
 
                              
-//Comodín: Si la peticion no coincide con ninguna ruta especificada se ejecuta.
+//Comodín: Si la peticion no coincide con ninguna ruta especificada se ejecuta (Va siempre al final)
 app.get("*", (req, res) => {
     res.setHeader("Content-Type", "application/json")
     res.status(404).json({
@@ -139,4 +139,5 @@ io.on("connection", (socket) => { //2) Va a estar esuchando si llega una conexio
 export {io}
 
 //00:00:00
+//Solucionar tema de eliminar producto, que no se elimina completamente del carrito xq queda la cantidad y demás campos en blanco
 
