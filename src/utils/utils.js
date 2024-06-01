@@ -1,7 +1,8 @@
 import {fileURLToPath} from "url"
 import {dirname, join} from "path"
+import { config } from "../config/config.js"
 import multer from "multer"
-import crypto from "crypto"
+import crypto from "crypto" //modulo nativo de node, lo cambié por bcrypt
 import bcrypt from "bcrypt"
 import passport from "passport"
 
@@ -29,7 +30,7 @@ const storage = multer.diskStorage({
   const upload = multer({ storage: storage })
 
   //HASH DE PASSWORDS
-  let SECRET = "coderCoder123"
+  let SECRET = config.SECRET
   //Hasheo con el modulo crypto de node
   // const generateHash = password => crypto.createHmac("sha256", SECRET).update(password).digest("hex")
 

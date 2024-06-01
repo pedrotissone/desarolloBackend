@@ -1,6 +1,6 @@
 import fs from "fs"
 import path from "path"
-import { __dirname } from "../../utils.js"//Importe el __dirname que arme para usar con ESmodules
+import { __dirname } from "../utils/utils.js"//Importe el __dirname que arme para usar con ESmodules
 import { cartModel } from "./models/cartModel.js"
 
 class CartManagerMongo {

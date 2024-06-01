@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { UsersManagerMongo as UsersManager } from "../dao/UsersManagerMongo.js";
-import { SECRET, passportCall } from "../../utils.js";
+import { SECRET, passportCall } from "../utils/utils.js";
 import jwt from "jsonwebtoken";
 import passport from "passport";
 
@@ -36,9 +36,9 @@ router.post("/login", passport.authenticate("login", { failureRedirect: "/api/se
         req.session.usuario = usuario
 
         //Tambien creo token (No debería convivir con sessions, si se rompe borrar y tambien en la .res el token)
-        let token = jwt.sign(usuario, SECRET, { expiresIn: "1h" })// Creo token
+        let token = jwt.sign(usuario, SECRET, { expiresIn: 30 })// Creo token
         res.cookie("codercookie", token, { httpOnly: true })//Creo cookie desde el servidor y guardo el token
-        console.log(token)
+        
         return res.redirect("/handlebars/")
     } else {
         //Rompo la referencia usando el spread (para que no me elimine la password del usuario de la DB) y le borro la contraseña para no devolverla en la response
@@ -49,7 +49,7 @@ router.post("/login", passport.authenticate("login", { failureRedirect: "/api/se
         req.session.usuario = usuario
 
         //Tambien creo token (No debería convivir con sessions, si se rompe borrar y tambien en la .res el token)
-        let token = jwt.sign(usuario, SECRET, { expiresIn: "1h" })// Creo token
+        let token = jwt.sign(usuario, SECRET, { expiresIn: 30 })// Creo token
         res.cookie("codercookie", token, { httpOnly: true })//Creo cookie desde el servidor y guardo el token
 
 
@@ -69,15 +69,15 @@ router.get("/callbackGithub", passport.authenticate("github", { failureRedirect:
     req.session.usuario = req.user
 
     //Achico los datos que me devuelve github sino no voy a poder guardarlo como cookie para JWT
-    let datosToken = {
-        nombre: req.user.nombre,
-        email: req.user.email,
-        rol: req.user.rol,
-        carrito: req.user.carrito
-    }   
-    //Tambien creo token (No debería convivir con sessions, si se rompe borrar y tambien en la .res el token)
-    let token = jwt.sign(datosToken, SECRET, { expiresIn: "1h" })// Creo token
-    res.cookie("codercookie", token, { httpOnly: true })//Creo cookie desde el servidor y guardo el token
+    // let datosToken = {
+    //     nombre: req.user.nombre,
+    //     email: req.user.email,
+    //     rol: req.user.rol,
+    //     carrito: req.user.carrito
+    // }   
+    // //Tambien creo token (No debería convivir con sessions, si se rompe borrar y tambien en la .res el token)
+    // let token = jwt.sign(datosToken, SECRET, { expiresIn: 30 })// Creo token
+    // res.cookie("codercookie", token, { httpOnly: true })//Creo cookie desde el servidor y guardo el token
 
     //Aca devuelvo todos los datos
     // res.setHeader("Content-Type", "application/json")

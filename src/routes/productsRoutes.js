@@ -1,7 +1,7 @@
 import { Router } from "express"
 // import ProductManager from "../dao/ProductManager.js" //FILE SYSTEM MANAGER
 import { ProductManagerMongo as ProductManager } from "../dao/ProductManagerMongo.js" //MONGO MANAGER
-import { upload } from "../../utils.js"
+import { upload } from "../utils/utils.js"
 import { io } from "../app.js"
 import { isValidObjectId } from "mongoose"
 import { productsModel } from "../dao/models/productsModel.js"

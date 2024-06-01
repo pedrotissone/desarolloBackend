@@ -23,5 +23,7 @@ export const config = {
     MONGO_URL: process.env.MONGO_URL,
     DB_NAME: process.env.DB_NAME,
     CLIENT_SECRET: process.env.CLIENT_SECRET,
-    CLIENT_ID: process.env.CLIENT_ID
+    CLIENT_ID: process.env.CLIENT_ID,
+    SECRET: process.env.SECRET,
+    SECRET_SESSION: process.env.SECRET_SESSION
 }

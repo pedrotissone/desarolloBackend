@@ -3,7 +3,7 @@ import local from "passport-local" //Importo la estrategia de autenticación que
 import github from "passport-github2" //estrategia
 import passportJWT from "passport-jwt"// estrategia
 import { config } from "./config.js"
-import { SECRET, generateHash, validaPassword } from "../../utils.js";
+import { SECRET, generateHash, validaPassword } from "../utils/utils.js";
 import { UsersManagerMongo as UsersManager } from "../dao/UsersManagerMongo.js";//Importo mi manager para crear los usuarios
 import { CartManagerMongo as CartManager } from "../dao/CartManagerMongo.js";
 

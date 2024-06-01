@@ -50,7 +50,7 @@ app.use(cookieParser("coderCoder"))
 
 //Utilizo la dependencia express-sessions, para obtener UNA session por cada usuario que se conecte al servidor (lo realiza a traves de una cookie de session)
 app.use(sessions({ //le paso un objeto de configuracion como argumento
-    secret: "coderCoder",
+    secret: config.SECRET_SESSION,
     resave: true,
     saveUninitialized: true,
     //Configuracion del FileStore para las sessiones (lo cambié por mongo)
