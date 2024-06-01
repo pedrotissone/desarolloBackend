@@ -2,6 +2,7 @@ import passport from "passport"; //Importo el nucleo (Core)
 import local from "passport-local" //Importo la estrategia de autenticación que quiero (Hay como 500)
 import github from "passport-github2" //estrategia
 import passportJWT from "passport-jwt"// estrategia
+import { config } from "./config.js"
 import { SECRET, generateHash, validaPassword } from "../../utils.js";
 import { UsersManagerMongo as UsersManager } from "../dao/UsersManagerMongo.js";//Importo mi manager para crear los usuarios
 import { CartManagerMongo as CartManager } from "../dao/CartManagerMongo.js";
@@ -102,9 +103,9 @@ export const initPassport = () => {
         "github",
         new github.Strategy(
             {
-                clientID: "Iv23liBAvhuqZXD4cqVT",
-                clientSecret: "7cd930479ba65f90ffd222136a2785f7f3fcdb87",
-                callbackURL: "http://localhost:8080/api/sessions/callbackGithub"
+                clientID: config.CLIENT_ID,
+                clientSecret: config.CLIENT_SECRET,
+                callbackURL: `http://localhost:${config.PORT}/api/sessions/callbackGithub`
             },
             async (tokenAcceso, tokenRefresh, profile, done) => {
                 try {

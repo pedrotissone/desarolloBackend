@@ -55,7 +55,6 @@ const storage = multer.diskStorage({
     };
   }
 
-
-
+ 
 
   export {__dirname, upload, generateHash, validaPassword, SECRET, passportCall};

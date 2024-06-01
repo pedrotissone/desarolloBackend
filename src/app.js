@@ -1,5 +1,6 @@
 import express from "express"
 import mongoose from "mongoose"
+import { config } from "./config/config.js"
 import cookieParser from "cookie-parser"
 import sessions from "express-session" //Las sessiones viven en memoria
 import FileStore from "session-file-store"//Con esto las sessiones vivian en un archivo local
@@ -16,16 +17,13 @@ import { errorHandler } from "./middlewares/errorHandler.js"
 import { chatModel } from "./dao/models/chatModel.js"
 
 
-const PORT = 8080
+const PORT = config.PORT
 const app = express()
 
 //Coneccíon a la base de datos (indicar URL y el nombre de la DB)
 const conectionDB = async () => {
     try {
-        await mongoose.connect("mongodb+srv://pedrotissone:2ennu3dL@codercluster.bk90trh.mongodb.net/?retryWrites=true&w=majority&appName=coderCluster",
-        {
-            dbName: "ecommerce"
-        }
+        await mongoose.connect(config.MONGO_URL, {dbName: config.DB_NAME}
     )
     console.log("DB online..")
         
@@ -138,6 +136,8 @@ io.on("connection", (socket) => { //2) Va a estar esuchando si llega una conexio
 
 export {io}
 
-//00:00:00
-//Solucionar tema de eliminar producto, que no se elimina completamente del carrito xq queda la cantidad y demás campos en blanco
+//01:52:00
+//NOTAS:
+//Variables de entorno: estan configuradas en el OS y uno puede acceder a ellas atraves de una aplicacion
+//CUSTOM ROUTER: VER CLASE 24 SEGUNDA PRACTICA INTEGRADORA
 
