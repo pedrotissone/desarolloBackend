@@ -136,7 +136,7 @@ io.on("connection", (socket) => { //2) Va a estar esuchando si llega una conexio
 
 export {io}
 
-//01:52:00
+//00:50:00
 
 //NOTAS:
 //Variables de entorno: estan configuradas en el OS y uno puede acceder a ellas atraves de una aplicacion
