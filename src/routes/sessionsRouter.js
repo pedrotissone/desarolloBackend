@@ -24,7 +24,7 @@ router.post("/signUp", passport.authenticate("signUp", { failureRedirect: "/api/
 })
 
 // 3er paso de passport, agrego middleware a la ruta y le indico el nombre de la estrategia elegida
-router.post("/login", passport.authenticate("login", { failureRedirect: "/api/sessions/error" }), async (req, res) => { //Me logeo con usuario ya registrado
+router.post("/login", passport.authenticate("login", { failureRedirect: "/api/sessions/error", session: false }), async (req, res) => { //Me logeo con usuario ya registrado
 
     let { web } = req.body
 
@@ -33,10 +33,10 @@ router.post("/login", passport.authenticate("login", { failureRedirect: "/api/se
         delete usuario.password
 
         //Aca creo una session para el usuario
-        req.session.usuario = usuario
+        // req.session.usuario = usuario
 
         //Tambien creo token (No debería convivir con sessions, si se rompe borrar y tambien en la .res el token)
-        let token = jwt.sign(usuario, SECRET, { expiresIn: 30 })// Creo token
+        let token = jwt.sign(usuario, SECRET, { expiresIn: "1h" })// Creo token
         res.cookie("codercookie", token, { httpOnly: true })//Creo cookie desde el servidor y guardo el token
         
         return res.redirect("/handlebars/")
@@ -46,10 +46,10 @@ router.post("/login", passport.authenticate("login", { failureRedirect: "/api/se
         delete usuario.password
 
         //creo una session para el usuario!
-        req.session.usuario = usuario
+        // req.session.usuario = usuario
 
         //Tambien creo token (No debería convivir con sessions, si se rompe borrar y tambien en la .res el token)
-        let token = jwt.sign(usuario, SECRET, { expiresIn: 30 })// Creo token
+        let token = jwt.sign(usuario, SECRET, { expiresIn: "1h" })// Creo token
         res.cookie("codercookie", token, { httpOnly: true })//Creo cookie desde el servidor y guardo el token
 
 
@@ -63,21 +63,21 @@ router.get("/github", passport.authenticate("github", {}), (req, res) => {//peti
 
 })
 
-router.get("/callbackGithub", passport.authenticate("github", { failureRedirect: "/api/sessions/error" }), (req, res) => {//callbackURL github (Si todo sale bien github devuelve los datos a esta ruta)
+router.get("/callbackGithub", passport.authenticate("github", { failureRedirect: "/api/sessions/error", session: false }), (req, res) => {//callbackURL github (Si todo sale bien github devuelve los datos a esta ruta)
 
     //Creo la session
-    req.session.usuario = req.user
+    // req.session.usuario = req.user
 
-    //Achico los datos que me devuelve github sino no voy a poder guardarlo como cookie para JWT
-    // let datosToken = {
-    //     nombre: req.user.nombre,
-    //     email: req.user.email,
-    //     rol: req.user.rol,
-    //     carrito: req.user.carrito
-    // }   
-    // //Tambien creo token (No debería convivir con sessions, si se rompe borrar y tambien en la .res el token)
-    // let token = jwt.sign(datosToken, SECRET, { expiresIn: 30 })// Creo token
-    // res.cookie("codercookie", token, { httpOnly: true })//Creo cookie desde el servidor y guardo el token
+    // Achico los datos que me devuelve github sino no voy a poder guardarlo como cookie para JWT
+    let datosToken = {
+        nombre: req.user.nombre,
+        email: req.user.email,
+        rol: req.user.rol,
+        carrito: req.user.carrito
+    }   
+    //Tambien creo token (No debería convivir con sessions, si se rompe borrar y tambien en la .res el token)
+    let token = jwt.sign(datosToken, SECRET, { expiresIn: "1h" })// Creo token y defino que será valido por 1 hora
+    res.cookie("codercookie", token, { httpOnly: true})//Creo cookie desde el servidor y guardo el token
 
     //Aca devuelvo todos los datos
     // res.setHeader("Content-Type", "application/json")
@@ -89,12 +89,12 @@ router.get("/callbackGithub", passport.authenticate("github", { failureRedirect:
 
 router.get("/logout", (req, res) => {//Destruyo la session o JWT cookie para el logout
     //Destruyo session
-    req.session.destroy((error) => {
-        if (error) {
-            res.setHeader("Content-Type", "application/json")
-            return res.status(500).json("Error en el servidor al querer destruir la session")
-        }
-    })
+    // req.session.destroy((error) => {
+    //     if (error) {
+    //         res.setHeader("Content-Type", "application/json")
+    //         return res.status(500).json("Error en el servidor al querer destruir la session")
+    //     }
+    // })
 
     //Destruyo cookie de JWT
     res.clearCookie("codercookie", { httpOnly: true})
@@ -104,16 +104,16 @@ router.get("/logout", (req, res) => {//Destruyo la session o JWT cookie para el 
 })
 
 //Ruta para probar JWT (Le indico sessions:false para que sepa que no estoy manejando sessiones)
-// router.get("/current", passport.authenticate("current", {session: false}), (req, res) => {
-//     res.setHeader("Content-Type", "application/json")
-//     return res.status(200).json(req.user)
-// })
-
-
-//Ruta para probar current con la funcion de callback de passport para mayor control (Yo la llamé passportCall)
-router.get("/current", passportCall("current"), (req, res) => {
+router.get("/current", passport.authenticate("current", {session: false}), (req, res) => {
     res.setHeader("Content-Type", "application/json")
     return res.status(200).json(req.user)
 })
+
+
+//Ruta para probar current con la funcion de callback de passport para mayor control (Yo la llamé passportCall)
+// router.get("/current", passportCall("current"), (req, res) => {
+//     res.setHeader("Content-Type", "application/json")
+//     return res.status(200).json(req.user)
+// })
 
 

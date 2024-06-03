@@ -9,12 +9,13 @@ import passport from "passport"
 import { initPassport } from "./config/passport.config.js" //importo mi funcion de config de passport
 import { Server } from "socket.io"
 import { engine } from "express-handlebars"
-import {router as productsRouter} from "./routes/productsRoutes.js"
-import {router as cartsRouter} from "./routes/cartsRoutes.js"
+import {router as productsRouter} from "./routes/productsRouter.js"
+import {router as cartsRouter} from "./routes/cartsRouter.js"
 import { router as viewsRouter } from "./routes/viewsRouter.js"
 import { router as sessionsRouter } from "./routes/sessionsRouter.js"
 import { errorHandler } from "./middlewares/errorHandler.js"
 import { chatModel } from "./dao/models/chatModel.js"
+import { verifyJWT } from "./utils/utils.js"
 
 
 const PORT = config.PORT
@@ -49,24 +50,27 @@ app.use(express.static("./src/public"))
 app.use(cookieParser("coderCoder"))
 
 //Utilizo la dependencia express-sessions, para obtener UNA session por cada usuario que se conecte al servidor (lo realiza a traves de una cookie de session)
-app.use(sessions({ //le paso un objeto de configuracion como argumento
-    secret: config.SECRET_SESSION,
-    resave: true,
-    saveUninitialized: true,
-    //Configuracion del FileStore para las sessiones (lo cambié por mongo)
-    // store: new fileStore({
-    //     ttl: 3600, retries: 0,
-    //     path: "./src/sessions"
-    // })
-    store: MongoStore.create({
-        ttl: 3600,
-        mongoUrl: "mongodb+srv://pedrotissone:2ennu3dL@codercluster.bk90trh.mongodb.net/?retryWrites=true&w=majority&appName=coderCluster&dbName=ecommerce"
-    })
-}))
+// app.use(sessions({ //le paso un objeto de configuracion como argumento
+//     secret: config.SECRET_SESSION,
+//     resave: true,
+//     saveUninitialized: true,
+//     //Configuracion del FileStore para las sessiones (lo cambié por mongo)
+//     // store: new fileStore({
+//     //     ttl: 3600, retries: 0,
+//     //     path: "./src/sessions"
+//     // })
+//     store: MongoStore.create({
+//         ttl: 3600,
+//         mongoUrl: "mongodb+srv://pedrotissone:2ennu3dL@codercluster.bk90trh.mongodb.net/?retryWrites=true&w=majority&appName=coderCluster&dbName=ecommerce"
+//     })
+// }))
+
 //2do paso de configuracion de passport (Siempre debajo de sessiones y antes de las rutas)
 initPassport()
 app.use(passport.initialize())
-app.use(passport.session()) //1er paso B)(Solo si uso sessiones y tiene que ir debajo del middleware de sessions, sino esta linea no va)
+//Con este middleware paso a las rutas siempre un req.user en caso de existir token valido
+app.use(verifyJWT)
+// app.use(passport.session()) //1er paso B)(Solo si uso sessiones y tiene que ir debajo del middleware de sessions, sino esta linea no va)
 
 //                                          RUTAS CON ROUTER
 app.use("/", viewsRouter) //Truco para que el home sea mi archivo de handlebars

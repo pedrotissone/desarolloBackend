@@ -3,6 +3,7 @@ import { Router } from "express"
 import { ProductManagerMongo as ProductManager } from "../dao/ProductManagerMongo.js"
 import { CartManagerMongo as CartManager } from "../dao/CartManagerMongo.js"
 import { auth } from "../middlewares/auth.js"
+import { verifyJWT } from "../utils/utils.js"
 
 
 const Producto = new ProductManager()
@@ -12,11 +13,13 @@ const router = Router()
 
 router.get("/", async (req, res) => {
 
-    let usuario = req.session.usuario
+    // let usuario = req.session.usuario
+    let usuario = req.user ? req.user : null
+        
     try {
         let productos = await Producto.getProducts()
         res.setHeader("Content-Type", "text/html")
-        res.status(200).render("home", { productos, usuario }) //Para la vista home, paso la variable products
+        res.status(200).render("home", { productos, usuario }) //Para la vista home, paso la variable products y el usuario si hay
     } catch (error) {
         res.setHeader("Content-Type", "application/json")
         res.status(500).json({ Error: "Error 500 - Error inesperado en el servidor" })
@@ -28,7 +31,7 @@ router.get("/products", auth(["usuario"]), async (req, res) => { //Paginacion co
 
 
     let carrito = {
-        _id: req.session.usuario.carrito
+        _id: req.user.carrito
     }
 
     try {
@@ -131,7 +134,7 @@ router.get("/login", (req, res) => {
 router.get("/perfil", auth(["usuario", "admin"]), (req, res) => {
     res.setHeader("Content-Type", "text/html")
     res.status(200).render("perfil", {
-        usuario: req.session.usuario
+        usuario: req.user
     })
 })
 

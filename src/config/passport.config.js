@@ -145,10 +145,10 @@ export const initPassport = () => {
                 secretOrKey: SECRET, //Una clave secreta, la tengo en utils.js
                 jwtFromRequest: new passportJWT.ExtractJwt.fromExtractors([buscaToken]) //El argumento es una funcion y la tengo definida arriba
             },
-            async (contenidoToken, done) => { //Se lo suele llamar usuario xq el token suele tener datos del usuario
+            async (usuario, done) => { //Se lo suele llamar usuario xq el token suele tener datos del usuario
                 try {
                     
-                    return done(null, contenidoToken) //contenidoToken será null o la token
+                    return done(null, usuario) //contenidoToken será null o la token
                     
                 } catch (error) {
                     return done(error)                    
@@ -158,12 +158,12 @@ export const initPassport = () => {
     )
 
     //1er paso B), Solo en caso de usar sessiones, debo además configurar la serializacion y deserializacion
-    passport.serializeUser((usuario, done) => {//Esto es para guardar el usuario para la session creo
-        return done(null, usuario._id)
-    })
+    // passport.serializeUser((usuario, done) => {//Esto es para guardar el usuario para la session creo
+    //     return done(null, usuario._id)
+    // })
 
-    passport.deserializeUser(async (id, done) => {
-        let usuario = await usersManager.getBy({ _id: id })
-        return done(null, usuario) //No hay error y hay un usuario!
-    })
+    // passport.deserializeUser(async (id, done) => {
+    //     let usuario = await usersManager.getBy({ _id: id })
+    //     return done(null, usuario) //No hay error y hay un usuario!
+    // })
 }
