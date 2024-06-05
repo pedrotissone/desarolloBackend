@@ -16,7 +16,7 @@ router.get("/error", (req, res) => {
 })
 
 // 3er paso de passport, agrego middleware a la ruta y le indico el nombre de la estrategia elegida
-router.post("/signUp", passport.authenticate("signUp", { failureRedirect: "/api/sessions/error" }), async (req, res) => { // registro para un nuevo usuario
+router.post("/signUp", passport.authenticate("signUp", { failureRedirect: "/api/sessions/error", session: false }), async (req, res) => { // registro para un nuevo usuario
 
     //Si sale todo bien passport crea un req.user y nos deja los datos ahi
     res.setHeader("Content-Type", "application/json")

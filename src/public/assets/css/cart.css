@@ -1,0 +1,15 @@
+.cartDivTitle {
+    width: 23rem;
+    height: fit-content;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cartTitle {
+    margin: 0
+}
+
+.cartSeguirComprando {
+    height: 2rem;
+    margin-top: 2rem;
+}

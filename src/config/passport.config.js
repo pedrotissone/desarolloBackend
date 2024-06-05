@@ -35,13 +35,13 @@ export const initPassport = () => {
                 passReqToCallback: true
             },
             async (req, username, password, done) => { //Los parametros de la async ()=> van a cambiar segun cada estrategia, aca son estos
-                try {
-
+                
+                try {                    
                     //OJO recordar que el username en mi caso va a ser el email
                     let { nombre, apellido, edad } = req.body
 
                     //Validacion
-                    if (!nombre || !apellido || !edad) { //los return de passport son con su formato de callback "done"
+                    if (!nombre || !apellido || !edad) { //los return de passport son con su formato de callback "done"                        
                         return done(null, false) //No hay error, pero algo esta mal en la peticion
                     }
                     //Validacion
@@ -49,7 +49,7 @@ export const initPassport = () => {
                     if (existe) {
                         return done(null, false)// No hay error, pero el email ya fue registrado por otro usuario en la DB
                     }
-
+                    
                     //Creo un carrito para el usuario
                     let nuevoCarrito = await cartManager.createCart()
 
