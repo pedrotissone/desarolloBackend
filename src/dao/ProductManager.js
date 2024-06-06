@@ -7,6 +7,7 @@ class ProductManager {
     products
     path
     idPath
+    //static también me permite utilizar funciones dentro de mi clase sin necesidad de instanciarla con new
     static idProducts //Variable Global, iniciada en 0 en DB
 
     constructor() {
