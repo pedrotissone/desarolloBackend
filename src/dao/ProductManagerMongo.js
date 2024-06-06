@@ -18,7 +18,6 @@ class ProductManagerMongo {
         return await productsModel.find().lean()// Le agrego el lean() solo por el desperfecto de handlebars         
     }
 
-
     //Devolver productos con Paginación
     async getProductsPaginate(filtro, opciones, sortOptions) {
 
