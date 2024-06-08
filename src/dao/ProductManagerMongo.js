@@ -1,22 +1,23 @@
 import { __dirname } from "../utils/utils.js"//Importe el __dirname que arme para usar con ESmodules
 import { productsModel } from "./models/productsModel.js"
 
-class ProductManagerMongo {
+class ProductManagerMongo {    
 
     //Agregar nuevo producto a DB
     async addProduct(obj) {
         try {
             return await productsModel.create(obj)
-
         } catch (error) {
             return "error en la funcion al agregar producto"
         }
     }
 
+
     // Devolver todos los productos de la DB
     async getProducts() {
         return await productsModel.find().lean()// Le agrego el lean() solo por el desperfecto de handlebars         
     }
+
 
     //Devolver productos con Paginación
     async getProductsPaginate(filtro, opciones, sortOptions) {
@@ -42,16 +43,18 @@ class ProductManagerMongo {
         return await productsModel.findOne(filtro)
     }
 
+
     //Metodo de filtrado por prop y value (Esta en uso esto????)
     async getProductsByPropValue(productos, propiedad, valor) {
         return productos.filter(producto => producto[propiedad] == valor)
     }
 
+
     //Metodo para borrar un producto
     async deleteProduct(id) {
-
         return await productsModel.deleteOne({ _id: id })
     }
+
 
     //Metodo para actualizar productos
     async updateProduct(id, obj) {

@@ -9,18 +9,14 @@ import { CartManagerMongo as CartManager } from "../dao/CartManagerMongo.js";
 
 //PASSPORT NOS PERMITE ENCAPSULAR TODA NUESTRA LOGICA DE AUTENTICACION DENTRO DE UN SOLO SCRIPT CON UNA ESTRUCTURA DETERMINADA.
 
-
 const usersManager = new UsersManager()
-
 const cartManager = new CartManager()
 
 const buscaToken = (req) => {
     let token = null
-
     if (req.cookies["codercookie"]) {
         token = req.cookies["codercookie"]
     }
-
     return token
 }
 
@@ -44,7 +40,7 @@ export const initPassport = () => {
                     if (!nombre || !apellido || !edad) { //los return de passport son con su formato de callback "done"                        
                         return done(null, false) //No hay error, pero algo esta mal en la peticion
                     }
-                    //Validacion
+                    //CONEXION A MI DAO/MANAGER - Paso a la capa que interactua con mi DB
                     let existe = await usersManager.getBy({ email: username }) //email es el username
                     if (existe) {
                         return done(null, false)// No hay error, pero el email ya fue registrado por otro usuario en la DB
@@ -75,9 +71,9 @@ export const initPassport = () => {
             {
                 usernameField: "email"
             },
-            async (username, password, done) => {
-                try {
-                    //passport valida automaticamente si se envió usuario y contraseña
+            async (username, password, done) => { //passport valida automaticamente si se envió usuario y contraseña
+                try {                    
+                    //CONEXION A MI DAO/MANAGER - Paso a la capa que interactua con mi DB
                     let usuario = await usersManager.getBy({ email: username })
 
                     if (!usuario) {
@@ -119,6 +115,7 @@ export const initPassport = () => {
                     }                    
 
                     //Compruebo si el usuario ya existe o no en mi DB
+                    //CONEXION A MI DAO/MANAGER - Paso a la capa que interactua con mi DB
                     let usuario = await usersManager.getBy({email}) //Crear funcion getByPopulate para ver el carrito (after passport 01:39)
                     if(!usuario) {
                         let nuevoCarrito = await cartManager.createCart()
@@ -146,10 +143,8 @@ export const initPassport = () => {
                 jwtFromRequest: new passportJWT.ExtractJwt.fromExtractors([buscaToken]) //El argumento es una funcion y la tengo definida arriba
             },
             async (usuario, done) => { //Se lo suele llamar usuario xq el token suele tener datos del usuario
-                try {
-                    
-                    return done(null, usuario) //contenidoToken será null o la token
-                    
+                try {                    
+                    return done(null, usuario) //contenidoToken será null o la token                    
                 } catch (error) {
                     return done(error)                    
                 }
@@ -157,6 +152,8 @@ export const initPassport = () => {
         )
     )
 
+
+    //                            SERIALIZE  DE  SESSIONS (Las deje de usar por JWT)
     //1er paso B), Solo en caso de usar sessiones, debo además configurar la serializacion y deserializacion
     // passport.serializeUser((usuario, done) => {//Esto es para guardar el usuario para la session creo
     //     return done(null, usuario._id)

@@ -5,7 +5,7 @@ import { Command, Option } from "commander"
 let programa = new Command()
 //Peronalizo las opciones posibles con el metodo addOption
 programa.addOption( new Option("-m, --mode <modo>", "Mode de ejecucion del script").choices(["dev", "prod"]).default("dev"))
-programa.parse() //Parseo es fundamental
+programa.parse() //Tengo que parsear
 const argumentos = programa.opts()
 
 const mode = argumentos.mode

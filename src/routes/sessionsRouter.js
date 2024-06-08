@@ -1,15 +1,12 @@
 import { Router } from "express";
-import { UsersManagerMongo as UsersManager } from "../dao/UsersManagerMongo.js";
 import { SECRET, passportCall } from "../utils/utils.js";
 import jwt from "jsonwebtoken";
 import passport from "passport";
 
 
-
 export const router = Router()
 
-const usersManager = new UsersManager() //Instancio mi clase
-
+//PASSPORT HACE DE MI CONTROLLER EN ESTE ROUTER
 router.get("/error", (req, res) => {
     res.setHeader("Content-Type", "application/json")
     res.status(500).json("Error en la autenticación")
@@ -110,6 +107,7 @@ router.get("/current", passport.authenticate("current", {session: false}), (req,
 })
 
 
+//                                      PASSPORT  CALL (No la voy a usar de momento)
 //Ruta para probar current con la funcion de callback de passport para mayor control (Yo la llamé passportCall)
 // router.get("/current", passportCall("current"), (req, res) => {
 //     res.setHeader("Content-Type", "application/json")
