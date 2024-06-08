@@ -78,7 +78,6 @@ app.use("/api/products", productsRouter)
 app.use("/api/carts", cartsRouter)
 app.use("/handlebars", viewsRouter)
 app.use("/api/sessions", sessionsRouter)
-
 //                                          RUTAS CON ROUTER
 
 
