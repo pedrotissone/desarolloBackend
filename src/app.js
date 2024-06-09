@@ -139,9 +139,7 @@ io.on("connection", (socket) => { //2) Va a estar esuchando si llega una conexio
 
 export {io}
 
-//01:51:00 Clase anterior
-//00:30:00 Ultima clase (ver bien tema de exportacion de instancia del service)
-
+//00:52:00
 //NOTAS:
 //Variables de entorno: estan configuradas en el OS y uno puede acceder a ellas atraves de una aplicacion
 //CUSTOM ROUTER: VER CLASE 24 SEGUNDA PRACTICA INTEGRADORA

@@ -44,10 +44,10 @@ class ProductManagerMongo {
     }
 
 
-    //Metodo de filtrado por prop y value (Esta en uso esto????)
-    async getProductsByPropValue(productos, propiedad, valor) {
-        return productos.filter(producto => producto[propiedad] == valor)
-    }
+    //Metodo de filtrado por prop y value (Esta en uso esto???? Creo que no, lo comento)
+    // async getProductsByPropValue(productos, propiedad, valor) {
+    //     return productos.filter(producto => producto[propiedad] == valor)
+    // }
 
 
     //Metodo para borrar un producto
