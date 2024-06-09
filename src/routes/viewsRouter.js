@@ -84,7 +84,6 @@ router.get("/products", auth(["usuario"]), async (req, res) => { //Paginacion co
 })
 
 
-
 router.get("/realtimeproducts", async (req, res) => {
     try {
         let productos = await Producto.getProducts()
