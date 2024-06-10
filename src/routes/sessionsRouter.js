@@ -6,7 +6,7 @@ import passport from "passport";
 
 export const router = Router()
 
-//PASSPORT HACE DE MI CONTROLLER EN ESTE ROUTER
+//                                  PASSPORT HACE DE MI CONTROLLER EN ESTE ROUTER
 router.get("/error", (req, res) => {
     res.setHeader("Content-Type", "application/json")
     res.status(500).json("Error en la autenticación")
