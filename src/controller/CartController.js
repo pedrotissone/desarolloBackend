@@ -1,9 +1,13 @@
 import { isValidObjectId } from "mongoose"
 import { CartManagerMongo as CartManager } from "../dao/CartManagerMongo.js"
 import { ProductManagerMongo as ProductManager } from "../dao/ProductManagerMongo.js"
+import { cartService } from "../services/CartService.js"
+import { productService } from "../services/ProductService.js"
+
 
 const Carts = new CartManager()
 const Producto = new ProductManager()
+
 
 export class CartController {
 
@@ -40,7 +44,8 @@ export class CartController {
     
         try {
             //CONEXION A MI DAO/MANAGER - Paso a la capa que interactua con mi DB
-            let resultado = await Carts.getCartById(id)
+            // let resultado = await Carts.getCartById(id)
+            let resultado = await cartService.getCartById(id)
             if (resultado) {
                 res.setHeader("Content-Type", "application/json")
                 return res.status(200).json(resultado)
@@ -77,7 +82,8 @@ export class CartController {
                 products: []
             }
             //CONEXION A MI DAO/MANAGER - Paso a la capa que interactua con mi DB
-            await Carts.createCart(newCart)
+            // await Carts.createCart(newCart)
+            await cartService.createCart(newCart)
             res.setHeader("Content-Type", "application/json")
             return res.status(200).json(newCart)
         } catch (error) {
@@ -131,7 +137,8 @@ export class CartController {
         let nuevoProducto //Producto a agregar
         let productos//Array de productos del carrito
         try {
-            carrito = await Carts.getCartById(cid)
+            // carrito = await Carts.getCartById(cid)
+            carrito = await cartService.getCartById(cid)
             if (carrito) {
                 productos = carrito.productos
                 console.log("El carrito de abajo existe seguimos...")
@@ -144,7 +151,8 @@ export class CartController {
                 return res.status(400).json("El id proporcionado no existe en ningun carrito")
             }
             //Valido que el producto exista
-            nuevoProducto = await Producto.getProductsByFiltro({ _id: pid })
+            // nuevoProducto = await Producto.getProductsByFiltro({ _id: pid })
+            nuevoProducto = await productService.getProductsByFiltro({ _id: pid })
             if (nuevoProducto) {
                 console.log("El producto de abajo existe seguimos...")
                 console.log(nuevoProducto)
@@ -178,7 +186,8 @@ export class CartController {
         }       
     
         try {
-            let resultado = await Carts.addToCart(cid, productos)
+            // let resultado = await Carts.addToCart(cid, productos)
+            let resultado = await cartService.addToCart(cid, productos)
             res.setHeader("Content-Type", "application/json")
             return res.status(200).json(resultado)    
         } catch (error) {
@@ -203,7 +212,8 @@ export class CartController {
         let productos
     
         try {
-            carrito = await Carts.getCartById(cid)
+            // carrito = await Carts.getCartById(cid)
+            carrito = await cartService.getCartById(cid)
             if (carrito) {
                 productos = carrito.productos
                 // console.log(productos)
@@ -244,7 +254,8 @@ export class CartController {
         // console.log(nuevaCantidad)    
     
         try {
-            let resultado = await Carts.updateQuantity(cid, pid, nuevaCantidad)
+            // let resultado = await Carts.updateQuantity(cid, pid, nuevaCantidad)
+            let resultado = await cartService.updateQuantity(cid, pid, nuevaCantidad)
             res.setHeader("Content-Type", "application/json")
             return res.status(200).json(resultado)
     
@@ -270,7 +281,8 @@ export class CartController {
         let productos
     
         try {
-            carrito = await Carts.getCartById(cid)
+            // carrito = await Carts.getCartById(cid)
+            carrito = await cartService.getCartById(cid)
             if (carrito) {
                 productos = carrito.productos
                 // console.log(productos)
@@ -297,7 +309,8 @@ export class CartController {
         }
     
         try {
-            let resultado = await Carts.deleteProductInCart(cid, pid)
+            // let resultado = await Carts.deleteProductInCart(cid, pid)
+            let resultado = await cartService.deleteProductInCart(cid, pid)
             res.setHeader("Content-Type", "application/json")
             return res.status(200).json(resultado)
         } catch (error) {
@@ -321,7 +334,8 @@ export class CartController {
         let productos
     
         try {
-            carrito = await Carts.getCartById(cid)
+            // carrito = await Carts.getCartById(cid)
+            carrito = await cartService.getCartById(cid)
             if (carrito) {
                 productos = carrito.productos
                 console.log(productos)
@@ -340,7 +354,8 @@ export class CartController {
         console.log(productos)
     
         try {
-            let resultado = await Carts.addToCart(cid, productos)
+            // let resultado = await Carts.addToCart(cid, productos)
+            let resultado = await cartService.addToCart(cid, productos)
             res.setHeader("Content-Type", "application/json")
             return res.status(200).json(resultado)
     
@@ -349,15 +364,6 @@ export class CartController {
             return res.status(500).json("Error inesperado en el servidor al realizar addToCart()")
         }
     }
-
-
-
-
-
-
-
-
-
 
 
 }

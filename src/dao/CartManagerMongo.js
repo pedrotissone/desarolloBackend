@@ -30,12 +30,12 @@ class CartManagerMongo {
         return await cartModel.updateOne({_id:cid}, {$set: {productos: productos}})
     }
 
-    //MODIFICAR SOLO LA CANTIDAD DE UN PRODUCTO
+    //MODIFICAR SOLO LA CANTIDAD DE UN PRODUCTO (Esto solo lo uso en postman, porque para las vistas uso addToCart que agrega un nuevo producto o suma +1 la cantidad si existe el producto en el carrito)
     async updateQuantity(cid, pid, nuevaCantidad) {
         return await cartModel.updateOne({_id:cid, "productos.producto": pid}, {$set:{"productos.$.quantity": nuevaCantidad}})
 
     }
-    //SUMAR + 1 A LA CANTIDAD DE UN PRODUCTO
+    //SUMAR + 1 A LA CANTIDAD DE UN PRODUCTO (Usé en algun lado esto?, no se que es)
     async updateQuantityHandlebars(cid, pid) {
         return await cartModel.updateOne({_id:cid, "productos.producto": pid},{$inc: {"productos.$.quantity": 1}})
     }

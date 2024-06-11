@@ -1,10 +1,10 @@
 import express from "express"
 import mongoose from "mongoose"
-import { config } from "./config/config.js"
-import cookieParser from "cookie-parser"
 import sessions from "express-session" //Las sessiones viven en memoria
 import FileStore from "session-file-store"//Con esto las sessiones vivian en un archivo local
 import MongoStore from "connect-mongo" //Con esto las sessiones viven en mongo
+import { config } from "./config/config.js"
+import cookieParser from "cookie-parser"
 import passport from "passport"
 import { initPassport } from "./config/passport.config.js" //importo mi funcion de config de passport
 import { Server } from "socket.io"

@@ -3,9 +3,11 @@ import { ProductManagerMongo as ProductManager } from "../dao/ProductManagerMong
 import { isValidObjectId } from "mongoose"
 import { productsModel } from "../dao/models/productsModel.js"
 import { io } from "../app.js"
+import { productService } from "../services/ProductService.js"
 
-//Tengo que instanciar mi clase ProductManager(DAO) para poder realizar la conexion a la DB desde mi controlador
+//Tengo que instanciar mi clase ProductManager(DAO) para poder realizar la conexion a la DB desde mi controlador (Ahora uso service)
 let Producto = new ProductManager()
+
 
 export class ProductController {
     //static me permite usar los metodos directamente sin necesidad de instanciar previamente la clase
@@ -44,12 +46,12 @@ export class ProductController {
             } else if (sort === 'desc') {
                 sortOptions.price = -1; // Orden descendente por precio
             }
-
-            //CONEXION A MI DAO/MANAGER - Paso a la capa que interactua con mi DB
-            let resultado = await Producto.getProductsPaginate(filtro, opciones, sortOptions)
+            //CONEXION A MI DAO/MANAGER - Paso a la capa que interactua con mi DB (No habia services)
+            // let resultado = await Producto.getProductsPaginate(filtro, opciones, sortOptions)
+            //CONEXION A MI CAPA DE SERVICIOS - es la capa intermediaria entre Controller y DAO
+            let resultado = await productService.getProductsPaginate(filtro, opciones, sortOptions)
             res.setHeader("Content-Type", "application/json")
             res.status(200).json(resultado)
-
 
         } catch (error) {
             res.setHeader("Content-Type", "application/json")
@@ -89,8 +91,10 @@ export class ProductController {
         }
 
         try {
-            //CONEXION A MI DAO/MANAGER - Paso a la capa que interactua con mi DB
-            let resultado = await Producto.getProductsByFiltro({ _id: id })
+            //CONEXION A MI DAO/MANAGER - Paso a la capa que interactua con mi DB (No habia services)
+            // let resultado = await Producto.getProductsByFiltro({ _id: id })
+            //CONEXION A MI CAPA DE SERVICIOS - es la capa intermediaria entre Controller y DAO
+            let resultado = await productService.getProductsByFiltro({ _id: id })
             if (resultado) {
                 res.setHeader("Content-Type", "application/json")
                 return res.json(resultado)
@@ -177,7 +181,8 @@ export class ProductController {
         let existeFiltro
         try {
             //CONEXION A MI DAO/MANAGER - Paso a la capa que interactua con mi DB
-            existeFiltro = await Producto.getProductsByFiltro({ code })
+            // existeFiltro = await Producto.getProductsByFiltro({ code })
+            existeFiltro = await productService.getProductsByFiltro({ code })
         } catch (error) {
             res.setHeader("Content-Type", "application/json")
             return res.status(500).json({ message: "Error 500 - Error al realizar la función de filtrado" })
@@ -191,7 +196,8 @@ export class ProductController {
         }
     
         try {
-            let nuevoProducto = await Producto.addProduct({ title, description, price, thumbnail, code, stock, category, status })
+            // let nuevoProducto = await Producto.addProduct({ title, description, price, thumbnail, code, stock, category, status })
+            let nuevoProducto = await productService.addProduct({ title, description, price, thumbnail, code, stock, category, status })
     
             let listadoActualizado = await productsModel.find() //Me traigo todos los productos directamente desde mi modelo, no se porque no usé mi manager/dao
             io.emit("listadoActualizado", listadoActualizado)//Emit para la vista handlebars/realtimeproducts
@@ -256,7 +262,8 @@ export class ProductController {
             let existe
             try {
                 //CONEXION A MI DAO/MANAGER - Paso a la capa que interactua con mi DB
-                existe = await Producto.getProductsByFiltro({ code: aModificar.code })
+                // existe = await Producto.getProductsByFiltro({ code: aModificar.code })
+                existe = await productService.getProductsByFiltro({ code: aModificar.code })
                 if (existe) {
                     res.setHeader("Content-Type", "application/json")
                     return res.status(400).json("Ya existe otro producto con el mismo código")
@@ -268,7 +275,8 @@ export class ProductController {
         }
     
         try {
-            let productoModificado = await Producto.updateProduct(id, aModificar)
+            // let productoModificado = await Producto.updateProduct(id, aModificar)
+            let productoModificado = await productService.updateProduct(id, aModificar)
             res.setHeader("Content-Type", "application/json")
             return res.status(200).json(productoModificado)
     
@@ -305,7 +313,8 @@ export class ProductController {
     
         try {
             //CONEXION A MI DAO/MANAGER - Paso a la capa que interactua con mi DB
-            let resultado = await Producto.deleteProduct(id)
+            // let resultado = await Producto.deleteProduct(id)
+            let resultado = await productService.deleteProduct(id)
             if (resultado.deletedCount > 0) {
                 res.setHeader("Content-Type", "application/json")
                 return res.status(200).json(`producto con id: ${id} eliminado`)
