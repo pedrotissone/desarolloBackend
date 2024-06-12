@@ -106,7 +106,7 @@ export class ViewController {
             console.log(carrito)
             productos = carrito.productos
             res.setHeader("Content-Type", "text/html")
-            res.status(200).render("cart", { productos })
+            res.status(200).render("cart", { productos, carrito })
         } catch (error) {
             res.setHeader("Content-Type", "application/json")
             res.status(500).json({ Error: "Error 500 - Error inesperado en el servidor" })

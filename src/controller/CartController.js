@@ -256,8 +256,10 @@ export class CartController {
         try {
             // let resultado = await Carts.updateQuantity(cid, pid, nuevaCantidad)
             let resultado = await cartService.updateQuantity(cid, pid, nuevaCantidad)
+            console.log(nuevaCantidad)
             res.setHeader("Content-Type", "application/json")
-            return res.status(200).json(resultado)
+            return res.status(200).json(nuevaCantidad)
+            
     
         } catch (error) {
             res.setHeader("Content-Type", "application/json")

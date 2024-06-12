@@ -1,11 +1,15 @@
+
+
 <div class="cartDivTitle">
     <h2 class="cartTitle">Detalle del carrito</h2>
-    <button class="cartButtonVaciar", onclick="vaciarCarrito()">Vaciar carrito</button>
+    <button id="cartButtonVaciar", onclick="vaciarCarrito('{{carrito._id}}')">Vaciar carrito</button>
 </div>
+
 
 <a href="/products">Seguir comprando</a>
 
-<ul>
+<ul id="cartUl">
+    {{#with carrito as |cart|}}   
     {{#each productos}}
     <br>
     <li>{{this.producto.title}}</li>
@@ -16,9 +20,11 @@
     <li>{{this.producto.stock}}</li>
     <li>{{this.producto.category}}</li>
     <li>{{this.producto.status}}</li>
-    <li>Cantidad: {{this.quantity}} <button onclick="restar()">-</button> <button onclick="sumar()">+</button> </li>
-    <button onclick="eliminar()">Eliminar</button>
+    <li id="cartQuantity-{{cart._id}}-{{this.producto._id}}">Cantidad: {{this.quantity}} <button id="cartButtonRestar" onclick="restar()">-</button> <button id="cartButtonSumar" onclick="sumar('{{cart._id}}', '{{this.producto._id}}')">+</button> </li>
+    <button id="cartButtonEliminar" onclick="eliminar()">Eliminar</button>
     <br>
     {{/each}}
+    {{/with}}
+    <button id="cartButtonConfirmar" onclick="comprar()">Confirmar compra</button>
 </ul>
 <script src="/assets/js/cart.js"></script>
