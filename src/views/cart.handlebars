@@ -11,6 +11,7 @@
 <ul id="cartUl">
     {{#with carrito as |cart|}}   
     {{#each productos}}
+    <div id="productDiv-{{cart._id}}-{{this.producto._id}}">
     <br>
     <li>{{this.producto.title}}</li>
     <li>{{this.producto.description}}</li>
@@ -20,11 +21,13 @@
     <li>{{this.producto.stock}}</li>
     <li>{{this.producto.category}}</li>
     <li>{{this.producto.status}}</li>
-    <li id="cartQuantity-{{cart._id}}-{{this.producto._id}}">Cantidad: {{this.quantity}} <button id="cartButtonRestar" onclick="restar()">-</button> <button id="cartButtonSumar" onclick="sumar('{{cart._id}}', '{{this.producto._id}}')">+</button> </li>
-    <button id="cartButtonEliminar" onclick="eliminar()">Eliminar</button>
+    <li id="cartQuantity-{{cart._id}}-{{this.producto._id}}">Cantidad: {{this.quantity}} <button id="cartButtonRestar" onclick="restar('{{cart._id}}', '{{this.producto._id}}', '{{this.quantity}}')">-</button> <button id="cartButtonSumar" onclick="sumar('{{cart._id}}', '{{this.producto._id}}')">+</button> </li>
+    <button id="cartButtonEliminar" onclick="eliminar('{{cart._id}}', '{{this.producto._id}}')">Eliminar</button>
     <br>
+    </div>
     {{/each}}
     {{/with}}
-    <button id="cartButtonConfirmar" onclick="comprar()">Confirmar compra</button>
 </ul>
+    <button id="cartButtonConfirmar" onclick="comprar()">Confirmar compra</button>
+    
 <script src="/assets/js/cart.js"></script>
