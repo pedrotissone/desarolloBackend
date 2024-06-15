@@ -10,6 +10,7 @@ const argumentos = programa.opts()
 
 const mode = argumentos.mode
 
+//Esta libreria me permite a traves de una simulacion el poder crear aca las variables de entorno, sino tendria que crearlas directamente en mi computadora (ver la constante config abajo)
 dotenv.config(
     {
         path: mode === "prod" ? "./src/.env.production" : "./src/.env.development", //Indico a que archivo .env debe apuntar

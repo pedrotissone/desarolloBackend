@@ -16,6 +16,7 @@ import { router as sessionsRouter } from "./routes/sessionsRouter.js"
 import { errorHandler } from "./middlewares/errorHandler.js"
 import { chatModel } from "./dao/models/chatModel.js"
 import { verifyJWT } from "./utils/utils.js"
+import cors from "cors"
 
 
 const PORT = config.PORT
@@ -37,6 +38,8 @@ conectionDB()
 //Estas 2 líneas son para que nuestro servidor interprete automaticamente msjes tipo JSON (CLAVE, son middlewares)
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
+//Esta línea permite la realizacion de peticiones cruzadas a nuestra aplicación, desde cualquier origen, con eso podemos trabajar con un front externo como React (Acceder de un dominio diferente al de tu servidor)
+app.use(cors())
 
 //Estas 3 lineas son para configurar handlebars
 app.engine("handlebars", engine())
@@ -139,7 +142,7 @@ io.on("connection", (socket) => { //2) Va a estar esuchando si llega una conexio
 
 export {io}
 
-//00:52:00
+//00:35:00
 //NOTAS:
 //Variables de entorno: estan configuradas en el OS y uno puede acceder a ellas atraves de una aplicacion
 //CUSTOM ROUTER: VER CLASE 24 SEGUNDA PRACTICA INTEGRADORA

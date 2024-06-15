@@ -11,7 +11,7 @@ router.post("/", CartController.createCart)
 
 router.post("/:cid/products/:pid", auth(["usuario"]), CartController.addToCart)
 
-router.put("/:cid/products/:pid", auth(["admin", "usuario"]), CartController.addQuantity)
+router.put("/:cid/products/:pid", auth(["usuario"]), CartController.addQuantity)
 
 router.delete("/:cid/products/:pid", auth(["admin", "usuario"]), CartController.deleteProductInCart)
 

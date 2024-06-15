@@ -2,6 +2,7 @@ import { Router } from "express";
 import { SECRET, passportCall } from "../utils/utils.js";
 import jwt from "jsonwebtoken";
 import passport from "passport";
+import { UsuariosDTO } from "../dto/UsuariosDTO.js";
 
 
 export const router = Router()
@@ -27,7 +28,7 @@ router.post("/login", passport.authenticate("login", { failureRedirect: "/api/se
 
     if (web) { //Si sale todo OK en passport, este crea un req.user
         let usuario = { ...req.user } //spread operator
-        delete usuario.password
+        delete usuario.password //Le borro la contraseña porque es un dato sensible
 
         //Aca creo una session para el usuario
         // req.session.usuario = usuario
@@ -40,7 +41,7 @@ router.post("/login", passport.authenticate("login", { failureRedirect: "/api/se
     } else {
         //Rompo la referencia usando el spread (para que no me elimine la password del usuario de la DB) y le borro la contraseña para no devolverla en la response
         let usuario = { ...req.user }//No es necesario xq es un usuario en memoria no el de la DB
-        delete usuario.password
+        delete usuario.password //Le borro la contraseña porque es un dato sensible
 
         //creo una session para el usuario!
         // req.session.usuario = usuario
@@ -103,7 +104,9 @@ router.get("/logout", (req, res) => {//Destruyo la session o JWT cookie para el 
 //Ruta para probar JWT (Le indico sessions:false para que sepa que no estoy manejando sessiones)
 router.get("/current", passport.authenticate("current", {session: false}), (req, res) => {
     res.setHeader("Content-Type", "application/json")
-    return res.status(200).json(req.user)
+    //Modifico el req.user utilizando un DTO para enviar al front solo los datos necesarios evitando enviar los datos sensibles
+    let usuarioFormateado = new UsuariosDTO(req.user)
+    return res.status(200).json(usuarioFormateado)
 })
 
 
