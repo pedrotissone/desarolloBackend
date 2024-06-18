@@ -17,6 +17,8 @@ router.delete("/:cid/products/:pid", auth(["admin", "usuario"]), CartController.
 
 router.delete("/:cid", auth(["admin", "usuario"]), CartController.clearCart)
 
+router.post("/:cid/purchase", auth(["usuario"]), CartController.purchase)
+
 
 
 // router.put("/:cid", auth(["admin", "usuario"]), async (req, res) => {// SOLO AGREGABA PRODUCTOS NUEVOS AL CARRITO

@@ -6,5 +6,3 @@ export class UsuariosDTO {
         this.carrito = usuario.carrito
     }
 }
-
-// let usuarioFormateado = new UsuariosDTO()

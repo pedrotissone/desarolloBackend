@@ -144,6 +144,9 @@ export {io}
 
 //00:35:00
 //NOTAS:
-//Variables de entorno: estan configuradas en el OS y uno puede acceder a ellas atraves de una aplicacion
 //CUSTOM ROUTER: VER CLASE 24 SEGUNDA PRACTICA INTEGRADORA
+//DESARROLLO SERVER COMPLETO EN CAPAS 01:00:00
+
+//modelo tiket 01:35:00
+//Dao tiket 01:48:00
 

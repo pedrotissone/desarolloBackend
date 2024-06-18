@@ -3,6 +3,7 @@ import { CartManagerMongo as CartManager } from "../dao/CartManagerMongo.js"
 import { ProductManagerMongo as ProductManager } from "../dao/ProductManagerMongo.js"
 import { cartService } from "../services/CartService.js"
 import { productService } from "../services/ProductService.js"
+import { ticketService } from "../services/TicketService.js"
 
 
 const Carts = new CartManager()
@@ -365,6 +366,58 @@ export class CartController {
             res.setHeader("Content-Type", "application/json")
             return res.status(500).json("Error inesperado en el servidor al realizar addToCart()")
         }
+    }
+
+    static purchase = async (req, res) => {
+        let cid = req.params.cid
+        let usuario = req.user
+        let productosParaFacturar = []
+        let productosRestantes = []
+
+        try {
+            const cart = await cartService.getCartById(cid)
+            //Valido stock
+            for (let i = 0; i < cart.productos.length; i++) {
+                let product = await productService.getProductsByFiltro(cart.productos[i].producto._id)//Busco producto      
+                console.log(product.stock)
+                if (cart.productos[i].quantity <= product.stock ) {
+                    let nuevoStock = {stock: product.stock - cart.productos[i].quantity}//resto y obtengo nueva cantidad                    
+                    await productService.updateProduct(cart.productos[i].producto._id, nuevoStock)//Actualizo stock producto
+                    productosParaFacturar.push(cart.productos[i]) //pusheo productosFacturables                   
+                } else {
+                    productosRestantes.push(cart.productos[i]) //pusheo productos no facturables
+                }                                                              
+            }
+
+        
+            //Obtengo total a pagar
+            const total = productosParaFacturar.reduce((accumulator, obj) => {
+                return accumulator + (obj.producto.price * obj.quantity)
+            }, 0)
+            console.log(total)            
+            
+            //Seteo el cart
+            let updatedCart = await cartService.addToCart(cart._id, productosRestantes)
+
+
+            //Por ultimo confecciono el objeto para crear el ticket
+            const datosDeCompra = {
+                code: Math.random() * 100000,
+                purchase_datetime: Date.now(),
+                amount: total,
+                purchaser: usuario.email,
+                products: productosParaFacturar
+            }           
+
+            let ticket = await ticketService.createTicket(datosDeCompra)              
+
+            res.setHeader("Content-Type", "application/json")
+            return res.status(201).json(ticket)
+            
+        } catch (error) {
+            res.setHeader("Content-Type", "application/json")
+            return res.status(500).json("Error inesperado en el servidor al procesar la compra")            
+        }        
     }
 
 
