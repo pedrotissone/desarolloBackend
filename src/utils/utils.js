@@ -6,6 +6,7 @@ import crypto from "crypto" //modulo nativo de node, lo cambié por bcrypt
 import bcrypt from "bcrypt"
 import passport from "passport"
 import jwt from "jsonwebtoken"
+import nodemailer from "nodemailer"
 
 //__DIRNAME CASERO
 const __filename = fileURLToPath(import.meta.url)
@@ -73,6 +74,46 @@ function verifyJWT(req, res, next) {
   next();
 }
 
+//Configuracion para envio de correos electrónicos
+const transporter = nodemailer.createTransport(
+  {
+    service: "gmail",
+    port: "587",
+    auth: {
+      user: "pedrotissone@gmail.com",
+      pass: "dgfwptaknqcxwxsx"
+    }
+  }
+)
 
+// transporter.sendMail(
+//   {
+//     from: "pedrotissone@gmail.com",
+//     to: "tiza90@hotmail.com",
+//     subject: "prueba de email con imagen incrustada y adjunto",
+//     html: `<h2>Mensaje de prueba</h2> <br> <br>
+//     <img src="imgIncrustada"/> <br>`,
+//     attachments: [
+//       {
+//         path: "./src/public/assets/img/1712650680873-champagne y mariposas img3.webp",
+//         filename: "imagenDelProyecto.webp",
+//         cid: "imgIncrustada"
+//       }
+//     ]
+//   }
+// ).then(resultado => console.log(resultado))
+// .catch(error => console.log(error))
 
-export { __dirname, upload, generateHash, validaPassword, SECRET, passportCall, verifyJWT };
+//Creo una funcion modelo para enviar emails sin adjuntos
+const enviarEmail = async (para, asunto, mensaje) => {
+    return await transporter.sendMail(
+      {
+        from: "pedrotissone@gmail.com",
+        to: para,
+        subject: asunto,
+        html: mensaje
+      }
+    )
+}
+
+export { __dirname, upload, generateHash, validaPassword, SECRET, passportCall, verifyJWT, enviarEmail };
