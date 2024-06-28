@@ -16,4 +16,6 @@ router.put("/:pid", auth(["admin"]), ProductController.modifyProduct)
 
 router.delete("/:pid", auth(["admin"]), ProductController.eraseProduct)
 
+router.get("/mock/mockingproducts", ProductController.getMockProducts)
+
 export { router };
