@@ -11,6 +11,7 @@ export class ViewController {
 
         // let usuario = req.session.usuario
         let usuario = req.user ? req.user : null
+        
             
         try {
             let productos = await Producto.getProducts()

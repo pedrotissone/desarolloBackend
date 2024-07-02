@@ -5,6 +5,8 @@ import { productsModel } from "../dao/models/productsModel.js"
 import { io } from "../app.js"
 import { productService } from "../services/ProductService.js"
 import { faker } from "@faker-js/faker"
+import { CustomError } from "../utils/CustomError.js"
+import { TIPOS_ERROR } from "../utils/EError.js"
 
 //Tengo que instanciar mi clase ProductManager(DAO) para poder realizar la conexion a la DB desde mi controlador (Ahora uso service)
 let Producto = new ProductManager()
@@ -113,7 +115,7 @@ export class ProductController {
     }
 
 
-    static createProduct = async (req, res) => {
+    static createProduct = async (req, res, next) => {//Le agrego el next para manejar el error asyncrono en esta ruta
         //          F I L E   S Y S T E M
         // try {        
         // await Producto.getProducts()
@@ -161,22 +163,29 @@ export class ProductController {
 
         //                              MONGO  DB        
         //Validación de que se cargue alguna imagen (OJO PROBLEMA CON LOS .HEIC)
-        let thumbnail
-        if (req.file) {
-            thumbnail = req.file.filename
-        } else {
-            return res.status(400).json({
-                message: "Error 400 - No se adjunto ningun archivo!"
-            })
-        }
+        try {
+            let thumbnail
+            if (req.file) {
+                thumbnail = req.file.filename
+            } else {
+                // return res.status(400).json({
+                //     message: "Error 400 - No se adjunto ningun archivo!"
+                // })
+                CustomError.createError("Error","Falta adjuntar archivo de imagen","Deberá adjuntar una imagen", TIPOS_ERROR.ARGUMENTOS_INVALIDOS)                    
+            }        
 
         let { title, description, price, code, stock, category, status } = req.body
         //Validación del request
         if (!title || !description || !price || !code || !stock || !category || !status) {
-            res.setHeader("Content-Type", "application/json")
-            return res.status(400).json({
-                message: "Error 400 - No se enviaron todos los datos necesarios para crear un nuevo producto"
-            })
+            // res.setHeader("Content-Type", "application/json")
+            // return res.status(400).json({
+            //     message: "Error 400 - No se enviaron todos los datos necesarios para crear un nuevo producto"
+            // })
+            CustomError.createError("Error","Faltan completar campos del formulario","Deberá completar todos los campos del formulario", TIPOS_ERROR.ARGUMENTOS_INVALIDOS)  
+        }        
+            
+        } catch (error) {
+            return next(error)            
         }
 
         let existeFiltro

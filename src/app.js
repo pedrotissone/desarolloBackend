@@ -17,6 +17,7 @@ import { errorHandler } from "./middlewares/errorHandler.js"
 import { chatModel } from "./dao/models/chatModel.js"
 import { verifyJWT } from "./utils/utils.js"
 import cors from "cors"
+import compression from "express-compression"
 
 
 const PORT = config.PORT
@@ -38,6 +39,8 @@ conectionDB()
 //Estas 2 líneas son para que nuestro servidor interprete automaticamente msjes tipo JSON (CLAVE, son middlewares)
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
+//Esta linea es para comprimir en gzip el contenido de la response que no este comprimido previamente (jpg es un formato que ya viene comprimido)
+app.use(compression({}))//Falta parametrizar con brotli
 //Esta línea permite la realizacion de peticiones cruzadas a nuestra aplicación, desde cualquier origen, con eso podemos trabajar con un front externo como React (Acceder de un dominio diferente al de tu servidor)
 app.use(cors())
 
@@ -95,7 +98,7 @@ app.get("*", (req, res) => {
 })
 
                   
-//Middleware para menjar errores a nivel aplicación, se escribe al final de todo para captar toda la aplicación, de esta forma le das un formato diferente el manejador de errores que tiene por defecto Express
+//Middleware para menjar errores a nivel aplicación, se escribe al final de todas las rutas para captar toda la aplicación, de esta forma le das un formato diferente el manejador de errores que tiene por defecto Express
 app.use(errorHandler)
 
 let usuarios = []
@@ -142,7 +145,7 @@ io.on("connection", (socket) => { //2) Va a estar esuchando si llega una conexio
 
 export {io}
 
-//00:55:00
+//01:18:00
 //NOTAS:
 //CUSTOM ROUTER: VER CLASE 24 SEGUNDA PRACTICA INTEGRADORA
 //DESARROLLO SERVER COMPLETO EN CAPAS 01:00:00
