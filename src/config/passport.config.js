@@ -15,9 +15,9 @@ const cartManager = new CartManager()
 const buscaToken = (req) => {
     let token = null
     if (req.cookies["codercookie"]) {
-        token = req.cookies["codercookie"]
+        token = req.cookies["codercookie"]   
     }
-    return token
+    return token    
 }
 
 //1er paso de configuracion de passport

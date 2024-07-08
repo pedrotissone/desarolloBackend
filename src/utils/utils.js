@@ -69,7 +69,7 @@ function verifyJWT(req, res, next) {
               console.warn('Token inválido:', err.message); // Log para depuración
           } else {
               req.user = decoded; // solo devuelve req.user si el token es valido
-              console.log(req.user)
+              // console.log(req.user)
           }
       });
   }

@@ -6,3 +6,6 @@
 {"level":"error","message":"Deberá completar todos los campos del formulario","timestamp":"2024-07-08T09:22:43.400Z"}
 {"level":"error","message":"Peticion POST hacia /api/products provoco el siguiente error: Deberá completar todos los campos del formulario","timestamp":"2024-07-08T09:26:18.017Z"}
 
+{"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /perfil","timestamp":"2024-07-08T20:30:51.039Z"}
+{"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /products","timestamp":"2024-07-08T20:31:04.453Z"}
+{"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /perfil","timestamp":"2024-07-08T20:40:07.841Z"}
