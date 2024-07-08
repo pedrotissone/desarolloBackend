@@ -143,11 +143,10 @@ export class CartController {
             carrito = await cartService.getCartById(cid)
             if (carrito) {
                 productos = carrito.productos
-                console.log("El carrito de abajo existe seguimos...")
-                // console.log(JSON.stringify(carrito))
-                console.log("lo de abajo es el carrito")
-                console.log(carrito)
-                // console.log(productos)
+                req.logger.debug("El carrito de abajo existe seguimos...")                
+                req.logger.debug("lo de abajo es el carrito")
+                req.logger.debug(carrito)
+                req.logger.debug(productos)
             } else {
                 res.setHeader("Content-Type", "application/json")
                 return res.status(400).json("El id proporcionado no existe en ningun carrito")
@@ -156,8 +155,9 @@ export class CartController {
             // nuevoProducto = await Producto.getProductsByFiltro({ _id: pid })
             nuevoProducto = await productService.getProductsByFiltro({ _id: pid })
             if (nuevoProducto) {
-                console.log("El producto de abajo existe seguimos...")
-                console.log(nuevoProducto)
+                // console.log("El producto de abajo existe seguimos...")
+                // console.log(nuevoProducto)
+                req.logger.debug(nuevoProducto)
             } else {
                 res.setHeader("Content-Type", "application/json")
                 return res.status(400).json("El producto que se desea agregar no existe")
@@ -171,11 +171,11 @@ export class CartController {
         let elProductoEsNuevo = false
         //Valido que el ID del Nuevo producto no se encuentre repetido en mi carrito
         let busqueda = productos.find(elem => elem.producto._id.toString() == nuevoProducto._id)
-        console.log("el resultado de la busqueda es lo de abajo")
+        // console.log("el resultado de la busqueda es lo de abajo")
         // console.log(busqueda)
 
         if (busqueda == undefined) {
-            console.log("El producto no esta agregado al carrito, lo pusheo")
+            req.logger.debug("El producto no esta agregado al carrito, lo pusheo")
             productos.push(
                 {
                     producto: nuevoProducto,
@@ -234,7 +234,7 @@ export class CartController {
         // console.log(cantidadASumar.cantidad)
         // console.log(Number.isInteger(cantidadASumar.cantidad))
         if (Number.isInteger(cantidadASumar.cantidad)) {
-            console.log("perfecto, la cantidad es numerica y entera")
+            // console.log("perfecto, la cantidad es numerica y entera")
         } else {
             res.setHeader("Content-Type", "application/json")
             return res.status(400).json("La cantidad que desea agregarle al producto no es numerica o no es un entero")
@@ -249,7 +249,7 @@ export class CartController {
             return res.status(400).json("No se puede actualizar la cantidad porque el producto no existe en el carrito")
 
         } else {
-            console.log("Existe el producto, seguimos..")
+            // console.log("Existe el producto, seguimos..")
         }
         // console.log(productoABuscar.quantity)
         let nuevaCantidad = cantidadASumar.cantidad + productoABuscar.quantity
@@ -258,7 +258,7 @@ export class CartController {
         try {
             // let resultado = await Carts.updateQuantity(cid, pid, nuevaCantidad)
             let resultado = await cartService.updateQuantity(cid, pid, nuevaCantidad)
-            console.log(nuevaCantidad)
+            // console.log(nuevaCantidad)
             res.setHeader("Content-Type", "application/json")
             return res.status(200).json(nuevaCantidad)
 
@@ -342,7 +342,7 @@ export class CartController {
             carrito = await cartService.getCartById(cid)
             if (carrito) {
                 productos = carrito.productos
-                console.log(productos)
+                // console.log(productos)
 
             } else {
                 res.setHeader("Content-Type", "application/json")
@@ -355,7 +355,7 @@ export class CartController {
         }
 
         productos = []
-        console.log(productos)
+        // console.log(productos)
 
         try {
             // let resultado = await Carts.addToCart(cid, productos)
@@ -400,7 +400,7 @@ export class CartController {
             const total = productosParaFacturar.reduce((accumulator, obj) => {
                 return parseInt(accumulator + (obj.producto.price * obj.quantity))
             }, 0)
-            console.log(total)
+            // console.log(total)
 
             //Seteo el cart
             let updatedCart = await cartService.addToCart(cart._id, productosRestantes)

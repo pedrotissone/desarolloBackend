@@ -9,9 +9,9 @@ const eliminar = async (cid, pid) => {
 }
 
 const restar = async (cid, pid, quantity) => {
-    console.log(cid)
-    console.log(pid)
-    console.log(quantity)
+    // console.log(cid)
+    // console.log(pid)
+    // console.log(quantity)
     if (quantity == 1) {
         console.log("no se puede restar a 1")
         return
@@ -33,7 +33,7 @@ const restar = async (cid, pid, quantity) => {
         console.log("cantidad actualizada")
         //Extraigo solo el json que devuelve mi api, que en este caso es la cantidad (sino me devuelve un choclo de cosas)
         let resultado = await respuesta.json()
-        console.log(resultado)
+        // console.log(resultado)
         let listQuantity = document.getElementById(`cartQuantity-${cid}-${pid}`)
         listQuantity.innerHTML = `<li id="cartQuantity-${cid}-${pid}">Cantidad: ${resultado} <button id="cartButtonRestar" onclick="restar('${cid}', '${pid}', '${resultado}')">-</button> <button id="cartButtonSumar" onclick="sumar('${cid}', '${pid}')">+</button> </li>`        
     } else {

@@ -14,8 +14,9 @@ import {router as cartsRouter} from "./routes/cartsRouter.js"
 import { router as viewsRouter } from "./routes/viewsRouter.js"
 import { router as sessionsRouter } from "./routes/sessionsRouter.js"
 import { errorHandler } from "./middlewares/errorHandler.js"
+import { middLogger } from "./middlewares/middLogger.js"
 import { chatModel } from "./dao/models/chatModel.js"
-import { verifyJWT } from "./utils/utils.js"
+import { logger, verifyJWT } from "./utils/utils.js"
 import cors from "cors"
 import compression from "express-compression"
 
@@ -39,6 +40,8 @@ conectionDB()
 //Estas 2 líneas son para que nuestro servidor interprete automaticamente msjes tipo JSON (CLAVE, son middlewares)
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
+//Esta linea es mi middleware logger, lo agrego a la req para poder llamarlo cuando quiera
+app.use(middLogger)
 //Esta linea es para comprimir en gzip el contenido de la response que no este comprimido previamente (jpg es un formato que ya viene comprimido)
 app.use(compression({}))//Falta parametrizar con brotli
 //Esta línea permite la realizacion de peticiones cruzadas a nuestra aplicación, desde cualquier origen, con eso podemos trabajar con un front externo como React (Acceder de un dominio diferente al de tu servidor)
@@ -104,7 +107,9 @@ app.use(errorHandler)
 let usuarios = []
 let mensajes = []
 
-const serverHTTP = app.listen(PORT, () => console.log(`Servidor escuchando en el puerto ${PORT}`))
+// const serverHTTP = app.listen(PORT, () => console.log(`Servidor escuchando en el puerto ${PORT}`))
+const serverHTTP = app.listen(PORT, () => logger.debug(`Servidor escuchando en el puerto ${PORT}`))
+
 //                                                    W E B  S O C K E T
 const io = new Server(serverHTTP)
 
@@ -145,7 +150,7 @@ io.on("connection", (socket) => { //2) Va a estar esuchando si llega una conexio
 
 export {io}
 
-//01:18:00
+//01:38:00
 //NOTAS:
 //CUSTOM ROUTER: VER CLASE 24 SEGUNDA PRACTICA INTEGRADORA
 //DESARROLLO SERVER COMPLETO EN CAPAS 01:00:00

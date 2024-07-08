@@ -1,0 +1,8 @@
+{"level":"error","message":"Peticion POST de usuario(marcelo) no autorizado hacia /api/products","timestamp":"2024-07-08T09:09:02.393Z"}
+{"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /perfil","timestamp":"2024-07-08T09:09:42.564Z"}
+{"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /products","timestamp":"2024-07-08T09:15:50.777Z"}
+{"level":"error","message":"Peticion POST de usuario no autenticado hacia la ruta: /api/products","timestamp":"2024-07-08T09:20:08.381Z"}
+{"level":"error","message":"Deberá adjuntar una imagen","timestamp":"2024-07-08T09:21:51.083Z"}
+{"level":"error","message":"Deberá completar todos los campos del formulario","timestamp":"2024-07-08T09:22:43.400Z"}
+{"level":"error","message":"Peticion POST hacia /api/products provoco el siguiente error: Deberá completar todos los campos del formulario","timestamp":"2024-07-08T09:26:18.017Z"}
+

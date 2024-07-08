@@ -2,11 +2,13 @@ import { fileURLToPath } from "url"
 import { dirname, join } from "path"
 import { config } from "../config/config.js"
 import multer from "multer"
-import crypto from "crypto" //modulo nativo de node, lo cambié por bcrypt
+import crypto from "crypto" //modulo nativo de node, ya no lo uso
 import bcrypt from "bcrypt"
 import passport from "passport"
 import jwt from "jsonwebtoken"
 import nodemailer from "nodemailer"
+import winston from "winston"
+import { warn } from "console"
 
 //__DIRNAME CASERO
 const __filename = fileURLToPath(import.meta.url)
@@ -116,4 +118,55 @@ const enviarEmail = async (para, asunto, mensaje) => {
     )
 }
 
-export { __dirname, upload, generateHash, validaPassword, SECRET, passportCall, verifyJWT, enviarEmail };
+//Creación y configuración de mi Logger
+
+//1) Creo mis transportes
+const transporteDesarrollo = new winston.transports.Console(
+  {
+    level: "debug",
+    format: winston.format.combine(
+      winston.format.timestamp(),
+      winston.format.json()
+    )
+  }        
+)
+
+const transporteProduccion = new winston.transports.File(
+  {
+    level: "info",
+    filename: "./errorLogs.log",
+    format: winston.format.combine(
+      winston.format.timestamp(),
+      winston.format.json()
+    )
+  }        
+)
+//1B) Personalizo los levels a mi gusto
+let customLevels = {
+  fatal: 0,
+  error: 1,
+  warn: 2,
+  info: 3,
+  http: 4,
+  debug: 5
+}
+
+//2) Creo mi logger con los transportes
+const logger = winston.createLogger(
+  {
+    levels: customLevels,
+    transports: 
+    [
+      transporteProduccion
+    ]
+  }
+)
+//Configuro el logger segun el modo de desarrollo
+let MODE = config.MODE
+if (MODE == "dev") {
+  logger.add(transporteDesarrollo)
+}
+
+
+
+export { __dirname, upload, generateHash, validaPassword, SECRET, passportCall, verifyJWT, enviarEmail, logger};
