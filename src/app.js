@@ -24,15 +24,17 @@ import compression from "express-compression"
 const PORT = config.PORT
 const app = express()
 
+//                EN  PRODUCCION  EL  PUERTO  ES  EL  3000!!!!!!!!
+
 //Coneccíon a la base de datos (indicar URL y el nombre de la DB)
 const conectionDB = async () => {
     try {
         await mongoose.connect(config.MONGO_URL, {dbName: config.DB_NAME}
     )
-    console.log("DB online..")
+    logger.debug("DB online..")
         
     } catch (error) {
-        console.log("Error al conectar a la DB")        
+        logger.debug("Error al conectar a la DB")        
     }
 }
 conectionDB()
@@ -107,7 +109,6 @@ app.use(errorHandler)
 let usuarios = []
 let mensajes = []
 
-// const serverHTTP = app.listen(PORT, () => console.log(`Servidor escuchando en el puerto ${PORT}`))
 const serverHTTP = app.listen(PORT, () => logger.debug(`Servidor escuchando en el puerto ${PORT}`))
 
 //                                                    W E B  S O C K E T
@@ -115,7 +116,7 @@ const io = new Server(serverHTTP)
 
 
 io.on("connection", (socket) => { //2) Va a estar esuchando si llega una conexion
-    console.log(`Se conecto al servidor el cliente ${socket.id}`)
+    logger.debug(`Se conecto al servidor el cliente ${socket.id}`)
 //                          L O G I C A  D E L  C H A T
     socket.on("id", async (nombre) => {
         //configuro los usuarios como un objeto y los pusheo a un array

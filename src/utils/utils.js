@@ -66,10 +66,10 @@ function verifyJWT(req, res, next) {
   if (token) {
       jwt.verify(token, SECRET, (err, decoded) => {
           if (err) {
-              console.warn('Token inválido:', err.message); // Log para depuración
+              logger.debug('Token inválido:', err.message); // Log para depuración
           } else {
               req.user = decoded; // solo devuelve req.user si el token es valido
-              // console.log(req.user)
+              logger.debug(req.user)
           }
       });
   }
@@ -124,9 +124,12 @@ const enviarEmail = async (para, asunto, mensaje) => {
 const transporteDesarrollo = new winston.transports.Console(
   {
     level: "debug",
-    format: winston.format.combine(
-      winston.format.timestamp(),
-      winston.format.json()
+    format: winston.format.combine(      
+      winston.format.json(),
+      winston.format.prettyPrint(),
+      winston.format.printf(({message})=> {
+        return JSON.stringify(message, null, 2)
+      })
     )
   }        
 )

@@ -5,7 +5,10 @@
 {"level":"error","message":"Deberá adjuntar una imagen","timestamp":"2024-07-08T09:21:51.083Z"}
 {"level":"error","message":"Deberá completar todos los campos del formulario","timestamp":"2024-07-08T09:22:43.400Z"}
 {"level":"error","message":"Peticion POST hacia /api/products provoco el siguiente error: Deberá completar todos los campos del formulario","timestamp":"2024-07-08T09:26:18.017Z"}
-
 {"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /perfil","timestamp":"2024-07-08T20:30:51.039Z"}
 {"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /products","timestamp":"2024-07-08T20:31:04.453Z"}
 {"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /perfil","timestamp":"2024-07-08T20:40:07.841Z"}
+{"level":"info","message":"Servidor escuchando en el puerto 3000","timestamp":"2024-07-10T08:30:45.500Z"}
+{"level":"info","message":"Servidor escuchando en el puerto 3000","timestamp":"2024-07-10T08:32:53.223Z"}
+{"level":"info","message":"Servidor escuchando en el puerto 8080","timestamp":"2024-07-10T08:33:18.262Z"}
+{"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /perfil","timestamp":"2024-07-10T08:37:04.117Z"}
