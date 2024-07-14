@@ -12,3 +12,5 @@
 {"level":"info","message":"Servidor escuchando en el puerto 3000","timestamp":"2024-07-10T08:32:53.223Z"}
 {"level":"info","message":"Servidor escuchando en el puerto 8080","timestamp":"2024-07-10T08:33:18.262Z"}
 {"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /perfil","timestamp":"2024-07-10T08:37:04.117Z"}
+{"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /products","timestamp":"2024-07-14T08:48:48.862Z"}
+{"level":"error","message":"Peticion POST de usuario no autenticado hacia la ruta: /api/carts/665ad848b016aab4eac89425/purchase","timestamp":"2024-07-14T08:53:52.321Z"}

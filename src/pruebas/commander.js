@@ -15,3 +15,8 @@ programa.parse()
 const argumentos = programa.opts() //Todas las opciones de argumentos creadas
 const port = argumentos.portConn
 console.log(argumentos)
+
+//                              ARTILLERY (PARA PROBAR RENDIMIENTO DEL SERVIDOR)
+//Comando quick para peticiones get: artillery quick -c 20 -n 5 http://blablabla (-c = usuarios -n = cant de peticiones GET)
+
+//Guardar metricas en un archivo txt con > o en json con -o: artillery quick -c 20 -n 5 https://www.aeginatocados.com.ar/category/Flores%20preservadas > metricas.txt

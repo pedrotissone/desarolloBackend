@@ -78,6 +78,12 @@ const vaciarCarrito = async (cid) => {
     }
 }
 
-const comprar = async () => {
-    alert("voy a comprar los productos del carrito")
+const comprar = async (cid) => {
+    let respuesta = await fetch(`/api/carts/${cid}/purchase`, {method: "post"})
+    if(respuesta.ok) {
+        alert("Compra realizada con exito, recibirás un email con los datos de la compra")
+        window.location.href = "/"
+    } else {
+        alert("Se produció un error al realizar la compra")
+    }
 }

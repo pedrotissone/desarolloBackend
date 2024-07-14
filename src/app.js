@@ -3,6 +3,8 @@ import mongoose from "mongoose"
 import sessions from "express-session" //Las sessiones viven en memoria
 import FileStore from "session-file-store"//Con esto las sessiones vivian en un archivo local
 import MongoStore from "connect-mongo" //Con esto las sessiones viven en mongo
+import cluster from "cluster" //Con este modulo nativo puedo escalar horizontalmente mi servidor
+import os from "os"// Con este modulo nativo puedo ver la capacidad que tengo para escalar horizontalmente con un cluster
 import { config } from "./config/config.js"
 import cookieParser from "cookie-parser"
 import passport from "passport"
@@ -23,6 +25,9 @@ import compression from "express-compression"
 
 const PORT = config.PORT
 const app = express()
+
+// console.log(os.cpus())
+// console.log("Cantidad de procesadores o nucleos: "+ os.cpus().length)
 
 //                EN  PRODUCCION  EL  PUERTO  ES  EL  3000!!!!!!!!
 
@@ -151,7 +156,7 @@ io.on("connection", (socket) => { //2) Va a estar esuchando si llega una conexio
 
 export {io}
 
-//01:38:00
+//01:36:00
 //NOTAS:
 //CUSTOM ROUTER: VER CLASE 24 SEGUNDA PRACTICA INTEGRADORA
 //DESARROLLO SERVER COMPLETO EN CAPAS 01:00:00
