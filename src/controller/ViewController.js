@@ -1,5 +1,7 @@
 import { CartManagerMongo as CartManager } from "../dao/CartManagerMongo.js"
 import { ProductManagerMongo as ProductManager } from "../dao/ProductManagerMongo.js"
+import jwt from "jsonwebtoken"
+import { SECRET, logger } from "../utils/utils.js"
 
 
 let Producto = new ProductManager()
@@ -129,6 +131,40 @@ export class ViewController {
         res.status(200).render("perfil", {
             usuario: req.user
         })
+    }
+
+    static getOlvideClave = (req, res) => {
+        res.setHeader("Content-Type", "text/html")
+        res.status(200).render("olvideClave")
+    }
+
+    static getCrearNuevaClave = async (req, res) => {
+        //1) Extraer token del req.params
+        let token = req.params.token
+        
+        //2) Verifico la Validez del token
+        let decoded
+        try {
+            decoded = jwt.verify(token, SECRET);
+            console.log('Token válido y aún en vigencia:', decoded);
+          } catch (err) {
+            if (err.name === 'TokenExpiredError') {
+              console.error('El token ha expirado.');
+            } else if (err.name === 'JsonWebTokenError') {
+              console.error('El token no es válido.');
+            } else {
+              console.error('Error al verificar el token:', err);
+            }
+          }
+
+          //3 Redirijo vista según la validez del token
+          if (decoded) {
+              res.setHeader("Content-Type", "text/html")
+              return res.status(200).render("crearNuevaClave", decoded)
+          } else {
+            res.setHeader("Content-Type", "text/html")
+            res.status(200).render("login", {message: "Lo siento el token expiro o es incorrecto, deberá repetir el procedimiento para restablecer la contraseña" })
+        }
     }
 
 }

@@ -12,4 +12,14 @@
 <br>
 <br>
 <input type="submit", value="login">
+<br>
+<a href="/olvideClave">Olvide mi contraseña</a>
 </form>
+
+    {{#if message}}
+    <script>
+        alert("{{message}}");
+    </script>
+    {{/if}}
+
+

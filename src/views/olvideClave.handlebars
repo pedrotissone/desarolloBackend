@@ -1,0 +1,8 @@
+{{>navBar}}
+
+<h3>Escriba su córreo electrónico para reestablecer la contraseña</h3>
+
+<form action="/api/users/restablecerClave", method="post">
+    <input type="email", name="email", placeholder="Escriba su email"/>
+    <input type="submit", value="enviar"/>
+</form>

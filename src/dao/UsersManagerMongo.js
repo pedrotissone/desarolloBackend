@@ -11,4 +11,9 @@ export class UsersManagerMongo{
         return await usersModel.findOne(filtro).lean()
     }
 
+    async update(id, hashedPassword) {
+        //El tercer argumento es para correr validaciones de mongo y para que te muestre el documento actualizado, sino te muestra el original, así viene por defecto
+        return await usersModel.findByIdAndUpdate(id, {password: hashedPassword}, { runValidators: true, returnDocument: "after" })
+    }
+
 }

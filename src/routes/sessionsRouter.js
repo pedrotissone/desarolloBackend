@@ -108,13 +108,9 @@ router.get("/current", passport.authenticate("current", {session: false}), (req,
     let usuarioFormateado = new UsuariosDTO(req.user)
     return res.status(200).json(usuarioFormateado)
 })
-
-
 //                                      PASSPORT  CALL (No la voy a usar de momento)
 //Ruta para probar current con la funcion de callback de passport para mayor control (Yo la llamé passportCall)
 // router.get("/current", passportCall("current"), (req, res) => {
 //     res.setHeader("Content-Type", "application/json")
 //     return res.status(200).json(req.user)
 // })
-
-

@@ -15,6 +15,7 @@ import {router as productsRouter} from "./routes/productsRouter.js"
 import {router as cartsRouter} from "./routes/cartsRouter.js"
 import { router as viewsRouter } from "./routes/viewsRouter.js"
 import { router as sessionsRouter } from "./routes/sessionsRouter.js"
+import {router as usersRouter} from "./routes/usersRouter.js"
 import { errorHandler } from "./middlewares/errorHandler.js"
 import { middLogger } from "./middlewares/middLogger.js"
 import { chatModel } from "./dao/models/chatModel.js"
@@ -94,6 +95,7 @@ app.use("/api/products", productsRouter)
 app.use("/api/carts", cartsRouter)
 app.use("/handlebars", viewsRouter)
 app.use("/api/sessions", sessionsRouter)
+app.use("/api/users", usersRouter)
 //                                          RUTAS CON ROUTER
 
 
@@ -156,7 +158,7 @@ io.on("connection", (socket) => { //2) Va a estar esuchando si llega una conexio
 
 export {io}
 
-//01:36:00
+//00:00:00
 //NOTAS:
 //CUSTOM ROUTER: VER CLASE 24 SEGUNDA PRACTICA INTEGRADORA
 //DESARROLLO SERVER COMPLETO EN CAPAS 01:00:00

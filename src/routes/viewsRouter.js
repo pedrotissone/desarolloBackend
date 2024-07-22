@@ -22,5 +22,10 @@ router.get("/login", ViewController.getLogin)
 
 router.get("/perfil", auth(["usuario", "admin"]), ViewController.getPerfil)
 
+router.get("/olvideClave", ViewController.getOlvideClave)
+
+router.get("/crearNuevaClave/:token", ViewController.getCrearNuevaClave)
+
+
 
 export { router }

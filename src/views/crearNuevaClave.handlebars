@@ -1,0 +1,9 @@
+{{>navBar}}
+
+<h3>Escriba su nueva contraseña para restablecer la misma</h3>
+
+<form action="/api/users/corroborarNuevaClave/:token", method="post">
+    <input type="password" name="password" placeholder="Nueva contraseña..">
+    {{!-- <input type="hidden" name="decoded" value="{{decoded}}"> --}}
+    <input type="submit" value="Confirmar">
+</form>
