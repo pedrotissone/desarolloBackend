@@ -1,6 +1,7 @@
 import { userService } from "../services/UserService.js"
 import jwt from "jsonwebtoken"
 import { SECRET, enviarEmail, generateHash, logger, validaPassword } from "../utils/utils.js"
+import { isValidObjectId } from "mongoose"
 
 
 export class UserController {
@@ -72,4 +73,47 @@ export class UserController {
         }
     }
 
+
+    static getPremium = async (req, res) => {
+
+        let id = req.params.uid
+        //1) Valido que el id tenga formato de Mongo DB
+        if (!isValidObjectId(id)) {
+            res.setHeader("Content-Type", "application/json")
+            return res.status(400).json({
+                message: "Error, el id requerido no tiene un formato valido de MongoDB"
+            })
+        }
+        
+        try {
+            //2) Busco si existe usuario con el Id requerido
+            let usuario = await userService.getUserId({_id:id})
+            if (!usuario) {
+                res.setHeader("Content-Type", "application/json")
+                return res.status(400).json("No hay ningun usuario registrado con el id proporcionado")                
+            }
+            //3) Modifico el rol segun el que actualmente tenga en la DB
+            if (usuario.rol == "usuario") {
+                let nuevoRol = "premium"
+                let nuevoUsuario = await userService.updateRol(id, nuevoRol)
+                res.setHeader("Content-Type", "text/html")
+                res.status(200).json(nuevoUsuario)  
+            } else {
+                let nuevoRol = "usuario"
+                let nuevoUsuario = await userService.updateRol(id, nuevoRol)
+                res.setHeader("Content-Type", "text/html")
+                res.status(200).json(nuevoUsuario)            
+            }
+        } catch (error) {
+            res.setHeader("Content-Type", "application/json")
+            return res.status(500).json({ error: "Error en el Servidor al querer modificar el rol del usuario" })            
+        }        
+    }
+
+
+
 }
+    
+    
+
+

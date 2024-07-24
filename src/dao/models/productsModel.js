@@ -14,10 +14,12 @@ const productsSchema = new mongoose.Schema(
         code: { type: String, required: true, unique: true},
         stock: {type: Number, required: true},
         category: {type: String, required: true},
-        status: {type: String, required: true}
+        status: {type: String, required: true},
+        owner: {type: String, default: "admin"}
     },
     {
-        timpestamps: true
+        timpestamps: true,
+        strict: false        
     }
 )
 //Agrego un plugin para utilizar el paginate con el esquema de productos

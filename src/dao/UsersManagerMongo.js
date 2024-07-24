@@ -16,4 +16,9 @@ export class UsersManagerMongo{
         return await usersModel.findByIdAndUpdate(id, {password: hashedPassword}, { runValidators: true, returnDocument: "after" })
     }
 
+    async updateRol(id, nuevoRol) {
+        //El tercer argumento es para correr validaciones de mongo y para que te muestre el documento actualizado, sino te muestra el original, así viene por defecto
+        return await usersModel.findByIdAndUpdate(id, {rol: nuevoRol}, { runValidators: true, returnDocument: "after" })
+    }
+
 }

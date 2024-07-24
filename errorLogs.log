@@ -19,3 +19,8 @@
 {"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /perfil","timestamp":"2024-07-20T17:20:28.680Z"}
 {"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /perfil","timestamp":"2024-07-20T17:28:35.060Z"}
 {"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /perfil","timestamp":"2024-07-22T07:28:11.394Z"}
+{"level":"error","message":"Peticion POST hacia /api/products provoco el siguiente error: Deberá completar todos los campos del formulario","timestamp":"2024-07-24T08:58:15.992Z"}
+{"level":"error","message":"Peticion POST de usuario no autenticado hacia la ruta: /api/products","timestamp":"2024-07-24T09:56:44.382Z"}
+{"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /perfil","timestamp":"2024-07-24T09:56:55.498Z"}
+{"level":"error","message":"Peticion POST hacia /api/products provoco el siguiente error: Deberá completar todos los campos del formulario","timestamp":"2024-07-24T09:57:42.622Z"}
+{"level":"error","message":"Peticion GET de usuario(admin) no autorizado hacia /products","timestamp":"2024-07-24T10:42:30.619Z"}

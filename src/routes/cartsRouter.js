@@ -9,15 +9,15 @@ router.get("/:cid", CartController.getCartById)
 
 router.post("/", CartController.createCart)
 
-router.post("/:cid/products/:pid", auth(["usuario"]), CartController.addToCart)
+router.post("/:cid/products/:pid", auth(["usuario", "premium"]), CartController.addToCart)
 
-router.put("/:cid/products/:pid", auth(["usuario"]), CartController.addQuantity)
+router.put("/:cid/products/:pid", auth(["usuario", "premium"]), CartController.addQuantity)
 
-router.delete("/:cid/products/:pid", auth(["admin", "usuario"]), CartController.deleteProductInCart)
+router.delete("/:cid/products/:pid", auth(["admin", "usuario", "premium"]), CartController.deleteProductInCart)
 
-router.delete("/:cid", auth(["admin", "usuario"]), CartController.clearCart)
+router.delete("/:cid", auth(["admin", "usuario", "premium"]), CartController.clearCart)
 
-router.post("/:cid/purchase", auth(["usuario"]), CartController.purchase)
+router.post("/:cid/purchase", auth(["usuario", "premium"]), CartController.purchase)
 
 
 

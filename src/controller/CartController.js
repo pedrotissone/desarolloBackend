@@ -126,7 +126,7 @@ export class CartController {
         //                          M O N G O  DB    
         let cid = req.params.cid
         let pid = req.params.pid
-        // console.log(`El pid es: ${pid}`)
+        let userEmail = req.user.email
 
         if (!isValidObjectId(cid)) {
             res.setHeader("Content-Type", "application/json")
@@ -142,10 +142,9 @@ export class CartController {
             // carrito = await Carts.getCartById(cid)
             carrito = await cartService.getCartById(cid)
             if (carrito) {
-                productos = carrito.productos
-                req.logger.debug("El carrito de abajo existe seguimos...")                
-                req.logger.debug("lo de abajo es el carrito")
+                productos = carrito.productos                
                 req.logger.debug(carrito)
+                req.logger.debug("lo de abajo son los productos que contiene")
                 req.logger.debug(productos)
             } else {
                 res.setHeader("Content-Type", "application/json")
@@ -155,12 +154,16 @@ export class CartController {
             // nuevoProducto = await Producto.getProductsByFiltro({ _id: pid })
             nuevoProducto = await productService.getProductsByFiltro({ _id: pid })
             if (nuevoProducto) {
-                // console.log("El producto de abajo existe seguimos...")
-                // console.log(nuevoProducto)
-                req.logger.debug(nuevoProducto)
+                req.logger.debug("Esto es nuevoProducto: " + nuevoProducto.owner)
+                req.logger.debug("Esto es userEmail: " + userEmail)
             } else {
                 res.setHeader("Content-Type", "application/json")
                 return res.status(400).json("El producto que se desea agregar no existe")
+            }
+            //Valido que un usuario premium no compre su propio producto
+            if (userEmail == nuevoProducto.owner) {
+                res.setHeader("Content-Type", "application/json")
+                return res.status(400).json("No se puede agregar al carrito un producto del cual se es owner")
             }
         } catch (error) {
             res.setHeader("Content-Type", "application/json")

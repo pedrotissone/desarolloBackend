@@ -7,6 +7,8 @@ import { productService } from "../services/ProductService.js"
 import { faker } from "@faker-js/faker"
 import { CustomError } from "../utils/CustomError.js"
 import { TIPOS_ERROR } from "../utils/EError.js"
+import jwt from "jsonwebtoken"
+import { SECRET } from "../utils/utils.js"
 
 //Tengo que instanciar mi clase ProductManager(DAO) para poder realizar la conexion a la DB desde mi controlador (Ahora uso service)
 let Producto = new ProductManager()
@@ -97,7 +99,7 @@ export class ProductController {
             //CONEXION A MI DAO/MANAGER - Paso a la capa que interactua con mi DB (No habia services)
             // let resultado = await Producto.getProductsByFiltro({ _id: id })
             //CONEXION A MI CAPA DE SERVICIOS - es la capa intermediaria entre Controller y DAO
-            let resultado = await productService.getProductsByFiltro({ _id: id })
+            let resultado = await productService.getProductsByFiltro({ id:_id })
             if (resultado) {
                 res.setHeader("Content-Type", "application/json")
                 return res.json(resultado)
@@ -161,10 +163,24 @@ export class ProductController {
         //     }
         // })
 
-        //                              MONGO  DB        
+        //                              MONGO  DB
+
+        //Variables globales
+        let coderCookie = req.cookies["codercookie"] //Extraigo el valor de la cookie jwt
+        let { title, description, price, code, stock, category, status } = req.body
+        let thumbnail
+        let owner
+
+        //Decodifico valor de la cookie y si el que va a subir un producto es premium le cambio el valor a owner a su ._id
+        let decoded = jwt.verify(coderCookie, SECRET)
+        console.log(decoded._id)
+        if (decoded.rol == "premium") {
+            owner = decoded.email
+        }
+
+
         //Validación de que se cargue alguna imagen (OJO PROBLEMA CON LOS .HEIC)
         try {
-            let thumbnail
             if (req.file) {
                 thumbnail = req.file.filename
             } else {
@@ -174,7 +190,7 @@ export class ProductController {
                 CustomError.createError("Error","Falta adjuntar archivo de imagen","Deberá adjuntar una imagen", TIPOS_ERROR.ARGUMENTOS_INVALIDOS)                    
             }        
 
-        let { title, description, price, code, stock, category, status } = req.body
+        // let { title, description, price, code, stock, category, status } = req.body
         //Validación del request
         if (!title || !description || !price || !code || !stock || !category || !status) {
             // res.setHeader("Content-Type", "application/json")
@@ -207,7 +223,7 @@ export class ProductController {
 
         try {
             // let nuevoProducto = await Producto.addProduct({ title, description, price, thumbnail, code, stock, category, status })
-            let nuevoProducto = await productService.addProduct({ title, description, price, thumbnail, code, stock, category, status })
+            let nuevoProducto = await productService.addProduct({ title, description, price, thumbnail, code, stock, category, status, owner})
 
             let listadoActualizado = await productsModel.find() //Me traigo todos los productos directamente desde mi modelo, no se porque no usé mi manager/dao
             io.emit("listadoActualizado", listadoActualizado)//Emit para la vista handlebars/realtimeproducts
@@ -312,14 +328,30 @@ export class ProductController {
         // })
 
         //                      M O N G O  DB    
-        //Valido que el id tenga el formato de Mongodb
+        
         let id = req.params.pid
+        let userEmail = req.user.email
+        console.log(userEmail)
+
+        //Valido que el id tenga el formato de Mongodb
         if (!isValidObjectId(id)) {
             res.setHeader("Content-Type", "application/json")
             return res.status(400).json({
                 message: "Error, el id requerido no tiene un formato valido de MongoDB"
             })
         }
+
+        //Busco el producto por el id y comparo con el email para validar que no se quiera borrar un producto ajeno
+        let producto = await productService.getProductsByFiltro({ _id:id })
+        console.log(producto.owner)
+
+        if (userEmail !== "adminCoder@coder.com") {
+            if (userEmail !== producto.owner) {
+                res.setHeader("Content-Type", "application/json")
+                return res.status(400).json("No se puede eliminar un producto del cual no se es el owner")
+            }
+        }
+
 
         try {
             //CONEXION A MI DAO/MANAGER - Paso a la capa que interactua con mi DB

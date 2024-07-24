@@ -10,7 +10,7 @@ class ProductService {
         return this.dao.getProductsPaginate(filtro, opciones, sortOptions)
     }
 
-    getProductsByFiltro = async (filtro) => {
+    getProductsByFiltro = async (filtro) => {       
         return this.dao.getProductsByFiltro(filtro)
     }
 
