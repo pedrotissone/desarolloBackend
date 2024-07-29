@@ -24,3 +24,4 @@
 {"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /perfil","timestamp":"2024-07-24T09:56:55.498Z"}
 {"level":"error","message":"Peticion POST hacia /api/products provoco el siguiente error: Deberá completar todos los campos del formulario","timestamp":"2024-07-24T09:57:42.622Z"}
 {"level":"error","message":"Peticion GET de usuario(admin) no autorizado hacia /products","timestamp":"2024-07-24T10:42:30.619Z"}
+{"level":"error","message":"Peticion POST de usuario no autenticado hacia la ruta: /api/products/","timestamp":"2024-07-29T18:16:17.488Z"}

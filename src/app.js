@@ -22,6 +22,8 @@ import { chatModel } from "./dao/models/chatModel.js"
 import { logger, verifyJWT } from "./utils/utils.js"
 import cors from "cors"
 import compression from "express-compression"
+import swaggerJSDoc from "swagger-jsdoc"
+import swaggerUi from "swagger-ui-express"
 
 
 const PORT = config.PORT
@@ -88,6 +90,30 @@ app.use(passport.initialize())
 //Con este middleware paso a las rutas siempre un req.user en caso de existir token valido
 app.use(verifyJWT)
 // app.use(passport.session()) //1er paso B)(Solo si uso sessiones y tiene que ir debajo del middleware de sessions, sino esta linea no va)
+
+
+//Configuración de Swagger
+const options = {
+    definition: {
+        openapi: "3.0.0",
+        info: {
+            title: "productos",
+            version: "1.0.0",
+            description: "documentacion products"
+        },
+        info: {
+            title: "carrito",
+            version: "1.0.0",
+            description: "documentacion carrito"
+        },
+    },
+    apis: ["./src/docs/*.yaml"]
+}
+
+const specification = swaggerJSDoc(options)
+//Uso middleware para mostrar la documentación
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specification))
+
 
 //                                          RUTAS CON ROUTER
 app.use("/", viewsRouter) //Truco para que el home sea mi archivo de handlebars
@@ -158,7 +184,7 @@ io.on("connection", (socket) => { //2) Va a estar esuchando si llega una conexio
 
 export {io}
 
-//00:00:00
+//01:50:00
 //NOTAS:
 //CUSTOM ROUTER: VER CLASE 24 SEGUNDA PRACTICA INTEGRADORA
 //DESARROLLO SERVER COMPLETO EN CAPAS 01:00:00
