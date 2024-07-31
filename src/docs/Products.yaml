@@ -10,6 +10,23 @@ paths:
           description: Los productos fueron obtenidos OK desde la DB
         "500":
           description: Error interno del servidor
+  /api/products/{pid}:
+    get:
+      summary: Obtiene un producto por ID
+      tags:
+        - Products
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: MongoDB id del producto        
+        schema:
+          type: string              
+      responses:
+        "200":
+          description: Producto obtenido de la DB
+        "500":
+          description: Error interno del servidor
     post:
       summary: Crea un producto (Solo puede hacerlo el admin o un usuario premium)
       tags:
@@ -19,21 +36,8 @@ paths:
           description: Producto creado Ok en la DB
         "500":
           description: Error interno del servidor
-    put:
-      summary: Modifica un producto (Solo puede hacerlo el admin o un usuario premiun respecto de su producto)
-      tags:
-        - Products
-      responses:
-        "201":
-          description: Producto modificado Ok en la DB
-        "500":
-          description: Error interno del servidor
-    delete:
-      summary: Elimina un producto de la DB (Solo puede hacerlo el admin o un usuario premiun respecto de su producto)
-      tags:
-        - Products
-      responses:
-        "201":
-          description: Producto eliminado en la DB
-        "500":
-          description: Error interno del servidor
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic

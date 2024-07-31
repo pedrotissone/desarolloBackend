@@ -99,10 +99,10 @@ export class ProductController {
             //CONEXION A MI DAO/MANAGER - Paso a la capa que interactua con mi DB (No habia services)
             // let resultado = await Producto.getProductsByFiltro({ _id: id })
             //CONEXION A MI CAPA DE SERVICIOS - es la capa intermediaria entre Controller y DAO
-            let resultado = await productService.getProductsByFiltro({ id:_id })
+            let resultado = await productService.getProductsByFiltro({_id:id})            
             if (resultado) {
                 res.setHeader("Content-Type", "application/json")
-                return res.json(resultado)
+                return res.status(200).json(resultado)
             } else {
                 res.setHeader("Content-Type", "application/json")
                 return res.json("No existe producto con el id requerido")

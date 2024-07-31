@@ -39,7 +39,7 @@ class ProductManagerMongo {
 
 
     //Metodo especial para validar con MONGO cualquier propiedad o propiedades (Lo enseñó el profe, tengo que repasarlo)
-    async getProductsByFiltro(filtro) { //filtro= {code: 123, status:"ok", etc}
+    async getProductsByFiltro(filtro) { //filtro= {code: 123, status:"ok", etc} 
         return await productsModel.findOne(filtro)
     }
 

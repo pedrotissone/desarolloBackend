@@ -184,7 +184,7 @@ io.on("connection", (socket) => { //2) Va a estar esuchando si llega una conexio
 
 export {io}
 
-//01:50:00
+//00:44:30
 //NOTAS:
 //CUSTOM ROUTER: VER CLASE 24 SEGUNDA PRACTICA INTEGRADORA
 //DESARROLLO SERVER COMPLETO EN CAPAS 01:00:00
