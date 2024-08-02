@@ -176,12 +176,12 @@ export class ProductController {
         console.log(decoded._id)
         if (decoded.rol == "premium") {
             owner = decoded.email
-        }
+        }        
 
 
         //Validación de que se cargue alguna imagen (OJO PROBLEMA CON LOS .HEIC)
         try {
-            if (req.file) {
+            if (req.file) {                
                 thumbnail = req.file.filename
             } else {
                 // return res.status(400).json({
@@ -190,7 +190,6 @@ export class ProductController {
                 CustomError.createError("Error","Falta adjuntar archivo de imagen","Deberá adjuntar una imagen", TIPOS_ERROR.ARGUMENTOS_INVALIDOS)                    
             }        
 
-        // let { title, description, price, code, stock, category, status } = req.body
         //Validación del request
         if (!title || !description || !price || !code || !stock || !category || !status) {
             // res.setHeader("Content-Type", "application/json")

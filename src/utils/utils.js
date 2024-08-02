@@ -22,9 +22,9 @@ const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, './src/public/assets/img')
   },
-  filename: function (req, file, cb) {
+  filename: function (req, file, cb) {    
     //Valido que solo se puedan subir imagenes
-    let tipo = file.mimetype.split("/")[0]
+    let tipo = file.mimetype.split("/")[0]    
     if (tipo !== "image") {
       return cb(new Error())
     }

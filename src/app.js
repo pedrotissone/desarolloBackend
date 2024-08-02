@@ -40,6 +40,7 @@ const conectionDB = async () => {
         await mongoose.connect(config.MONGO_URL, {dbName: config.DB_NAME}
     )
     logger.debug("DB online..")
+    console.log(config.DB_NAME)
         
     } catch (error) {
         logger.debug("Error al conectar a la DB")        
@@ -184,7 +185,7 @@ io.on("connection", (socket) => { //2) Va a estar esuchando si llega una conexio
 
 export {io}
 
-//00:44:30
+//01:40:30
 //NOTAS:
 //CUSTOM ROUTER: VER CLASE 24 SEGUNDA PRACTICA INTEGRADORA
 //DESARROLLO SERVER COMPLETO EN CAPAS 01:00:00
