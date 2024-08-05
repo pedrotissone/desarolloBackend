@@ -12,7 +12,7 @@ export class UserController {
         try {
             //1) Comprobar que el email pertenezca a un usuario registrado en la DB
             let usuario = await userService.checkEmail({ email: email })
-            if (usuario) {    
+            if (usuario) {
                 //2) Creo token con los datos del usuario
                 let token = jwt.sign(usuario, SECRET, { expiresIn: "1h" })//Creo token
                 res.cookie("usercookie", token, { httpOnly: true })//Creo cookie desde el servidor y guardo el token
@@ -44,7 +44,7 @@ export class UserController {
         }
 
 
-        let {password} = req.body
+        let { password } = req.body
         let token = req.params.token
         //Decodifico el token para obtener los datos de usuario
         let decoded = jwt.verify(token, SECRET)
@@ -52,7 +52,7 @@ export class UserController {
         console.log(decoded)
 
         //Guardo el Id del usuario
-        let id = decoded._id       
+        let id = decoded._id
 
         try {
             //1) Valido si la nueva contraseña es igual a la registrada en la DB
@@ -66,10 +66,10 @@ export class UserController {
             } else {
                 res.setHeader("Content-Type", "text/html")
                 res.status(400).json("La nueva constraseña no puede ser igual a la registrada en nuestra DB")
-            }            
+            }
         } catch (error) {
             res.setHeader("Content-Type", "application/json")
-            return res.status(500).json({ error: "Error en el Servidor al querer actualizar la clave del usuario" })            
+            return res.status(500).json({ error: "Error en el Servidor al querer actualizar la clave del usuario" })
         }
     }
 
@@ -84,36 +84,50 @@ export class UserController {
                 message: "Error, el id requerido no tiene un formato valido de MongoDB"
             })
         }
-        
+
         try {
             //2) Busco si existe usuario con el Id requerido
-            let usuario = await userService.getUserId({_id:id})
+            let usuario = await userService.getUserId({ _id: id })
             if (!usuario) {
                 res.setHeader("Content-Type", "application/json")
-                return res.status(400).json("No hay ningun usuario registrado con el id proporcionado")                
+                return res.status(400).json("No hay ningun usuario registrado con el id proporcionado")
             }
             //3) Modifico el rol segun el que actualmente tenga en la DB
             if (usuario.rol == "usuario") {
                 let nuevoRol = "premium"
                 let nuevoUsuario = await userService.updateRol(id, nuevoRol)
+                //Destruyo cookie y creo nuevo token sin la password con el rol actualizado
+                let nuevoUsuarioSinPassword = { ...nuevoUsuario._doc };
+                delete nuevoUsuarioSinPassword.password                       
+                res.clearCookie("codercookie", { httpOnly: true })
+                let token = jwt.sign(nuevoUsuarioSinPassword, SECRET, { expiresIn: "1h" })
+                console.log(token)
+                res.cookie("codercookie", token, { httpOnly: true })
                 res.setHeader("Content-Type", "text/html")
-                res.status(200).json(nuevoUsuario)  
+                res.status(200).json(nuevoUsuarioSinPassword)
             } else {
                 let nuevoRol = "usuario"
                 let nuevoUsuario = await userService.updateRol(id, nuevoRol)
+                //Destruyo cookie y creo nuevo token sin la password con el rol actualizado
+                let nuevoUsuarioSinPassword = { ...nuevoUsuario._doc };
+                delete nuevoUsuarioSinPassword.password                       
+                res.clearCookie("codercookie", { httpOnly: true })
+                let token = jwt.sign(nuevoUsuarioSinPassword, SECRET, { expiresIn: "1h" })
+                console.log(token)
+                res.cookie("codercookie", token, { httpOnly: true })
                 res.setHeader("Content-Type", "text/html")
-                res.status(200).json(nuevoUsuario)            
+                res.status(200).json(nuevoUsuarioSinPassword)
             }
         } catch (error) {
             res.setHeader("Content-Type", "application/json")
-            return res.status(500).json({ error: "Error en el Servidor al querer modificar el rol del usuario" })            
-        }        
+            return res.status(500).json({ error: "Error en el Servidor al querer modificar el rol del usuario" })
+        }
     }
 
 
 
 }
-    
-    
+
+
 
 

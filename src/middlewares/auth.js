@@ -10,7 +10,7 @@ export const auth = (permisos=[]) => { //auth(["admin", "premium"])
         //     return next()
         // }
 
-        //1) Hay usuario?
+        //1) Hay usuario?       
         if (!req.user?.rol) { //Hay user? si hay entonces hay user.rol?
             //Agrego logger para guardar en un archivo el error de autenticacion
             req.logger.error(`Peticion ${req.method} de usuario no autenticado hacia la ruta: ${req.originalUrl}`)

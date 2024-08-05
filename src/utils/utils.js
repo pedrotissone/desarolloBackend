@@ -67,9 +67,9 @@ function verifyJWT(req, res, next) {
       jwt.verify(token, SECRET, (err, decoded) => {
           if (err) {
               logger.debug('Token inválido:', err.message); // Log para depuración
-          } else {
+          } else {              
               req.user = decoded; // solo devuelve req.user si el token es valido
-              logger.debug(req.user)
+              logger.debug(req.user)              
           }
       });
   }

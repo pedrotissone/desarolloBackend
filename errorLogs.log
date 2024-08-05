@@ -51,3 +51,36 @@
 {"level":"error","message":"Peticion POST hacia /api/products provoco el siguiente error: Deberá completar todos los campos del formulario","timestamp":"2024-08-02T07:56:12.624Z"}
 {"level":"error","message":"Peticion POST hacia /api/products provoco el siguiente error: Deberá adjuntar una imagen","timestamp":"2024-08-02T07:58:21.750Z"}
 {"level":"error","message":"Peticion POST de usuario no autenticado hacia la ruta: /api/products","timestamp":"2024-08-02T08:04:21.959Z"}
+{"level":"error","message":"Peticion POST de usuario no autenticado hacia la ruta: /api/products","timestamp":"2024-08-02T08:33:48.619Z"}
+{"level":"error","message":"Peticion PUT de usuario no autenticado hacia la ruta: /api/products/66680dc7ae62454bba210664","timestamp":"2024-08-02T08:35:06.697Z"}
+{"level":"error","message":"Peticion DELETE de usuario no autenticado hacia la ruta: /api/products/66a0d8d3dadeecd5b88cb8d5","timestamp":"2024-08-02T08:35:12.129Z"}
+{"level":"error","message":"Peticion POST de usuario no autenticado hacia la ruta: /api/products","timestamp":"2024-08-02T08:45:43.461Z"}
+{"level":"error","message":"Peticion PUT de usuario no autenticado hacia la ruta: /api/products/66a0d8dddadeecd5b88cb8d9","timestamp":"2024-08-02T08:45:49.347Z"}
+{"level":"error","message":"Peticion POST de usuario(nuevo usuario) no autorizado hacia /api/carts/","timestamp":"2024-08-02T08:53:20.356Z"}
+{"level":"error","message":"Peticion POST de usuario no autenticado hacia la ruta: /api/carts/","timestamp":"2024-08-02T08:53:46.840Z"}
+{"level":"error","message":"Peticion POST de usuario no autenticado hacia la ruta: /api/carts/","timestamp":"2024-08-02T18:02:11.901Z"}
+{"level":"error","message":"Peticion PUT de usuario no autenticado hacia la ruta: /api/carts/665ad848b016aab4eac89425/products/6637f70b871c86e5f604818a","timestamp":"2024-08-04T22:00:31.059Z"}
+{"level":"error","message":"Peticion POST de usuario no autenticado hacia la ruta: /api/carts/669e8b43c350d6a206840c57/products/66a0d9e0dadeecd5b88cb8fc","timestamp":"2024-08-04T22:01:46.522Z"}
+{"level":"error","message":"Peticion DELETE de usuario no autenticado hacia la ruta: /api/products/66afff0b1e11d21759d860c5","timestamp":"2024-08-04T22:23:05.516Z"}
+{"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /perfil","timestamp":"2024-08-04T22:31:44.307Z"}
+{"level":"error","message":"Peticion POST de usuario no autenticado hacia la ruta: /api/products","timestamp":"2024-08-05T07:56:32.698Z"}
+{"level":"error","message":"Peticion POST de usuario(jopi) no autorizado hacia /api/products","timestamp":"2024-08-05T07:56:58.658Z"}
+{"level":"error","message":"Peticion PUT de usuario no autenticado hacia la ruta: /api/users/premium/669e8b44c350d6a206840c59","timestamp":"2024-08-05T08:15:24.783Z"}
+{"level":"error","message":"Peticion PUT de usuario no autenticado hacia la ruta: /api/users/premium/669e8b44c350d6a206840c59","timestamp":"2024-08-05T08:15:31.047Z"}
+{"level":"error","message":"Peticion PUT de usuario no autenticado hacia la ruta: /api/users/premium/669e8b44c350d6a206840c59","timestamp":"2024-08-05T08:17:50.908Z"}
+{"level":"error","message":"Peticion PUT de usuario no autenticado hacia la ruta: /api/users/premium/669e8b44c350d6a206840c59","timestamp":"2024-08-05T08:19:46.847Z"}
+{"level":"error","message":"Peticion PUT de usuario no autenticado hacia la ruta: /api/users/premium/669e8b44c350d6a206840c59","timestamp":"2024-08-05T08:28:13.293Z"}
+{"level":"error","message":"Peticion PUT de usuario no autenticado hacia la ruta: /api/users/premium/669e8b44c350d6a206840c59","timestamp":"2024-08-05T08:30:04.446Z"}
+{"level":"error","message":"Peticion PUT de usuario no autenticado hacia la ruta: /api/users/premium/669e8b44c350d6a206840c59","timestamp":"2024-08-05T08:36:27.102Z"}
+{"level":"error","message":"Peticion PUT de usuario no autenticado hacia la ruta: /api/users/premium/669e8b44c350d6a206840c59","timestamp":"2024-08-05T08:37:35.337Z"}
+{"level":"error","message":"Peticion PUT de usuario no autenticado hacia la ruta: /api/users/premium/669e8b44c350d6a206840c59","timestamp":"2024-08-05T08:37:37.220Z"}
+{"level":"error","message":"Peticion PUT de usuario no autenticado hacia la ruta: /api/users/premium/669e8b44c350d6a206840c59","timestamp":"2024-08-05T08:38:28.611Z"}
+{"level":"error","message":"Peticion PUT de usuario no autenticado hacia la ruta: /api/users/premium/669e8b44c350d6a206840c59","timestamp":"2024-08-05T08:38:32.219Z"}
+{"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /handlebars/perfil","timestamp":"2024-08-05T08:46:39.757Z"}
+{"level":"error","message":"Peticion PUT de usuario no autenticado hacia la ruta: /api/users/premium/669e8b44c350d6a206840c59","timestamp":"2024-08-05T08:55:53.941Z"}
+{"level":"error","message":"Peticion POST de usuario(jopi) no autorizado hacia /api/products","timestamp":"2024-08-05T09:03:08.841Z"}
+{"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /handlebars/perfil","timestamp":"2024-08-05T09:07:19.994Z"}
+{"level":"error","message":"Peticion PUT de usuario no autenticado hacia la ruta: /api/users/premium/669e8b44c350d6a206840c59","timestamp":"2024-08-05T09:12:52.512Z"}
+{"level":"error","message":"Peticion PUT de usuario no autenticado hacia la ruta: /api/users/premium/669e8b44c350d6a206840c59","timestamp":"2024-08-05T09:15:26.758Z"}
+{"level":"error","message":"Peticion PUT de usuario no autenticado hacia la ruta: /api/users/premium/669e8b44c350d6a206840c59","timestamp":"2024-08-05T09:21:24.098Z"}
+{"level":"error","message":"Peticion POST de usuario(jopi) no autorizado hacia /api/products","timestamp":"2024-08-05T09:22:11.933Z"}

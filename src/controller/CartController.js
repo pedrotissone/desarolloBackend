@@ -85,9 +85,9 @@ export class CartController {
             }
             //CONEXION A MI DAO/MANAGER - Paso a la capa que interactua con mi DB
             // await Carts.createCart(newCart)
-            await cartService.createCart(newCart)
+            let resultado = await cartService.createCart(newCart)            
             res.setHeader("Content-Type", "application/json")
-            return res.status(200).json(newCart)
+            return res.status(200).json(resultado)
         } catch (error) {
             res.setHeader("Content-Type", "application/json")
             return res.status(500).json("Error inesperado en el servidor al crear carrito")
@@ -263,7 +263,7 @@ export class CartController {
             let resultado = await cartService.updateQuantity(cid, pid, nuevaCantidad)
             // console.log(nuevaCantidad)
             res.setHeader("Content-Type", "application/json")
-            return res.status(200).json(nuevaCantidad)
+            return res.status(200).json(resultado)
 
 
         } catch (error) {

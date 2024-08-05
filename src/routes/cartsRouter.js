@@ -7,7 +7,7 @@ const router = Router()
 
 router.get("/:cid", CartController.getCartById)
 
-router.post("/", CartController.createCart)
+router.post("/", auth(["admin"]), CartController.createCart)
 
 router.post("/:cid/products/:pid", auth(["usuario", "premium"]), CartController.addToCart)
 

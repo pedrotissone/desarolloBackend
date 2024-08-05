@@ -342,7 +342,11 @@ export class ProductController {
 
         //Busco el producto por el id y comparo con el email para validar que no se quiera borrar un producto ajeno
         let producto = await productService.getProductsByFiltro({ _id:id })
-        console.log(producto.owner)
+        
+        if (!producto) {
+            res.setHeader("Content-Type", "application/json")
+                return res.status(400).json("No existe en la DB el producto que desea eliminar")
+        }
 
         if (userEmail !== "adminCoder@coder.com") {
             if (userEmail !== producto.owner) {

@@ -5,12 +5,8 @@ class CartManagerMongo {
     //                                          METODOS
 
     //CREAR CARRITO
-    async createCart(obj) {
-
-        return await cartModel.create(obj) 
-        //Agregué el toJSON() para poder mostrarlo en una vista
-        // let carrito = await cartModel.create({productos: []})
-        // return carrito.toJSON()
+    async createCart(obj) {        
+        return await cartModel.create(obj)        
     }
 
     //TRAER TODOS LOS CARRITOS
