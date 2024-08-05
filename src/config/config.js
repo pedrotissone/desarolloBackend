@@ -27,5 +27,6 @@ export const config = {
     CLIENT_ID: process.env.CLIENT_ID,
     SECRET: process.env.SECRET,
     SECRET_SESSION: process.env.SECRET_SESSION,
-    MODE: process.env.MODE
+    MODE: process.env.MODE,
+    EMAIL_USER: process.env.EMAIL_USER
 }

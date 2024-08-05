@@ -82,7 +82,7 @@ const transporter = nodemailer.createTransport(
     service: "gmail",
     port: "587",
     auth: {
-      user: "pedrotissone@gmail.com",
+      user: config.EMAIL_USER,
       pass: "dgfwptaknqcxwxsx"
     }
   }
@@ -110,7 +110,7 @@ const transporter = nodemailer.createTransport(
 const enviarEmail = async (para, asunto, mensaje) => {
     return await transporter.sendMail(
       {
-        from: "pedrotissone@gmail.com",
+        from: config.EMAIL_USER,
         to: para,
         subject: asunto,
         html: mensaje
