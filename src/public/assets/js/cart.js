@@ -58,11 +58,10 @@ const sumar = async (cid, pid) => {
         body: JSON.stringify(data)
     });    
 
-    if(respuesta.ok) {
-        console.log("cantidad actualizada")
+    if(respuesta.ok) {        
         //Extraigo solo el json que devuelve mi api, que en este caso es la cantidad (sino me devuelve un choclo de cosas)
         let resultado = await respuesta.json()
-        console.log(resultado)
+        // console.log(resultado)
         let listQuantity = document.getElementById(`cartQuantity-${cid}-${pid}`)
         listQuantity.innerHTML = `<li id="cartQuantity-${cid}-${pid}">Cantidad: ${resultado} <button id="cartButtonRestar" onclick="restar('${cid}', '${pid}', '${resultado}')">-</button> <button id="cartButtonSumar" onclick="sumar('${cid}', '${pid}')">+</button> </li>`        
     } else {

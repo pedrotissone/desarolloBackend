@@ -84,3 +84,7 @@
 {"level":"error","message":"Peticion PUT de usuario no autenticado hacia la ruta: /api/users/premium/669e8b44c350d6a206840c59","timestamp":"2024-08-05T09:15:26.758Z"}
 {"level":"error","message":"Peticion PUT de usuario no autenticado hacia la ruta: /api/users/premium/669e8b44c350d6a206840c59","timestamp":"2024-08-05T09:21:24.098Z"}
 {"level":"error","message":"Peticion POST de usuario(jopi) no autorizado hacia /api/products","timestamp":"2024-08-05T09:22:11.933Z"}
+{"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /products","timestamp":"2024-08-06T08:16:26.506Z"}
+{"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /perfil","timestamp":"2024-08-06T08:16:34.159Z"}
+{"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /products","timestamp":"2024-08-06T08:16:40.407Z"}
+{"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /perfil","timestamp":"2024-08-06T08:17:07.321Z"}

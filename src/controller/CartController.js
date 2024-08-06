@@ -220,24 +220,21 @@ export class CartController {
             // carrito = await Carts.getCartById(cid)
             carrito = await cartService.getCartById(cid)
             if (carrito) {
-                productos = carrito.productos
-                // console.log(productos)
-
+                productos = carrito.productos                
             } else {
                 res.setHeader("Content-Type", "application/json")
                 return res.status(400).json("El id proporcionado no existe en ningun carrito")
             }
-
         } catch (error) {
             res.setHeader("Content-Type", "application/json")
             return res.status(500).json("Error inesperado en el servidor al buscar carrito por id")
         }
 
         let cantidadASumar = req.body
-        // console.log(cantidadASumar.cantidad)
+        console.log(`Esta es la cantidad a sumar: ${cantidadASumar.cantidad}`)
         // console.log(Number.isInteger(cantidadASumar.cantidad))
         if (Number.isInteger(cantidadASumar.cantidad)) {
-            // console.log("perfecto, la cantidad es numerica y entera")
+            console.log("perfecto, la cantidad es numerica y entera")
         } else {
             res.setHeader("Content-Type", "application/json")
             return res.status(400).json("La cantidad que desea agregarle al producto no es numerica o no es un entero")
@@ -256,15 +253,14 @@ export class CartController {
         }
         // console.log(productoABuscar.quantity)
         let nuevaCantidad = cantidadASumar.cantidad + productoABuscar.quantity
-        // console.log(nuevaCantidad)    
+        console.log(`Esto es la nueva cantidad:  ${nuevaCantidad}`)    
 
         try {
             // let resultado = await Carts.updateQuantity(cid, pid, nuevaCantidad)
-            let resultado = await cartService.updateQuantity(cid, pid, nuevaCantidad)
-            // console.log(nuevaCantidad)
+            let resultado = await cartService.updateQuantity(cid, pid, nuevaCantidad)            
             res.setHeader("Content-Type", "application/json")
-            return res.status(200).json(resultado)
-
+            // return res.status(200).json(resultado)
+            return res.status(200).json(nuevaCantidad)
 
         } catch (error) {
             res.setHeader("Content-Type", "application/json")

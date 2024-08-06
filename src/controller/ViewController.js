@@ -105,8 +105,7 @@ export class ViewController {
         let id = req.params.cid
         let productos
         try {
-            let carrito = await Carts.getCartById(id)
-            // console.log(carrito)
+            let carrito = await Carts.getCartById(id)                                  
             productos = carrito.productos
             res.setHeader("Content-Type", "text/html")
             res.status(200).render("cart", { productos, carrito })
