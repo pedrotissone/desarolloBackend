@@ -88,3 +88,18 @@
 {"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /perfil","timestamp":"2024-08-06T08:16:34.159Z"}
 {"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /products","timestamp":"2024-08-06T08:16:40.407Z"}
 {"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /perfil","timestamp":"2024-08-06T08:17:07.321Z"}
+{"level":"error","message":"Peticion POST de usuario no autenticado hacia la ruta: /api/products/","timestamp":"2024-08-08T08:19:33.909Z"}
+{"level":"error","message":"Peticion POST hacia /api/products/ provoco el siguiente error: Deberá adjuntar una imagen","timestamp":"2024-08-08T08:20:25.413Z"}
+{"level":"error","message":"Peticion POST hacia /api/products/ provoco el siguiente error: Deberá adjuntar una imagen","timestamp":"2024-08-08T08:26:56.969Z"}
+{"level":"error","message":"Peticion POST hacia /api/products/ provoco el siguiente error: Deberá adjuntar una imagen","timestamp":"2024-08-08T08:27:59.923Z"}
+{"level":"error","message":"Peticion POST hacia /api/products/ provoco el siguiente error: Deberá adjuntar una imagen","timestamp":"2024-08-08T08:30:43.569Z"}
+{"level":"error","message":"Peticion POST hacia /api/products/ provoco el siguiente error: Deberá adjuntar una imagen","timestamp":"2024-08-08T08:34:07.723Z"}
+{"level":"error","message":"Peticion POST hacia /api/products/ provoco el siguiente error: Deberá completar todos los campos del formulario","timestamp":"2024-08-08T08:42:58.534Z"}
+{"level":"error","message":"Peticion POST hacia /api/products/ provoco el siguiente error: Deberá adjuntar una imagen","timestamp":"2024-08-08T08:48:14.157Z"}
+{"level":"error","message":"Peticion POST hacia /api/products/ provoco el siguiente error: Deberá adjuntar una imagen","timestamp":"2024-08-08T08:48:40.250Z"}
+{"level":"error","message":"Peticion POST hacia /api/products/ provoco el siguiente error: Deberá adjuntar una imagen","timestamp":"2024-08-08T08:54:44.210Z"}
+{"level":"error","message":"Peticion POST de usuario no autenticado hacia la ruta: /api/carts/66792f8149a644e4dae9bd22/products/66b099e11b846fafcb6e1c27","timestamp":"2024-08-08T09:18:06.468Z"}
+{"level":"error","message":"Peticion POST de usuario no autenticado hacia la ruta: /api/carts/66792f8149a644e4dae9bd22/products/66b099e11b846fafcb6e1c27","timestamp":"2024-08-08T09:18:34.575Z"}
+{"level":"error","message":"Peticion POST de usuario no autenticado hacia la ruta: /api/carts/66792f8149a644e4dae9bd22/products/66b099e11b846fafcb6e1c27","timestamp":"2024-08-08T09:18:38.457Z"}
+{"level":"error","message":"Peticion POST de usuario(pedro) no autorizado hacia /api/products/","timestamp":"2024-08-08T09:23:50.127Z"}
+{"level":"error","message":"Peticion POST hacia /api/products/ provoco el siguiente error: Deberá adjuntar una imagen","timestamp":"2024-08-08T09:24:37.974Z"}

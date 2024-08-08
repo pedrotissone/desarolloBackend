@@ -2,12 +2,64 @@
 paths:
   /api/products/:
     get:
-      summary: Obtiene todos los productos
+      summary: Obtiene todos los productos pudiendo parametrizar paginacion, categoria, stock,
       tags:
         - Products
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Determinás el límite de productos devueltos por página, por defecto son 10
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Determinás la página exacta de productos que querés
+        - in: query
+          name: stock
+          schema:
+            type: integer
+          description: Filtras productos con un stock mayor al elegido
+        - in: query
+          name: sort
+          schema:
+            type: string
+          description: Ordenas por precio, tenes que escribir "asc" o "desc" sino te los trae ordenados como estan en la DB
+        - in: query
+          name: query
+          schema:
+            type: string
+          description: filtras por categoria o lo que quieras colocarlo de esta forma "propiedad:valor" ejemplo category:herramienta
       responses:
         "200":
-          description: Los productos fueron obtenidos OK desde la DB
+          description: productos paginados desde la DB
+        "500":
+          description: Error interno del servidor al realizar la paginacion
+    post:
+      summary: Crea un nuevo producto (Solo puede hacerlo el admin o un usuario premium, deberá logearse previamente)
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#components/schemas/createProduct'
+            example:
+              title: iphone x
+              description: plastico
+              price: 1000000
+              code: 1233321s
+              stock: 10
+              category: herramienta
+              status: ok
+              thumbnail: imagen/swagger.jpg
+      responses:
+        "200":
+          description: Producto creado Ok en la DB
+        "400":
+          description: Faltan completar campos del formulario o el codigo se encuentra repetido en otro producto
         "500":
           description: Error interno del servidor
   /api/products/{pid}:
@@ -25,19 +77,40 @@ paths:
       responses:
         "200":
           description: Producto obtenido de la DB
+        "400":
+          description: Id sin formato de MongoDb o producto inexistente en la DB
         "500":
           description: Error interno del servidor
-    post:
-      summary: Crea un producto (Solo puede hacerlo el admin o un usuario premium)
-      tags:
-        - Products
-      responses:
-        "201":
-          description: Producto creado Ok en la DB
-        "500":
-          description: Error interno del servidor
-components:
-  securitySchemes:
-    basicAuth:
-      type: http
-      scheme: basic
+components:  
+  schemas:  
+    createProduct:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Nombre del producto
+        description:
+          type: string
+          description: descripcion del producto
+        price:
+          type: number
+          description: precio del producto
+        code:
+          type: string
+          description: codigo unico del producto
+        stock:
+          type: number
+          description: stock del producto
+        category:
+          type: string
+          description: categoria del producto
+        status:
+          type: string
+          description: status del producto
+        thumbnail:
+          type: string
+          format: binary
+          description: imagen swagger
+
+       
+              

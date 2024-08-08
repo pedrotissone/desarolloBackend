@@ -167,7 +167,7 @@ export class CartController {
             }
         } catch (error) {
             res.setHeader("Content-Type", "application/json")
-            return res.status(500).json("Error inesperado en el servidor al buscar carrito por id")
+            return res.status(500).json("Error inesperado en el servidor al querer agregar un producto al carrito")
         }
 
         //PASO 1

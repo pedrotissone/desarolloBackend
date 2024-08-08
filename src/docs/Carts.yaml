@@ -17,13 +17,29 @@ paths:
           description: Carrito obtenido OK desde la DB
         "500":
           description: Error interno del servidor
+  /api/carts/{cid}/products/{pid}:
     post:
-      summary: Crea un carrito al registrarse un nuevo usuario y lo asocia al mismo
+      summary: Agrega un nuevo producto al carrito o le suma la cantidad en 1 en caso de ya existir (Previamente deberá logearse)
       tags:
         - Carrito
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: MongoDB id del carrito       
+        schema:
+          type: string   
+      - name: pid
+        in: path
+        required: true
+        description: MongoDB id del producto a agregar       
+        schema:
+          type: string   
       responses:
-        "201":
-          description: Carrito creado Ok en la DB
+        "200":
+          description: Producto agregado al carrito
+        "400":
+          description: El id no tiene formato valido de Mongo o no existe al validar el carrito o el producto a agregar 
         "500":
           description: Error interno del servidor
 

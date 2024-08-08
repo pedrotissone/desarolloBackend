@@ -105,12 +105,12 @@ export class ProductController {
                 return res.status(200).json(resultado)
             } else {
                 res.setHeader("Content-Type", "application/json")
-                return res.json("No existe producto con el id requerido")
+                return res.status(400).json("No existe producto con el id requerido")
             }
 
         } catch (error) {
             res.setHeader("Content-Type", "application/json")
-            return res.status(400).json({
+            return res.status(500).json({
                 message: "Error al realizar la función de filtro por _id"
             })
         }
