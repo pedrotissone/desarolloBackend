@@ -9,7 +9,8 @@
   "type": "module",
   "scripts": {
     "start": "node ./src/app.js",
-    "dev": "nodemon ./src/app.js"
+    "dev": "nodemon ./src/app.js",
+    "test": "mocha ./test/**/*.js"
   },
   "keywords": [],
   "author": "Pedro Federico Tissone",
@@ -42,6 +43,8 @@
     "winston": "^3.13.0"
   },
   "devDependencies": {
-    "mocha": "^10.7.0"
+    "chai": "^5.1.1",
+    "mocha": "^10.7.0",
+    "supertest": "^7.0.0"
   }
 }
