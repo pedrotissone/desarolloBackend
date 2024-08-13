@@ -193,6 +193,7 @@ export class CartController {
         try {
             // let resultado = await Carts.addToCart(cid, productos)
             let resultado = await cartService.addToCart(cid, productos)
+            console.log(resultado)
             res.setHeader("Content-Type", "application/json")
             return res.status(200).json(resultado)
         } catch (error) {

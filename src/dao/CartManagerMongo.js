@@ -23,7 +23,8 @@ class CartManagerMongo {
 
     //AGREGAR PRODUCTOS AL CARRITO (Nuevos o agrega cantidad)
     async addToCart(cid, productos) {
-        return await cartModel.updateOne({_id:cid}, {$set: {productos: productos}})
+        // return await cartModel.updateOne({_id:cid}, {$set: {productos: productos}})
+        return await cartModel.findOneAndUpdate({_id:cid}, {$set: {productos: productos}}, {new: true}) //Modifiqué esta linea para que me devuelva el documento actualizado y no el resultado de la operacion de mongoose
     }
 
     //MODIFICAR SOLO LA CANTIDAD DE UN PRODUCTO (Esto solo lo uso en postman, porque para las vistas uso addToCart que agrega un nuevo producto o suma +1 la cantidad si existe el producto en el carrito)

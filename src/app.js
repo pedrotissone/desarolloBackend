@@ -185,7 +185,7 @@ io.on("connection", (socket) => { //2) Va a estar esuchando si llega una conexio
 
 export {io}
 
-//01:44:00 test avanzado
+//01:36:00 Nest 1
 //NOTAS:
 //CUSTOM ROUTER: VER CLASE 24 SEGUNDA PRACTICA INTEGRADORA
 //DESARROLLO SERVER COMPLETO EN CAPAS 01:00:00

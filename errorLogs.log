@@ -103,3 +103,7 @@
 {"level":"error","message":"Peticion POST de usuario no autenticado hacia la ruta: /api/carts/66792f8149a644e4dae9bd22/products/66b099e11b846fafcb6e1c27","timestamp":"2024-08-08T09:18:38.457Z"}
 {"level":"error","message":"Peticion POST de usuario(pedro) no autorizado hacia /api/products/","timestamp":"2024-08-08T09:23:50.127Z"}
 {"level":"error","message":"Peticion POST hacia /api/products/ provoco el siguiente error: Deberá adjuntar una imagen","timestamp":"2024-08-08T09:24:37.974Z"}
+{"level":"error","message":"Peticion POST de usuario no autenticado hacia la ruta: /api/products","timestamp":"2024-08-11T08:33:50.037Z"}
+{"level":"error","message":"Peticion POST de usuario no autenticado hacia la ruta: /api/products","timestamp":"2024-08-11T09:13:40.487Z"}
+{"level":"error","message":"Peticion POST de usuario no autenticado hacia la ruta: /api/products","timestamp":"2024-08-13T06:22:40.312Z"}
+{"level":"error","message":"Peticion POST de usuario no autenticado hacia la ruta: /api/carts/669e8b43c350d6a206840c57/products/66a0d9f4dadeecd5b88cb900","timestamp":"2024-08-13T08:37:55.781Z"}
