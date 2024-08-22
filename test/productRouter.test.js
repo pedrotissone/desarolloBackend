@@ -119,8 +119,7 @@ describe("TESTS DEL PROYECTO DESARROLLO BACKEND", async function(){
                                             .set("Cookie", `${nombreCookie}=${valorCookie}`)
             
             expect(statusCode).to.be.equal(200)
-        })        
-
+        })
     })
 
 
@@ -167,8 +166,6 @@ describe("TESTS DEL PROYECTO DESARROLLO BACKEND", async function(){
             expect(statusCode).to.be.equal(400)            
         })
     })
-
-
 
 
 
