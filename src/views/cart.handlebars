@@ -28,6 +28,8 @@
     {{/each}}
     {{/with}}
 </ul>
-    <button id="cartButtonConfirmar" onclick="comprar('{{carrito._id}}')">Confirmar compra</button>
+    {{!-- <button id="cartButtonConfirmar" onclick="comprar('{{carrito._id}}')">Confirmar compra</button> --}}
+    <button id="cartButtonConfirmar" onclick="redireccionMediosDePago('{{carrito._id}}')">Confirmar compra</button>
+    
     
 <script src="/assets/js/cart.js"></script>

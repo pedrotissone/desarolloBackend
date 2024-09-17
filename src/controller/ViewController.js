@@ -2,6 +2,11 @@ import { CartManagerMongo as CartManager } from "../dao/CartManagerMongo.js"
 import { ProductManagerMongo as ProductManager } from "../dao/ProductManagerMongo.js"
 import jwt from "jsonwebtoken"
 import { SECRET, logger } from "../utils/utils.js"
+import { productService } from "../services/ProductService.js"
+import { cartService } from "../services/CartService.js"
+import {__dirname} from "../utils/utils.js"
+import path, {join} from "path"
+
 
 
 let Producto = new ProductManager()
@@ -165,5 +170,19 @@ export class ViewController {
             res.status(200).render("login", {message: "Lo siento el token expiro o es incorrecto, deberá repetir el procedimiento para restablecer la contraseña" })
         }
     }
+
+
+    static getMediosDePago = async (req, res) => {
+        let cid = req.params.cid        
+        try {
+            res.setHeader("Content-Type", "text/html")          
+            res.status(200).sendFile(path.join(__dirname, "/src/public/views/mediosDePago.html"))
+        } catch (error) {
+            res.setHeader("Content-Type", "application/json")
+            return res.status(500).json("Error inesperado en el servidor al intentar renderizar html")
+            
+        }
+    }
+
 
 }

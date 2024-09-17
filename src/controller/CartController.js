@@ -5,10 +5,14 @@ import { cartService } from "../services/CartService.js"
 import { productService } from "../services/ProductService.js"
 import { ticketService } from "../services/TicketService.js"
 import { enviarEmail } from "../utils/utils.js"
+import stripe from "stripe"
 
 
 const Carts = new CartManager()
 const Producto = new ProductManager()
+
+//3) Conectar stripe con mi backend
+const stripeInstance = stripe("sk_test_51Pvx99I4zZn1LBXUuIxpriRc80qOGACzSTrXVSYvaOYBGDrNRnAiKdxvCiqcJI4M6orvvDB0SoUiKDOi2ZiwMiNj00sYHtIm04") //Clave Secreta
 
 
 export class CartController {
@@ -85,7 +89,7 @@ export class CartController {
             }
             //CONEXION A MI DAO/MANAGER - Paso a la capa que interactua con mi DB
             // await Carts.createCart(newCart)
-            let resultado = await cartService.createCart(newCart)            
+            let resultado = await cartService.createCart(newCart)
             res.setHeader("Content-Type", "application/json")
             return res.status(200).json(resultado)
         } catch (error) {
@@ -142,7 +146,7 @@ export class CartController {
             // carrito = await Carts.getCartById(cid)
             carrito = await cartService.getCartById(cid)
             if (carrito) {
-                productos = carrito.productos                
+                productos = carrito.productos
                 req.logger.debug(carrito)
                 req.logger.debug("lo de abajo son los productos que contiene")
                 req.logger.debug(productos)
@@ -221,7 +225,7 @@ export class CartController {
             // carrito = await Carts.getCartById(cid)
             carrito = await cartService.getCartById(cid)
             if (carrito) {
-                productos = carrito.productos                
+                productos = carrito.productos
             } else {
                 res.setHeader("Content-Type", "application/json")
                 return res.status(400).json("El id proporcionado no existe en ningun carrito")
@@ -254,11 +258,11 @@ export class CartController {
         }
         // console.log(productoABuscar.quantity)
         let nuevaCantidad = cantidadASumar.cantidad + productoABuscar.quantity
-        console.log(`Esto es la nueva cantidad:  ${nuevaCantidad}`)    
+        console.log(`Esto es la nueva cantidad:  ${nuevaCantidad}`)
 
         try {
             // let resultado = await Carts.updateQuantity(cid, pid, nuevaCantidad)
-            let resultado = await cartService.updateQuantity(cid, pid, nuevaCantidad)            
+            let resultado = await cartService.updateQuantity(cid, pid, nuevaCantidad)
             res.setHeader("Content-Type", "application/json")
             // return res.status(200).json(resultado)
             return res.status(200).json(nuevaCantidad)
@@ -418,7 +422,7 @@ export class CartController {
             let ticket = await ticketService.createTicket(datosDeCompra)
 
             //Por último envio correo electrónico
-    
+
             // Creo la estructura HTML del cuerpo del email
             let productosHTML = datosDeCompra.products.map(obj => {
                 return `<li>Producto: ${obj.producto.title}, Cantidad: ${obj.quantity}, Precio: ${obj.producto.price}`
@@ -438,6 +442,74 @@ export class CartController {
             res.setHeader("Content-Type", "application/json")
             return res.status(500).json("Error inesperado en el servidor al procesar la compra")
         }
+    }
+
+
+    static getObtenerDatosDeCompra = async (req, res) => {
+        let cid = req.params.cid
+        let usuario = req.user
+        let productosParaFacturar = []
+        let productosRestantes = []
+
+        try {
+            const cart = await cartService.getCartById(cid)
+
+            //Valido stock
+            for (let i = 0; i < cart.productos.length; i++) {
+                let product = await productService.getProductsByFiltro(cart.productos[i].producto._id)//Busco producto
+
+                if (cart.productos[i].quantity <= product.stock) {
+                    let nuevoStock = { stock: product.stock - cart.productos[i].quantity }//resto y obtengo nueva cantidad                    
+                    await productService.updateProduct(cart.productos[i].producto._id, nuevoStock)//Actualizo stock producto
+                    productosParaFacturar.push(cart.productos[i]) //pusheo productosFacturables                   
+                } else {
+                    productosRestantes.push(cart.productos[i]) //pusheo productos no facturables por no haber stock en DB
+                }
+            }
+
+            //SACO ESTE IF PARA QUE AVANCE AUNQUE TODOS LOS PRODUCTOS SELECCIONADOS NO TENGAN STOCK (ME PIDIERON ESA LOGICA, PERO ES ABSURDO)
+            // if (productosParaFacturar.length == 0) {
+            //     res.setHeader("Content-Type", "application/json")
+            //     return res.status(400).json("No hay stock de ninguno de los productos que desea comprar!")
+            // }
+
+
+            //Obtengo total a pagar
+            const total = productosParaFacturar.reduce((accumulator, obj) => {
+                return parseInt(accumulator + (obj.producto.price * obj.quantity))
+            }, 0)
+
+
+            //Confecciono el objeto para crear el ticket
+            const datosDeProductos = {
+                amount: total,
+                purchaser: usuario.email,
+                products: productosParaFacturar,
+                productosRestantes: productosRestantes
+            }
+
+            res.setHeader("Content-Type", "appplication/json")
+            res.status(200).json(datosDeProductos)
+
+        } catch (error) {
+            res.setHeader("Content-Type", "application/json")
+            return res.status(500).json("Error inesperado en el servidor al intentar obtener el monto total de compra")
+        }
+    }
+
+    static getCreatePaymentIntent = async (req, res) => {
+        //OJO hay que multiplicar los importes por 100, porque asi trabaja stripe Ej: 14,90, envias a stripe como monto 1490
+        let {importe} = req.body
+
+        // 4) Generar desde mi backend el paymentIntent con stripe
+        const paymentIntent = await stripeInstance.paymentIntents.create(
+            {
+                amount: importe * 100,
+                currency: "usd"
+            }
+        )
+        res.setHeader("Content-Type", "application/json")
+        res.status(200).json({paymentIntent})
     }
 
 

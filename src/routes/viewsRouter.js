@@ -26,6 +26,7 @@ router.get("/olvideClave", ViewController.getOlvideClave)
 
 router.get("/crearNuevaClave/:token", ViewController.getCrearNuevaClave)
 
+router.get("/:cid/mediosDePago", auth(["usuario", "premium"]), ViewController.getMediosDePago)
 
 
 export { router }

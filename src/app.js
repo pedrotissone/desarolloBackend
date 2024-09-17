@@ -24,6 +24,9 @@ import cors from "cors"
 import compression from "express-compression"
 import swaggerJSDoc from "swagger-jsdoc"
 import swaggerUi from "swagger-ui-express"
+import { __dirname } from "./utils/utils.js"
+import { join } from "path"
+import path from "path"
 
 
 const PORT = config.PORT
@@ -185,7 +188,7 @@ io.on("connection", (socket) => { //2) Va a estar esuchando si llega una conexio
 
 export {io}
 
-//01:00:00!
+//01:45:00 stripe
 //NOTAS:
 //CUSTOM ROUTER: VER CLASE 24 SEGUNDA PRACTICA INTEGRADORA
 //DESARROLLO SERVER COMPLETO EN CAPAS 01:00:00

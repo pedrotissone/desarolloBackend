@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">   
+    <link rel="stylesheet" href="/assets/css/mediosDePago.css">    
+    <title>Medios de Pago</title>
+</head>
+<body>
+    <h1>Medios de Pago</h1>
+
+    <div id="mediosDePago_divProducts_sinStock">
+
+    </div>
+
+    <div id="mediosDePago_divProducts">
+        <ul id="mediosDePago_divProducts_ul"></ul>        
+    </div>
+
+    <div id="mediosDePago_divTotal">
+        <p>TOTAL</p>
+        <p id="mediosDePago_divTotal_monto"></p>
+    </div>
+    <button onclick="cargarMediosDePago()">Seleccionar medio de pago</button>
+    <br>
+    <div id="payment-element">
+
+    </div>
+    <p id="resultado"></p>
+    <br>
+    <button onclick="pagar()">Pagar</button>
+
+
+
+ 
+<script src="https://js.stripe.com/v3/"></script>
+<script src="/assets/js/mediosDePago.js"> </script>
+</body>
+</html>

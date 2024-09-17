@@ -17,7 +17,15 @@ router.delete("/:cid/products/:pid", auth(["admin", "usuario", "premium"]), Cart
 
 router.delete("/:cid", auth(["admin", "usuario", "premium"]), CartController.clearCart)
 
-router.post("/:cid/purchase", auth(["usuario", "premium"]), CartController.purchase)
+router.post("/:cid/purchase", auth(["usuario", "premium"]), CartController.purchase) //Será eliminado al incorporar medios de pago
+
+router.get("/:cid/obtenerDatosDeCompra", auth(["usuario", "premium"]), CartController.getObtenerDatosDeCompra)
+
+router.post("/create-payment-intent", auth(["usuario", "premium"]), CartController.getCreatePaymentIntent)
+
+
+
+
 
 
 

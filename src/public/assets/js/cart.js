@@ -86,3 +86,9 @@ const comprar = async (cid) => {
         alert("Se produció un error al realizar la compra")
     }
 }
+
+//Me envio en la URL el id del carrito para luego obtener todos los datos del mismo desde otro html
+const redireccionMediosDePago = async (cid) => {
+    window.location.href = `/handlebars/${cid}/mediosDePago`
+
+}

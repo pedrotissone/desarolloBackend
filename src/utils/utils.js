@@ -1,5 +1,5 @@
 import { fileURLToPath } from "url"
-import { dirname, join } from "path"
+import path, { dirname, join } from "path"
 import { config } from "../config/config.js"
 import multer from "multer"
 import crypto from "crypto" //modulo nativo de node, ya no lo uso
@@ -12,7 +12,7 @@ import { warn } from "console"
 
 //__DIRNAME CASERO
 const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
+const __dirname = dirname(path.join(__filename, "..", "..")) //Apunto a la raiz del proyecto (Donde esta el src, el package json etc)
 //__dirname 01:05:00 (explicacion en la clase de Express Avanzado)
 
 

@@ -107,3 +107,13 @@
 {"level":"error","message":"Peticion POST de usuario no autenticado hacia la ruta: /api/products","timestamp":"2024-08-11T09:13:40.487Z"}
 {"level":"error","message":"Peticion POST de usuario no autenticado hacia la ruta: /api/products","timestamp":"2024-08-13T06:22:40.312Z"}
 {"level":"error","message":"Peticion POST de usuario no autenticado hacia la ruta: /api/carts/669e8b43c350d6a206840c57/products/66a0d9f4dadeecd5b88cb900","timestamp":"2024-08-13T08:37:55.781Z"}
+{"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /products","timestamp":"2024-08-23T09:34:04.672Z"}
+{"level":"error","message":"No hay causa de error especifica Error: ENOENT: no such file or directory, stat 'C:\\views\\mediosDePago.html'","timestamp":"2024-08-25T13:27:52.887Z"}
+{"level":"error","message":"No hay causa de error especifica Error: ENOENT: no such file or directory, stat 'C:\\Users\\pedro\\OneDrive\\Escritorio\\proyectos\\desarrolloBackend\\src\\utils\\src\\public\\views\\mediosDePago.html'","timestamp":"2024-08-25T13:38:46.858Z"}
+{"level":"error","message":"No hay causa de error especifica Error: ENOENT: no such file or directory, stat 'C:\\Users\\pedro\\OneDrive\\Escritorio\\proyectos\\desarrolloBackend\\src\\utils\\src\\public\\views\\mediosDePAgo.html'","timestamp":"2024-08-25T13:40:20.194Z"}
+{"level":"error","message":"No hay causa de error especifica Error: ENOENT: no such file or directory, stat 'C:\\Users\\pedro\\OneDrive\\Escritorio\\proyectos\\desarrolloBackend\\src\\utils\\views\\mediosDePAgo.html'","timestamp":"2024-08-25T13:41:58.895Z"}
+{"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /handlebars/66c5a3105280688d2961b9a0/mediosDePago","timestamp":"2024-09-08T09:38:31.742Z"}
+{"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /handlebars/66c5a3105280688d2961b9a0/mediosDePago","timestamp":"2024-09-08T09:38:40.113Z"}
+{"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /products","timestamp":"2024-09-09T06:59:01.449Z"}
+{"level":"error","message":"Peticion DELETE de usuario no autenticado hacia la ruta: /api/carts/66c5a3105280688d2961b9a0/products/66a0d8f0dadeecd5b88cb8e1","timestamp":"2024-09-09T08:11:47.632Z"}
+{"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /products","timestamp":"2024-09-09T08:11:49.473Z"}
