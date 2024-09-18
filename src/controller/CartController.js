@@ -373,6 +373,7 @@ export class CartController {
         }
     }
 
+    //EN DESUSO AL INCORPORAR MEDIOS DE PAGO
     static purchase = async (req, res) => {
         let cid = req.params.cid
         let usuario = req.user
@@ -460,7 +461,7 @@ export class CartController {
 
                 if (cart.productos[i].quantity <= product.stock) {
                     let nuevoStock = { stock: product.stock - cart.productos[i].quantity }//resto y obtengo nueva cantidad                    
-                    await productService.updateProduct(cart.productos[i].producto._id, nuevoStock)//Actualizo stock producto
+                    // await productService.updateProduct(cart.productos[i].producto._id, nuevoStock)//Actualizo stock producto (Aun no!)
                     productosParaFacturar.push(cart.productos[i]) //pusheo productosFacturables                   
                 } else {
                     productosRestantes.push(cart.productos[i]) //pusheo productos no facturables por no haber stock en DB
@@ -499,7 +500,7 @@ export class CartController {
 
     static getCreatePaymentIntent = async (req, res) => {
         //OJO hay que multiplicar los importes por 100, porque asi trabaja stripe Ej: 14,90, envias a stripe como monto 1490
-        let {importe} = req.body
+        let { importe } = req.body
 
         // 4) Generar desde mi backend el paymentIntent con stripe
         const paymentIntent = await stripeInstance.paymentIntents.create(
@@ -509,7 +510,78 @@ export class CartController {
             }
         )
         res.setHeader("Content-Type", "application/json")
-        res.status(200).json({paymentIntent})
+        res.status(200).json({ paymentIntent })
+    }
+
+    static getFinalizarCompra = async (req, res) => {
+        let cid = req.params.cid
+        let usuario = req.user
+        let productosParaFacturar = []
+        let productosRestantes = []
+
+        try {
+            const cart = await cartService.getCartById(cid)
+            //Valido stock
+            for (let i = 0; i < cart.productos.length; i++) {
+                let product = await productService.getProductsByFiltro(cart.productos[i].producto._id)//Busco producto      
+                console.log(product.stock)
+                if (cart.productos[i].quantity <= product.stock) {
+                    let nuevoStock = { stock: product.stock - cart.productos[i].quantity }//resto y obtengo nueva cantidad                    
+                    await productService.updateProduct(cart.productos[i].producto._id, nuevoStock)//Actualizo stock producto
+                    productosParaFacturar.push(cart.productos[i]) //pusheo productosFacturables                   
+                } else {
+                    productosRestantes.push(cart.productos[i]) //pusheo productos no facturables
+                }
+            }
+
+            // if (productosParaFacturar.length == 0) {
+            //     res.setHeader("Content-Type", "application/json")
+            //     return res.status(400).json("No hay stock de ninguno de los productos que desea comprar!")
+            // }
+
+
+            //Obtengo total a pagar
+            const total = productosParaFacturar.reduce((accumulator, obj) => {
+                return parseInt(accumulator + (obj.producto.price * obj.quantity))
+            }, 0)
+            // console.log(total)
+
+            //Seteo el cart
+            let updatedCart = await cartService.addToCart(cart._id, productosRestantes)
+
+
+            //Confecciono el objeto para crear el ticket
+            const datosDeCompra = {
+                code: Math.random() * 100000,
+                purchase_datetime: Date.now(),
+                amount: total,
+                purchaser: usuario.email,
+                products: productosParaFacturar
+            }
+
+            let ticket = await ticketService.createTicket(datosDeCompra)
+
+            //Por último envio correo electrónico
+
+            // Creo la estructura HTML del cuerpo del email
+            let productosHTML = datosDeCompra.products.map(obj => {
+                return `<li>Producto: ${obj.producto.title}, Cantidad: ${obj.quantity}, Precio: ${obj.producto.price}`
+            }).join("")
+            let estructuraHTML = `<h2> Detalle de compra </h2>
+                                    <ul>${productosHTML}</ul>
+                                    <p>Total: ${datosDeCompra.amount}</p>
+                                    <p>Comprador: ${datosDeCompra.purchaser}</p>
+                                    <p>Compra realizada el ${datosDeCompra.purchase_datetime}</p>`
+
+            let resultado = await enviarEmail(datosDeCompra.purchaser, "Confirmacion de compra", estructuraHTML)
+
+            res.setHeader("Content-Type", "application/json")
+            return res.status(201).json(ticket)
+
+        } catch (error) {
+            res.setHeader("Content-Type", "application/json")
+            return res.status(500).json("Error inesperado en el servidor al procesar la compra")
+        }
     }
 
 

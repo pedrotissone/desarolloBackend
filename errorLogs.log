@@ -117,3 +117,6 @@
 {"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /products","timestamp":"2024-09-09T06:59:01.449Z"}
 {"level":"error","message":"Peticion DELETE de usuario no autenticado hacia la ruta: /api/carts/66c5a3105280688d2961b9a0/products/66a0d8f0dadeecd5b88cb8e1","timestamp":"2024-09-09T08:11:47.632Z"}
 {"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /products","timestamp":"2024-09-09T08:11:49.473Z"}
+{"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /handlebars/66c5a3105280688d2961b9a0/mediosDePago","timestamp":"2024-09-17T07:56:48.763Z"}
+{"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /products","timestamp":"2024-09-17T09:00:59.742Z"}
+{"level":"error","message":"Peticion GET de usuario no autenticado hacia la ruta: /products","timestamp":"2024-09-18T01:00:48.119Z"}

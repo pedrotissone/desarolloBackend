@@ -1,6 +1,6 @@
 
 //VARIABLES GLOBALES
-let datosDeCompra //productos facturables, productos sin stock, etc
+let datosDeCompra //Acá están los productos facturables, productos sin stock, etc
 let amount
 let cartId
 
@@ -17,7 +17,7 @@ const obtenerDatosDeCompra = async () => {
     let data = await respuesta.json()
 
     let monto = document.getElementById("mediosDePago_divTotal_monto")
-    if (data.products.length == 0) {
+    if (data.products.length == 0) {//Si no hay productos facturables le doy directamente el valor de 0 al total y me va a servir para la validacion de los medios de pago
         monto.textContent = "0"
         //Le doy a mis variables globales amount, el valor del monto total (asi evito manipulación del mismo a traves de html) y a datosDeCompra el valor de data
         amount = 0
@@ -45,7 +45,7 @@ const obtenerDatosDeCompra = async () => {
     if (data.productosRestantes.length > 0) {
         let listadoProductosSinStock = document.getElementById("mediosDePago_divProducts_sinStock")
         const h3 = document.createElement("h3")
-        h3.textContent = "ATENCIÓN, NO HAY STOCK DE LOS SIGUIENTES PRODUCTOS"
+        h3.textContent = "ATENCIÓN, NO HAY STOCK SUFICIENTE DE LOS SIGUIENTES PRODUCTOS"
         listadoProductosSinStock.appendChild(h3)
 
         data.productosRestantes.forEach(elem => {
@@ -58,7 +58,7 @@ const obtenerDatosDeCompra = async () => {
     }
     console.log(data)
 }
-
+//                                                          EJECUTO FUNCIÓN!!!!!!!!!!!!!!!!!!
 obtenerDatosDeCompra()
 
 //                                                                  S T R I P E
@@ -113,12 +113,14 @@ const pagar = async () => {
 
 
 const mostrarResultado = async () => {
-    //7) Verificar el estado del pago y mostrarlo
+    //7) Verificar el estado del pago y mostrarlo (AGREGO MODIFICAR STOCK EN DB Y ENVIAR EMAIL EN CASO DE PAGO EXITOSO)
     const { paymentIntent } = await stripe.retrievePaymentIntent(clientSecret)
     console.log(paymentIntent)
-    // document.getElementById("resultado").textContent = paymentIntent.status
     if (paymentIntent.status = "succeeded") {
-        alert("Pago realizado con éxito")
+        let respuesta = await fetch(`/api/carts/${cartId}/finalizarCompra`, {method: "post"})
+        let data = await respuesta.json()
+        console.log(data)
+        alert("Pago realizado con éxito, recibirás un  correo electrónico con el detalle de tu compra")        
         window.location.href = "/"
     } else {
         document.getElementById("resultado").textContent = resultado.error.message
