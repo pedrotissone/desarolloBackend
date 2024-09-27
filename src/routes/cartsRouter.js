@@ -25,6 +25,10 @@ router.post("/create-payment-intent", auth(["usuario", "premium"]), CartControll
 
 router.post("/:cid/finalizarCompra", auth(["usuario", "premium"]), CartController.getFinalizarCompra)
 
+router.post("/crearPreferencia", auth(["usuario", "premium"]), CartController.getCrearPreferencia)
+
+
+
 
 
 

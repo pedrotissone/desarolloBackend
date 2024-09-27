@@ -28,5 +28,7 @@ router.get("/crearNuevaClave/:token", ViewController.getCrearNuevaClave)
 
 router.get("/:cid/mediosDePago", auth(["usuario", "premium"]), ViewController.getMediosDePago)
 
+router.get("/feedbackMercadoPago", auth(["usuario", "premium"]), ViewController.getFeedbackMercadoPago)
+
 
 export { router }

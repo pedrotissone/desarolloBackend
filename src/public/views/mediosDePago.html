@@ -22,18 +22,27 @@
         <p id="mediosDePago_divTotal_monto"></p>
     </div>
     <button onclick="cargarMediosDePago()">Seleccionar medio de pago</button>
+    <button onclick="cargarMercadoPago()">Pagar con Mercado Pago</button>
+
     <br>
+    <!-- Div de Stripe -->
     <div id="payment-element">
 
     </div>
     <p id="resultado"></p>
-    <br>
+    <br>    
     <button onclick="pagar()">Pagar</button>
+
+    <!-- Div de Mercado Pago -->
+    <div id="payment-elementMP">
+
+    </div>
 
 
 
  
 <script src="https://js.stripe.com/v3/"></script>
+<script src="https://sdk.mercadopago.com/js/v2"></script>
 <script src="/assets/js/mediosDePago.js"> </script>
 </body>
 </html>

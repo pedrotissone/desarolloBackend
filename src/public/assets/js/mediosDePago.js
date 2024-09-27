@@ -117,10 +117,10 @@ const mostrarResultado = async () => {
     const { paymentIntent } = await stripe.retrievePaymentIntent(clientSecret)
     console.log(paymentIntent)
     if (paymentIntent.status = "succeeded") {
-        let respuesta = await fetch(`/api/carts/${cartId}/finalizarCompra`, {method: "post"})
+        let respuesta = await fetch(`/api/carts/${cartId}/finalizarCompra`, { method: "post" })
         let data = await respuesta.json()
         console.log(data)
-        alert("Pago realizado con éxito, recibirás un  correo electrónico con el detalle de tu compra")        
+        alert("Pago realizado con éxito, recibirás un  correo electrónico con el detalle de tu compra")
         window.location.href = "/"
     } else {
         document.getElementById("resultado").textContent = resultado.error.message
@@ -133,6 +133,59 @@ let clientSecret = params.get("payment_intent_client_secret")
 if (clientSecret) {
     mostrarResultado(clientSecret)
 }
+
+//                                                          MERCADO PAGO
+
+const mp = new MercadoPago("APP_USR-e589398a-568b-42d7-bf86-982c857129ab", {
+    locale: "es-AR"
+})
+
+
+const cargarMercadoPago = async () => {
+    let importe = amount
+    if (amount < 1 || isNaN(importe)) {
+        alert("Error en el importe")
+        return
+    }
+    let respuesta = await fetch("/api/carts/crearPreferencia", {
+        method: "post",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ datosDeCompra })
+    })
+
+    let datos = await respuesta.json()
+
+    console.log(datos)
+    console.log(datosDeCompra.products)
+
+    const brickBuilder = mp.bricks()
+//Acá armo el boton de Mercado Pago
+brickBuilder.create("wallet", "payment-elementMP", {
+    initialization: {
+        preferenceId: datos.payload.id
+    },
+    customization: {
+        texts: {
+            valuePropo: "smart_option"
+        }
+    },
+    callbacks: {
+        onError: error => console.log(error.message),
+        onReady: () => {
+        }
+    }
+})
+
+}
+
+
+
+
+
+
+
 
 
 

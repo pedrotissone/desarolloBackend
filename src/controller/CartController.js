@@ -6,6 +6,7 @@ import { productService } from "../services/ProductService.js"
 import { ticketService } from "../services/TicketService.js"
 import { enviarEmail } from "../utils/utils.js"
 import stripe from "stripe"
+import {MercadoPagoConfig, Preference} from "mercadopago"
 
 
 const Carts = new CartManager()
@@ -582,6 +583,44 @@ export class CartController {
             res.setHeader("Content-Type", "application/json")
             return res.status(500).json("Error inesperado en el servidor al procesar la compra")
         }
+    }
+
+    static getCrearPreferencia = async (req, res) => {
+        let productosFormateados = []
+        let productos = req.body.datosDeCompra.products
+        
+        productos.forEach(elem => {
+            let formatProduct = {
+                title: elem.producto.title,
+                unit_price: elem.producto.price,
+                quantity: elem.quantity
+            }
+            productosFormateados.push(formatProduct)            
+        });
+
+        console.log(productosFormateados)
+
+        const client = new MercadoPagoConfig( {accessToken: "APP_USR-4908677735669400-092504-fb17fb45659a24d8bbf059bfb9157346-2003133063"})
+        
+        const preference=new Preference(client)
+
+        let resultado=await preference.create(
+            {
+                body:{
+                    items: productosFormateados,                                           
+                                        
+                    back_urls:{
+                        success:"http://localhost:8080/handlebars/feedbackMercadoPago",
+                        pending:"http://localhost:8080/handlebars/feedbackMercadoPago",
+                        failure:"http://localhost:8080/handlebars/feedbackMercadoPago", 
+                    },
+                    // auto_return: "approved"
+                }
+            }            
+        )
+    
+        res.setHeader('Content-Type','application/json');
+        return res.status(200).json({payload:resultado});
     }
 
 

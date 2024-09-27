@@ -184,5 +184,16 @@ export class ViewController {
         }
     }
 
+    static getFeedbackMercadoPago = async (req, res) => {
+        try {
+            res.setHeader("Content-Type", "application/json")          
+            res.status(200).json({payload: req.query})
+        } catch (error) {
+            res.setHeader("Content-Type", "application/json")
+            return res.status(500).json("Error inesperado en el servidor al intentar devolver respuesta de MP")
+            
+        }
+    }
+
 
 }
